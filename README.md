@@ -1,12 +1,12 @@
 # NFK-WEB
-Need For Kill - Quake 3 in 2d - WebGl game
+Need For Kill - Quake 3 in 2d - WebGL game
 
 ## What NFK really is?
 Original game called "Need For Kill" was developed by 3d[Power] in early 200x as Windows DirectX game application written in Delphi.
-Game has multiplayer and dedicated servers on the Internet. There are several game modes: duel, teamplay, captu the flag, domintaion and more. One of the killer feature is a progamer physics model and game balance! 
+The game has multiplayer and dedicated servers on the Internet. There are several game modes: duel, teamplay, captu the flag, domintaion and more. One of the killer feature is a progamer physics model and game balance!
 
 Look this short demo: http://www.youtube.com/watch?v=FgvgVttl0zE
-Move videos on http://www.youtube.com/user/nfk2d and http://www.youtube.com/user/needforkilldemo
+and more videos on http://www.youtube.com/user/nfk2d and http://www.youtube.com/user/needforkilldemo
 
 You can download original Need For Kill game from official web-site: http://needforkill.ru/load/need_for_kill_0_77/22-1-0-494
 
@@ -16,7 +16,7 @@ This project is aimed to rewrite original game with modern web technologies keep
 Demo: http://nfk.pqr.su/game/
 
 ## Tehcical Details
-- Graphics is rendered by <a href="http://www.pixijs.com/">Pixi.js</a> (WebGl with canvas fallback)
+- Graphics is rendered by <a href="http://www.pixijs.com/">Pixi.js</a> (WebGL with canvas fallback)
 - JavaScript clien code is written in ECMAScript 2015 (former ES6) standart and trinspiled to ES5 using <a href="http://babeljs.io/">Babel</a>
 - Build system: <a href="http://webpack.github.io/">webpack</a>
 
@@ -27,8 +27,8 @@ Demo: http://nfk.pqr.su/game/
 4. Create mutiplayer and dedicated server with first gamemode: Railarena
 5. Launch official web-site with registration, playres statistic charts, matchmaking
 6. More weapons and items, new game modes: duel, ctf and teamplay 
-7. Enchanced map editing functionality
-8. Brick textures, models skins
+7. Enhanced map editing functionality
+8. Bricks textures, models skins
 9. Visual effects
 10. Profit!!!
 
