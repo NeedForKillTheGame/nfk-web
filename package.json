@@ -1,0 +1,30 @@
+{
+  "name": "nfk-web",
+  "version": "0.0.0",
+  "description": "Need For Kill - Quake 3 in 2d - WebGl game",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nfk2d/nfk-web.git"
+  },
+  "keywords": [
+    "nfk",
+    "quake3",
+    "2d",
+    "game",
+    "webgl"
+  ],
+  "author": "PQR",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nfk2d/nfk-web/issues"
+  },
+  "homepage": "http://needforkill.ru",
+  "devDependencies": {
+    "babel-core": "^4.6.4",
+    "babel-loader": "^4.0.0"
+  }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<table>
+    <tr valign="top">
+        <td id="game">
+
+        </td>
+        <td style="padding-left: 10px">
+            <a href="#" id="mapeditor-link" style="border-bottom: 1px dashed; text-decoration: none">Show map editor</a>
+            <form id="mapeditor" style="display: none" action=".">
+                <textarea id="maptext" name="maptext" style="width: 580px; height: 480px; font-family: courier, monospace; font-size: 12px; line-height: 16px; letter-spacing:20px; font-weight: bold"></textarea>
+                <br><input type="submit" value="Apply map">
+            </form>
+
+            <ul>
+                <li><a href="?mapfile=dm2">dm2</a></li>
+                <li><a href="?mapfile=t4">t4</a></li>
+            </ul>
+        </td>
+    </tr>
+</table>
+<div id="fpsupdate">Update frame rate: </div>
+<div id="fpsrender">Render frame rate: </div>
+<script src="pixi/pixi.dev.js"></script>
+<script src="pixi/stats.min.js"></script>
+<script src="build/gamebuild.js"></script>
+<script>
+    (function () {
+
+
+
+        var player = {
+            x: 100,
+            y: 100,
+            velocityX: 0,
+            velocityY: 0,
+            doublejumpCountdown: 0,
+            dir: 3 //0 - look left and keyLeft pressed; 1 - look right and keyRight pressed, 2 - just look left, 3 - just look right
+        };
+
+
+
+
+
+
+
+
+
+
+        var keyUp = false;
+        var keyLeft = false;
+        var keyRight = false;
+        var keyDown = false;
+
+
+
+
+
+        function playermove(player) {
+
+
+        }
+
+
+
+    })();
+</script>
+</body>
+</html>
