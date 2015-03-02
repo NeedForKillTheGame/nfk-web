@@ -13,6 +13,8 @@ You can download original Need For Kill game from official web-site: http://need
 ## What NFK-WEB is?
 This project is aimed to rewrite original game with modern web technologies keeping the same physics model and game balance.
 
+Demo: http://nfk.pqr.su/game/
+
 ## Tehcical Details
 - Graphics is rendered by <a href="http://www.pixijs.com/">Pixi.js</a> (WebGl with canvas fallback)
 - JavaScript clien code is written in ECMAScript 2015 (former ES6) standart and trinspiled to ES5 using <a href="http://babeljs.io/">Babel</a>
