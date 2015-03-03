@@ -1,4 +1,4 @@
-<a href="blob/master/README.md">Read this README in English ></a>
+<a href="README.md">Read this README in English ></a>
 
 # NFK-WEB
 Need For Kill - Quake 3 in 2d - WebGL game
