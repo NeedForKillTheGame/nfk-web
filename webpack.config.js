@@ -6,7 +6,8 @@ module.exports = {
     },
     externals: {
         "PIXI": "PIXI",
-        "Stats": "Stats"
+        "Stats": "Stats",
+        "Howl": "Howl"
     },
     module: {
         loaders: [

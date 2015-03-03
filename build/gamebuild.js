@@ -59,7 +59,7 @@
 	var renderMap = _RenderJs.renderMap;
 	var renderFrame = _RenderJs.renderFrame;
 
-	var playermove = __webpack_require__(10).playermove;
+	var playermove = __webpack_require__(6).playermove;
 
 	var Stats = _interopRequire(__webpack_require__(1));
 
@@ -114,7 +114,7 @@
 
 	exports.loadMapFromQuery = loadMapFromQuery;
 
-	var MapEditor = _interopRequireWildcard(__webpack_require__(8));
+	var MapEditor = _interopRequireWildcard(__webpack_require__(10));
 
 	var Constants = _interopRequire(__webpack_require__(9));
 
@@ -259,7 +259,7 @@
 	exports.renderMap = renderMap;
 	exports.renderFrame = renderFrame;
 
-	var PIXI = _interopRequire(__webpack_require__(7));
+	var PIXI = _interopRequire(__webpack_require__(8));
 
 	var Constants = _interopRequire(__webpack_require__(9));
 
@@ -313,62 +313,7 @@
 	});
 
 /***/ },
-/* 6 */,
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = PIXI;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	exports.showMapEditor = showMapEditor;
-	exports.setMapEditorContent = setMapEditorContent;
-	var mapEditorForm = document.getElementById("mapeditor");
-	var showMapEditorLink = document.getElementById("mapeditor-link");
-	showMapEditorLink.addEventListener("click", function (e) {
-	    e.preventDefault();showMapEditor();
-	});
-
-	function showMapEditor() {
-	    mapEditorForm.style.display = "block";
-	    showMapEditorLink.style.display = "none";
-	}
-
-	function setMapEditorContent(maptext) {
-	    document.getElementById("maptext").innerHTML = maptext;
-	}
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	module.exports = {
-
-	    BRICK_WIDTH: 32,
-	    BRICK_HEIGHT: 16,
-
-	    PLAYER_WIDTH: 20,
-
-	    PLAYER_MAXSPEED: 3,
-
-	    MAP_ROWS: 30,
-	    MAP_COLS: 20,
-
-	    GRAVITY: 0.02
-	};
-
-/***/ },
-/* 10 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -377,6 +322,8 @@
 
 	exports.playermove = playermove;
 
+	var Howl = _interopRequire(__webpack_require__(7));
+
 	var Constants = _interopRequire(__webpack_require__(9));
 
 	var mapBricks;
@@ -384,6 +331,10 @@
 	var keyDown = false;
 	var keyLeft = false;
 	var keyRight = false;
+
+	var jumpSound = new Howl({
+	    urls: ["sounds/jump1.wav"]
+	});
 
 	var BRICK_WIDTH = Constants.BRICK_WIDTH;
 	var BRICK_HEIGHT = Constants.BRICK_HEIGHT;
@@ -550,6 +501,8 @@
 	                }
 	                player.velocityY = -2.9;
 	            }
+
+	            jumpSound.play();
 	        }
 	    }
 
@@ -561,7 +514,11 @@
 	            player.crouch = false;
 	        }
 	    } else {
-	        player.crouch = false;
+	        if (brickCrouchOnHead) {
+	            player.crouch = true;
+	        } else {
+	            player.crouch = false;
+	        }
 	    }
 
 	    if (!brickCrouchOnHead && !onGround) {
@@ -601,6 +558,66 @@
 	        //Finally change current direction flag
 	        player.dir = keyLeft ? 0 : 1;
 	    }
+	}
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = Howl;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = PIXI;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = {
+
+	    BRICK_WIDTH: 32,
+	    BRICK_HEIGHT: 16,
+
+	    PLAYER_WIDTH: 20,
+
+	    PLAYER_MAXSPEED: 3,
+
+	    MAP_ROWS: 30,
+	    MAP_COLS: 20,
+
+	    GRAVITY: 0.02
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.showMapEditor = showMapEditor;
+	exports.setMapEditorContent = setMapEditorContent;
+	var mapEditorForm = document.getElementById("mapeditor");
+	var showMapEditorLink = document.getElementById("mapeditor-link");
+	showMapEditorLink.addEventListener("click", function (e) {
+	    e.preventDefault();showMapEditor();
+	});
+
+	function showMapEditor() {
+	    mapEditorForm.style.display = "block";
+	    showMapEditorLink.style.display = "none";
+	}
+
+	function setMapEditorContent(maptext) {
+	    document.getElementById("maptext").innerHTML = maptext;
 	}
 
 	Object.defineProperty(exports, "__esModule", {

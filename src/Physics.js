@@ -1,3 +1,4 @@
+import Howl from "Howl";
 import Constants from "./Constants.js";
 
 var mapBricks;
@@ -5,6 +6,10 @@ var keyUp = false;
 var keyDown = false;
 var keyLeft = false;
 var keyRight = false;
+
+var jumpSound = new Howl({
+    urls: ['sounds/jump1.wav']
+});
 
 const BRICK_WIDTH = Constants.BRICK_WIDTH;
 const BRICK_HEIGHT = Constants.BRICK_HEIGHT;
@@ -189,6 +194,8 @@ export function playermove(player, _mapBricks) {
                 }
                 player.velocityY = -2.9;
             }
+
+            jumpSound.play();
         }
     }
 
@@ -201,7 +208,13 @@ export function playermove(player, _mapBricks) {
             player.crouch = false;
         }
     } else {
-        player.crouch = false;
+        if (brickCrouchOnHead) {
+            player.crouch = true;
+
+        } else {
+            player.crouch = false;
+
+        }
     }
 
     if (!brickCrouchOnHead && !onGround) {
