@@ -1,9 +1,11 @@
+<a href="blob/master/README.ru.md">Read this README in Russian ></a>
+
 # NFK-WEB
 Need For Kill - Quake 3 in 2d - WebGL game
 
 ## What NFK really is?
 Original game called "Need For Kill" was developed by 3d[Power] in early 200x as Windows DirectX game application written in Delphi.
-The game has multiplayer and dedicated servers on the Internet. There are several game modes: duel, teamplay, captu the flag, domintaion and more. One of the killer feature is a progamer physics model and game balance!
+The game has multiplayer and dedicated servers on the Internet. There are several game modes: duel, teamplay, captu the flag, domintaion and others. The killer features are a progamer physics model and well balanced gameplay!
 
 Look this short demo: http://www.youtube.com/watch?v=FgvgVttl0zE
 and more videos on http://www.youtube.com/user/nfk2d and http://www.youtube.com/user/needforkilldemo
@@ -11,7 +13,7 @@ and more videos on http://www.youtube.com/user/nfk2d and http://www.youtube.com/
 You can download original Need For Kill game from official web-site: http://needforkill.ru/load/need_for_kill_0_77/22-1-0-494
 
 ## What NFK-WEB is?
-This project is aimed to rewrite original game with modern web technologies keeping the same physics model and game balance.
+This project is aimed to rewrite the original game with modern web technologies keeping the same physics model and game balance.
 
 Demo: http://nfk.pqr.su/game/
 
