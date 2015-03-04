@@ -37,5 +37,6 @@ function render() {
     requestAnimationFrame(render); //infinite render loop
     statsRender.end();
 }
+
 requestAnimationFrame(render);
 

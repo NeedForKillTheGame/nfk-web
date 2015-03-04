@@ -2,7 +2,8 @@ module.exports = {
     entry: "./src/app.js",
     output: {
         path: __dirname + "/build",
-        filename: "gamebuild.js"
+        filename: "gamebuild.js",
+        publicPath: '/build/'
     },
     externals: {
         "PIXI": "PIXI",

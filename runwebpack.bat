@@ -1,1 +1,1 @@
-webpack --color --watch
+webpack --color
