@@ -43,4 +43,4 @@ NFK-WEB - это проект нацеленный на перенос ориг�
 
 С нами можно связаться на irc канале: irc.wenet.ru:6667 #nfk (кодировка cp1251). Веб-портал для irc: http://needforkill.ru/index/web_chat/0-54
 
-Или в чатике Gitter.im: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nfk2d/nfk-web?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+Или в чатике Gitter.im: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NeedForKillTheGame?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
