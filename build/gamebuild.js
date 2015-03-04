@@ -114,9 +114,9 @@
 
 	exports.loadMapFromQuery = loadMapFromQuery;
 
-	var MapEditor = _interopRequireWildcard(__webpack_require__(10));
+	var MapEditor = _interopRequireWildcard(__webpack_require__(9));
 
-	var Constants = _interopRequire(__webpack_require__(9));
+	var Constants = _interopRequire(__webpack_require__(10));
 
 	function parseMapText(mapText) {
 	    var lines = mapText.split("\n");
@@ -259,9 +259,9 @@
 	exports.renderMap = renderMap;
 	exports.renderFrame = renderFrame;
 
-	var PIXI = _interopRequire(__webpack_require__(8));
+	var PIXI = _interopRequire(__webpack_require__(7));
 
-	var Constants = _interopRequire(__webpack_require__(9));
+	var Constants = _interopRequire(__webpack_require__(10));
 
 	var renderer = PIXI.autoDetectRenderer(640, 480);
 	//renderer.view.style.display = "block";
@@ -322,9 +322,9 @@
 
 	exports.playermove = playermove;
 
-	var Howl = _interopRequire(__webpack_require__(7));
+	var Howl = _interopRequire(__webpack_require__(8));
 
-	var Constants = _interopRequire(__webpack_require__(9));
+	var Constants = _interopRequire(__webpack_require__(10));
 
 	var mapBricks;
 	var keyUp = false;
@@ -568,37 +568,16 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = Howl;
+	module.exports = PIXI;
 
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = PIXI;
+	module.exports = Howl;
 
 /***/ },
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	module.exports = {
-
-	    BRICK_WIDTH: 32,
-	    BRICK_HEIGHT: 16,
-
-	    PLAYER_WIDTH: 20,
-
-	    PLAYER_MAXSPEED: 3,
-
-	    MAP_ROWS: 30,
-	    MAP_COLS: 20,
-
-	    GRAVITY: 0.02
-	};
-
-/***/ },
-/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -623,6 +602,27 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = {
+
+	    BRICK_WIDTH: 32,
+	    BRICK_HEIGHT: 16,
+
+	    PLAYER_WIDTH: 20,
+
+	    PLAYER_MAXSPEED: 3,
+
+	    MAP_ROWS: 30,
+	    MAP_COLS: 20,
+
+	    GRAVITY: 0.02
+	};
 
 /***/ }
 /******/ ])
