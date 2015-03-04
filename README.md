@@ -41,3 +41,5 @@ Especially we are looking for Multiplayer/Network stack developer (both clien an
 Join us on irc: irc.wenet.ru:6667 #nfk (for russian use cp1251). Webgate to irc: http://needforkill.ru/index/web_chat/0-54
 
 Gitter.im developers chat: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NeedForKillTheGame?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+Follow on Twitter <a href="https://twitter.com/nfk2d">@nfk2d</a>
