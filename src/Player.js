@@ -1,8 +1,9 @@
+
 export default class Player {
     constructor() {
 
-        this.x = 0;
-        this.y = 0;
+        this.left = 0;
+        this.bottom = 0;
 
         this.velocityX = 0;
         this.velocityY = 0;
@@ -14,9 +15,15 @@ export default class Player {
         this.keyRight = false;
 
         this.crouch = false; //current crouch state
-        this.dir = 3; //0 - look left and keyLeft pressed; 1 - look right and keyRight pressed, 2 - just look left, 3 - just look right
 
-        this.doublejumpCountdown = 0;
+        this.cacheBottomRow = 0;
+        this.cacheHeadRow = 0;
+        this.cacheLeftCol = 0;
+        this.cacheRightCol = 0;
 
+        //Кеширующий флаг - находится ли игрок по вертикали ровно на каком-то брике
+        //Проверить это просто: координата игрока по вертикали+1 целочисленно делится на высоту бриков
+        //((player.bottom + 1) % BRICK_HEIGHT) === 0
+        this.cacheJustOnBrick = false;
     }
 }

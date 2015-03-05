@@ -1,42 +1,39 @@
-import {loadMapFromQuery} from "./MapLoader.js";
+import Map from "./Map.js";
+import Constants from "./Constants.js";
 import Keyboard from "./Keyboard.js";
 import Player from "./Player.js";
-import {renderMap, renderFrame} from "./Render.js";
-import {playermove} from "./Physics.js";
+import {renderMap, renderGame} from "./Render.js";
+import {updateGame} from "./Physics.js";
 import Stats from "Stats";
+
+var stats = new Stats();
+document.getElementById('fpsstats').appendChild(stats.domElement);
+
+Map.loadFromQuery();
+renderMap();
 
 var localPlayer = new Player();
 
 //just for safe respawn
-localPlayer.x = 100;
-localPlayer.y = 100;
+var respawn = Map.getRandomRespawn();
+localPlayer.left = respawn.col * Constants.BRICK_WIDTH;
+localPlayer.bottom = respawn.row * Constants.BRICK_HEIGHT + Constants.BRICK_HEIGHT - 1;
 
-var mapBricks = loadMapFromQuery();
-renderMap(mapBricks);
+function gameLoop() {
+    stats.begin();
 
-var statsRender = new Stats();
-document.getElementById('fpsrender').appendChild(statsRender.domElement);
-
-var statsUpdate = new Stats();
-document.getElementById('fpsupdate').appendChild(statsUpdate.domElement);
-
-setInterval(() => {
-    statsUpdate.begin();
     localPlayer.keyUp = Keyboard.keyUp;
     localPlayer.keyDown = Keyboard.keyDown;
     localPlayer.keyLeft = Keyboard.keyLeft;
     localPlayer.keyRight = Keyboard.keyRight;
-    playermove(localPlayer, mapBricks);
-    statsUpdate.end();
 
-}, 1000 / 50); //50 fps for player update!
+    updateGame(localPlayer);
+    renderGame(localPlayer);
 
-function render() {
-    statsRender.begin();
-    renderFrame(localPlayer);
-    requestAnimationFrame(render); //infinite render loop
-    statsRender.end();
+    requestAnimationFrame(gameLoop); //infinite render loop
+
+    stats.end();
 }
 
-requestAnimationFrame(render);
+requestAnimationFrame(gameLoop);
 
