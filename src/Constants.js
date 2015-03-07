@@ -5,7 +5,7 @@ export default {
 
     PLAYER_WIDTH: 20,
 
-    PLAYER_MAXSPEED: 3,
+    PLAYER_MAX_VELOCITY_X: 3,
 
     MAP_ROWS: 30,
     MAP_COLS: 20,

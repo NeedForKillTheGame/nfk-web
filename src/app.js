@@ -16,10 +16,10 @@ var localPlayer = new Player();
 
 //just for safe respawn
 var respawn = Map.getRandomRespawn();
-localPlayer.left = respawn.col * Constants.BRICK_WIDTH;
-localPlayer.bottom = respawn.row * Constants.BRICK_HEIGHT + Constants.BRICK_HEIGHT - 1;
+localPlayer.setLeft(respawn.col * Constants.BRICK_WIDTH);
+localPlayer.setBottom(respawn.row * Constants.BRICK_HEIGHT + Constants.BRICK_HEIGHT - 1);
 
-function gameLoop() {
+function gameLoop(timestamp) {
     stats.begin();
 
     localPlayer.keyUp = Keyboard.keyUp;
@@ -27,7 +27,7 @@ function gameLoop() {
     localPlayer.keyLeft = Keyboard.keyLeft;
     localPlayer.keyRight = Keyboard.keyRight;
 
-    updateGame(localPlayer);
+    updateGame(localPlayer, timestamp);
     renderGame(localPlayer);
 
     requestAnimationFrame(gameLoop); //infinite render loop

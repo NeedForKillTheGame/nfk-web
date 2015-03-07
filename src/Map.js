@@ -32,7 +32,7 @@ export default {
         var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
         if (queryString.indexOf('maptext=') === 0) {
             mapText = decodeURIComponent(queryString.substring(8)).replace(/\+/g, ' ');
-            MapEditor.showMapEditor();
+            MapEditor.show();
         }
         else {
             var mapfile;
@@ -52,9 +52,6 @@ export default {
     },
 
     isBrick(row, col) {
-        if (typeof bricks[row] == "undefined") {
-            return false;
-        }
         return bricks[row][col];
     },
 

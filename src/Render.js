@@ -46,6 +46,5 @@ export function renderGame(player) {
         localPlayerGraphics.y = player.bottom - BRICK_HEIGHT * 3 + 1;
         localPlayerGraphics.height = 1;
     }
-
     renderer.render(stage);
 }

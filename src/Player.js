@@ -1,12 +1,16 @@
+import Utils from "./Utils.js";
+import Constants from "./Constants.js";
+
+const PLAYER_WIDTH = Constants.PLAYER_WIDTH;
 
 export default class Player {
     constructor() {
 
-        this.left = 0;
-        this.bottom = 0;
+        this.left = 0.0;
+        this.bottom = 0.0;
 
-        this.velocityX = 0;
-        this.velocityY = 0;
+        this.velocityX = 0.0;
+        this.velocityY = 0.0;
 
         //Current state of pressed keys
         this.keyUp = false;
@@ -17,7 +21,7 @@ export default class Player {
         this.crouch = false; //current crouch state
 
         this.cacheBottomRow = 0;
-        this.cacheHeadRow = 0;
+        this.cacheTopRow = 0;
         this.cacheLeftCol = 0;
         this.cacheRightCol = 0;
 
@@ -25,5 +29,34 @@ export default class Player {
         //Проверить это просто: координата игрока по вертикали+1 целочисленно делится на высоту бриков
         //((player.bottom + 1) % BRICK_HEIGHT) === 0
         this.cacheJustOnBrick = false;
+
+        this.cacheBlockedBottom = false;
+        this.cacheBlockedTop = false;
+        this.cacheBlockedLeft = false;
+        this.cacheBlockedRight = false;
+    }
+
+    setLeft(newLeft) {
+        if (newLeft !== this.left) {
+            this.left = newLeft;
+            this.cacheLeftCol = Utils.getLeftBorderCol(newLeft);
+            this.cacheRightCol = Utils.getRightBorderCol(newLeft + PLAYER_WIDTH);
+        }
+    }
+
+    setBottom(newBottom) {
+        if (newBottom !== this.bottom) {
+            this.bottom = newBottom;
+            this.cacheJustOnBrick = Utils.getPlayerJustOnBrick(newBottom);
+            this.cacheBottomRow = Utils.getBottomBorderRow(newBottom);
+            this.cacheTopRow = Utils.getPlayerTopRow(newBottom, this.crouch);
+        }
+    }
+
+    setCrouch(newCrouch) {
+        if (newCrouch !== this.crouch) {
+            this.crouch = newCrouch;
+            this.cacheTopRow = Utils.getPlayerTopRow(this.bottom, newCrouch);
+        }
     }
 }

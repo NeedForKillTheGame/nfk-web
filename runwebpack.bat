@@ -1,1 +1,2 @@
 webpack --color
+pause
