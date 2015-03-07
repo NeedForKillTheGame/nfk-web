@@ -142,7 +142,7 @@ function updatePlayerPosition(player) {
         return;
 
     }
-
+    /*
     //Если же падали внизу и приседали и пытались зати в какую-то стену влево или вправо - надо попытаться туда зайти!
     if (player.cacheTopRow - tmpNewTopRow === -1
         && player.keyDown
@@ -165,6 +165,7 @@ function updatePlayerPosition(player) {
         return;
 
     }
+    */
 
     //Было какое-то движение в результате которого игрок пересёк границу бриков. Проверим, не возникло ли коллизий?
     tmpPlayerHasCollizionVertical = tmpToBeCheсkedRow !== -100 && hasPlayerCollisionVertical(tmpToBeCheсkedRow, tmpNewLeftCol, tmpNewRightCol);
@@ -270,7 +271,33 @@ function updatePlayerBlockedDirections(player) {
     && hasPlayerCollisionHorizontal(player.cacheBottomRow, player.cacheTopRow, player.cacheRightCol + 1);
 }
 
-function updatePlayerVelocityYAndCrouch(player, oldBottomRow) {
+var tmpEdgeBrickTestCol = 0;
+function isEdgeBrickJumpPossible(player) {
+    /*
+    if (player.velocityX === 0) {
+        return false;
+    }
+    */
+    if (player.velocityX < 0 || false && player.velocityX === 0 && player.keyLeft) {
+        tmpEdgeBrickTestCol = Utils.getLeftBorderCol(player.left - 3);
+    } else if (player.velocityX > 0 || false && player.velocityX === 0 && player.keyRight) {
+        tmpEdgeBrickTestCol = Utils.getRightBorderCol(player.left + PLAYER_WIDTH + 3);
+    } else {
+        return false;
+    }
+
+    return isBrick(Utils.getBottomBorderRow(player.bottom), tmpEdgeBrickTestCol)
+            && !isBrick(Utils.getBottomBorderRow(player.bottom - 4), tmpEdgeBrickTestCol);
+
+}
+
+function updatePlayerVelocityYAndCrouch(player) {
+    if (isEdgeBrickJumpPossible(player) && player.keyUp && !player.cacheBlockedTop) {
+        player.velocityY = -3;
+        Sound.jump();
+        return;
+    }
+
     //Если мы стоим на земле - значит можно приседать и прыгать! Проверим...
     if (player.cacheBlockedBottom) {
         //Если нажата кнопка вверх - попытка прыгнуть!
@@ -383,19 +410,17 @@ function updatePlayerVelocityX(player) {
     }
 }
 
-function updatePlayerVelocity(player, oldBottomRow) {
-    updatePlayerVelocityYAndCrouch(player, oldBottomRow);
+function updatePlayerVelocity(player) {
+    updatePlayerVelocityYAndCrouch(player);
     updatePlayerVelocityX(player);
 }
 
-var tmpOldBottomRow = 0;
 function runPhysicsOneFrame(player) {
 
     //Стратегия расчёта физики следующая:
     //Используя текущие значения скорости (расчитанные в предыдущем кадре) сделаем перемещение игрока
     //Проверим столкновения со стенами, сделаем корректировку позиции игрока, если он провалился внутрь какой-нибудь стены
     //Перед обновлением позиции игрока запомним старые значения колонки
-    tmpOldBottomRow = player.cacheBottomRow;
     updatePlayerPosition(player);
 
     //После корректировки позиции игрока, обновим кеширующие поля, показывающие упёрся ли игрок в какую-то стену или пол или потолок
@@ -404,7 +429,7 @@ function runPhysicsOneFrame(player) {
 
     //Расчитаем новые значения скоростей на основе нажатых кнопок и констант с ускорениями (гравитация, трение и проч)
     //(новые скорости будут применены только в следующем фрейме)
-    updatePlayerVelocity(player, tmpOldBottomRow);
+    updatePlayerVelocity(player);
 }
 
 var time = 0;
