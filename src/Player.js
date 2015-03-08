@@ -20,6 +20,8 @@ export default class Player {
 
         this.crouch = false; //current crouch state
 
+        this.doubleJumpCountdown = 0;
+
         this.cacheBottomRow = 0;
         this.cacheTopRow = 0;
         this.cacheLeftCol = 0;

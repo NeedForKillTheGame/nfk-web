@@ -45,7 +45,6 @@ function hasPlayerCollisionHorizontal(bottomRow, topRow, col) {
     return false;
 }
 
-var tmpNewJustOnBrick = false;
 var tmpNewBottomRow = 0;
 var tmpNewTopRow = 0;
 var tmpNewLeftCol = 0;
@@ -60,8 +59,13 @@ var tmpToBeCheckedCol = -100;
 var tmpPlayerHasCollizionVertical = false;
 var tmpPlayerHasCollizionHorizontal = false;
 
-function updatePlayerPosition(player) {
+var tmpNewBottomBorderRowMinus4 = 0;
+var tmpColForRowMinus4 = 0;
 
+var tmpOnEdge = false;
+
+function updatePlayerPosition(player) {
+    tmpOnEdge = false;
     if (player.velocityX === 0 && player.velocityY === 0) {
         //Если не было никакого движения, нечего обновлять, просто выходим из этого метода
         return;
@@ -111,6 +115,44 @@ function updatePlayerPosition(player) {
         tmpToBeCheckedCol = -100;
     }
 
+    //Частный случай: если игрок хочет войт внутрь брика по горизонтали, посмотрим, а что если его приподнять на пару пикселей вверх?
+    if (player.velocityY !== 0) {
+        if (player.velocityX !== 0 || player.keyLeft != player.keyRight) {
+            if (player.velocityX === 0) {
+                tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - (player.keyUp ? 8 : 4));
+            } else {
+                tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - 8);
+            }
+
+            if (tmpNewBottomBorderRowMinus4 != tmpNewBottomRow) {
+                if (player.velocityX === 0) {
+                    tmpColForRowMinus4 = player.keyLeft ? Utils.getLeftBorderCol(player.left - 1) : Utils.getRightBorderCol(player.left + PLAYER_WIDTH + 1);
+                } else {
+                    tmpColForRowMinus4 = player.velocityX < 0 ? tmpNewLeftCol : tmpNewRightCol;
+                }
+
+                if (isBrick(tmpNewBottomRow, tmpColForRowMinus4) && !isBrick(tmpNewBottomBorderRowMinus4, tmpColForRowMinus4)) {
+                    //Если приподняться вверх на 1 или 4 пикселя, то обнаруживаем, что коллизии нет!
+                    //Проверим, можем ли мы пройти в этот тоннель по высоте?
+                    if (!isBrick(tmpNewBottomBorderRowMinus4 - 1, tmpColForRowMinus4)
+                        && (player.crouch || !isBrick(tmpNewBottomBorderRowMinus4 - 2, tmpColForRowMinus4))) {
+                        //По высоте проходим!
+                        //Так сделаем это - приподнимимся
+                        if (player.velocityX === 0) {
+                            player.setLeft(player.left + (player.keyLeft ? -1 : 1));
+                        } else {
+                            player.setLeft(tmpNewLeft);
+                        }
+                        player.setBottom(Utils.getBottomBorder(tmpNewBottomBorderRowMinus4));
+                        log('зацепление за уголок');
+                        tmpOnEdge = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     if (tmpToBeCheсkedRow === -100 && tmpToBeCheckedCol === -100) {
         //Игрок не пересекал строк или столбцов, значит и коллизий не должно было возникнуть!
         //Больше ничего не проверяем, просто обновим координаты
@@ -122,6 +164,7 @@ function updatePlayerPosition(player) {
     //Было какое-то движение. Проверим частный случай зацепления за брик:
     //например, игрок прижат к правой стене и жмёт вправо и одновременно он подлетает вверх. Стена заканчивается и он
     //должен зацепиться за горизонтальный брик (если, конечно, голове ничего не помешает)!
+    /*
     if (player.cacheBottomRow - tmpNewBottomRow === 1
         && player.keyLeft !== player.keyRight
         && (
@@ -142,28 +185,39 @@ function updatePlayerPosition(player) {
         return;
 
     }
+    */
+    //Если же падали вниз и пытались зати в какую-то стену влево или вправо - надо попытаться туда зайти, чуть чуть приподняв игрока!
+    //это чтобы не проваливаться в дырки наверну dm2
     /*
-    //Если же падали внизу и приседали и пытались зати в какую-то стену влево или вправо - надо попытаться туда зайти!
-    if (player.cacheTopRow - tmpNewTopRow === -1
-        && player.keyDown
-        && player.keyLeft !== player.keyRight
-        && (
-        player.keyLeft
-        && player.cacheBlockedLeft
-        && !hasPlayerCollisionHorizontal(tmpNewTopRow + 1, tmpNewTopRow, player.cacheLeftCol - 1)
-        && !hasPlayerCollisionVertical(tmpNewTopRow + 1, player.cacheLeftCol - 1, player.cacheRightCol)
-        ||
-        player.keyRight
-        && player.cacheBlockedRight
-        && !hasPlayerCollisionHorizontal(tmpNewTopRow + 1, tmpNewTopRow, player.cacheRightCol + 1)
-        && !hasPlayerCollisionVertical(tmpNewTopRow + 1, player.cacheLeftCol, player.cacheRightCol + 1)
-        )
-    ) {
-        player.setLeft(player.left + (player.keyLeft ? -1 : 1));
-        player.setBottom(Utils.getBottomBorder(tmpNewTopRow + 1));
-        player.setCrouch(true);
-        return;
+    if (player.velocityY > 0
+        && (player.velocityX !== 0 || player.keyLeft != player.keyRight)) {
+        var checkCol;
+        if (player.velocityX === 0) {
+            checkCol = player.keyLeft ? Utils.getLeftBorderCol(player.left - 1) : Utils.getRightBorderCol(player.left + 1 + PLAYER_WIDTH);
+        } else {
+            checkCol = player.velocityX < 0 ? tmpNewLeftCol : tmpNewRightCol;
+        }
+        tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - 4);
+        if (tmpNewBottomBorderRowMinus4 != tmpNewBottomRow
+            && (
+                (player.velocityX < 0 || player.keyLeft)
+            && hasPlayerCollisionHorizontal(tmpNewBottomRow, tmpNewTopRow, tmpNewLeftCol)
+            && !hasPlayerCollisionHorizontal(tmpNewBottomBorderRowMinus4, tmpNewBottomBorderRowMinus4 - (player.crouch ? 1 : 2), tmpNewLeftCol)
+            ||
+                (player.velocityX > 0 || player.keyRight)
+            && hasPlayerCollisionHorizontal(tmpNewBottomRow, tmpNewTopRow, tmpNewRightCol)
+            && !hasPlayerCollisionHorizontal(tmpNewBottomBorderRowMinus4, tmpNewBottomBorderRowMinus4 - (player.crouch ? 1 : 2), tmpNewRightCol)
+            )
+        ) {
+            if (player.velocityX === 0) {
+                player.setLeft(player.left + (player.keyLeft ? -1 : 1));
+            } else {
+                player.setLeft(tmpNewLeft);
+            }
+            player.setBottom(Utils.getBottomBorder(tmpNewBottomBorderRowMinus4));
+            return;
 
+        }
     }
     */
 
@@ -274,29 +328,50 @@ function updatePlayerBlockedDirections(player) {
 var tmpEdgeBrickTestCol = 0;
 function isEdgeBrickJumpPossible(player) {
     /*
-    if (player.velocityX === 0) {
-        return false;
-    }
-    */
-    if (player.velocityX < 0 || false && player.velocityX === 0 && player.keyLeft) {
+     if (player.velocityX === 0) {
+     return false;
+     }
+     */
+    if (player.velocityX < 0 /*&& player.keyRight */ || false && player.velocityX === 0 && player.keyLeft) {
         tmpEdgeBrickTestCol = Utils.getLeftBorderCol(player.left - 3);
-    } else if (player.velocityX > 0 || false && player.velocityX === 0 && player.keyRight) {
+    } else if (player.velocityX > 0/* && player.keyLeft*/ || false && player.velocityX === 0 && player.keyRight) {
         tmpEdgeBrickTestCol = Utils.getRightBorderCol(player.left + PLAYER_WIDTH + 3);
     } else {
         return false;
     }
 
     return isBrick(Utils.getBottomBorderRow(player.bottom), tmpEdgeBrickTestCol)
-            && !isBrick(Utils.getBottomBorderRow(player.bottom - 4), tmpEdgeBrickTestCol);
+        && !isBrick(Utils.getBottomBorderRow(player.bottom - 3), tmpEdgeBrickTestCol);
 
 }
 
-function updatePlayerVelocityYAndCrouch(player) {
-    if (isEdgeBrickJumpPossible(player) && player.keyUp && !player.cacheBlockedTop) {
+function makeJump(player, fromEdge) {
+    if (false && player.doubleJumpCountdown >= 6) {
+        return false;
+    }
+    if (player.doubleJumpCountdown > 0) {
         player.velocityY = -3;
-        Sound.jump();
+        player.doubleJumpCountdown = 0;
+        log('double jump ' + player.left + 'x' + player.bottom + ' ' + (fromEdge ? ' from edge' : ''));
+    } else {
+        player.velocityY = -2.9;
+        player.doubleJumpCountdown = 8;
+        log('jump ' + player.left + 'x' + player.bottom + ' ' + (fromEdge ? ' from edge' : ''));
+    }
+    Sound.jump();
+}
+
+function updatePlayerVelocityYAndCrouch(player) {
+    if (player.doubleJumpCountdown > 0) {
+        player.doubleJumpCountdown--;
+    }
+
+/*
+    if (isEdgeBrickJumpPossible(player) && player.keyUp && !player.cacheBlockedTop) {
+        makeJump(player, true);
         return;
     }
+*/
 
     //Если мы стоим на земле - значит можно приседать и прыгать! Проверим...
     if (player.cacheBlockedBottom) {
@@ -304,8 +379,7 @@ function updatePlayerVelocityYAndCrouch(player) {
         if (player.keyUp) {
             if (!player.cacheBlockedTop) {
                 //Можно прыгать, т.к. над головой ничего не мешает!
-                player.velocityY = -3;
-                Sound.jump();
+                makeJump(player);
             }
         } else {
 
@@ -473,4 +547,11 @@ export function updateGame(player, timestamp) {
             tmpDeltaPhysicFrames--;
         }
     }
+}
+
+var logLine = 0;
+var textarea = document.getElementById('log');
+function log(text) {
+    logLine++;
+    textarea.innerHTML = logLine + ' ' + text + "\n" + textarea.innerHTML.substring(0, 1000);
 }

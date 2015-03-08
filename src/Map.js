@@ -55,6 +55,10 @@ export default {
         return bricks[row][col];
     },
 
+    getMapBricks() {
+        return bricks;
+    },
+
     getRandomRespawn() {
         return respawns[Math.floor(Math.random() * respawns.length)];
     }
