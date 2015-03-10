@@ -380,6 +380,9 @@ function updatePlayerVelocityYAndCrouch(player) {
             if (!player.cacheBlockedTop) {
                 //Можно прыгать, т.к. над головой ничего не мешает!
                 makeJump(player);
+            } else {
+                //Над головой заблокировано, прыгнуть нельзя, вниз тоже упасть нельзя - обнуляем скорость
+                player.velocityY = 0;
             }
         } else {
 
