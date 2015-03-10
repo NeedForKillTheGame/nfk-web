@@ -16,8 +16,10 @@ var localPlayer = new Player();
 
 //just for safe respawn
 var respawn = Map.getRandomRespawn();
-localPlayer.setLeft(respawn.col * Constants.BRICK_WIDTH);
-localPlayer.setBottom(respawn.row * Constants.BRICK_HEIGHT + Constants.BRICK_HEIGHT - 1);
+localPlayer.x = respawn.col * Constants.BRICK_WIDTH + 10;
+localPlayer.y = respawn.row * Constants.BRICK_HEIGHT - 24;
+//localPlayer.setLeft(respawn.col * Constants.BRICK_WIDTH);
+//localPlayer.setBottom(respawn.row * Constants.BRICK_HEIGHT + Constants.BRICK_HEIGHT - 1);
 
 function gameLoop(timestamp) {
     stats.begin();

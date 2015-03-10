@@ -6,8 +6,8 @@ const PLAYER_WIDTH = Constants.PLAYER_WIDTH;
 export default class Player {
     constructor() {
 
-        this.left = 0.0;
-        this.bottom = 0.0;
+        this.x = 0.0;
+        this.y = 0.0;
 
         this.velocityX = 0.0;
         this.velocityY = 0.0;

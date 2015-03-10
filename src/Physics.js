@@ -11,8 +11,9 @@ const PLAYER_MAX_VELOCITY_X = Constants.PLAYER_MAX_VELOCITY_X;
 const GRAVITY = Constants.GRAVITY;
 
 //Вынесем указатель на функцию в отедельную переменную, чтобы не писать везде Map.isBrick(...)
-var isBrick = Map.isBrick;
-
+function isBrick(col, row) {
+    return Map.isBrick(row, col);
+}
 
 /**
  * Проверяет на возможную колизию при движении вверх или вниз.
@@ -489,21 +490,224 @@ function updatePlayerVelocity(player) {
     updatePlayerVelocityX(player);
 }
 
+function isOnGround(playerX, playerY) {
+    return isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY + 25)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY + 23))
+        || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY + 25)) && !isBrick(Utils.getLeftBorderCol(playerX + 9), Utils.getTopBorderRow(playerY + 23))
+        || isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY + 24)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY + 8))
+        || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY + 24)) && !isBrick(Utils.getLeftBorderCol(playerX + 9), Utils.getTopBorderRow(playerY + 8));
+}
+
+function isBrickCrouchOnHead(playerX, playerY) {
+    return isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(playerX - 8, Utils.getBottomBorderRow(playerY - 7))
+        || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(playerX + 8, Utils.getBottomBorderRow(playerY - 7))
+        || isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 23))
+        || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 23))
+        || isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 16))
+        || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 16));
+}
+
+function isBrickOnHead(playerX, playerY) {
+    return isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY - 25)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY - 23))
+        || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getTopBorderRow(playerY - 25)) && !isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY - 23))
+        || isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY - 24)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY - 8))
+        || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getTopBorderRow(playerY - 24)) && !isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY - 8));
+}
+
+var defx = 0;
+var defy = 0;
+function playerphysic(player) {
+    // --!-!-!=!=!= ULTIMATE 3d[Power]'s PHYSIX M0DEL =!=!=!-!-!--
+
+    defx = player.x;
+    defy = player.y;
+    player.velocityY = player.velocityY + (GRAVITY * 2.80); // --> 10
+
+    if (player.velocityY > -1 && player.velocityY < 0) {
+        player.velocityY /= 1.11; // progressive inertia
+    }
+    if (player.velocityY > 0 && player.velocityY < 5) {
+        player.velocityY *= 1.1; // progressive inertia
+    }
+
+    if (player.velocityX < -0.2 || player.velocityX > 0.2) {
+        if (player.keyLeft === player.keyRight) {
+            //No active key left/right pressed
+            if (isOnGround(player.x, player.y)) {
+                player.velocityX /= 1.14;    // ongroud stop speed.
+            }
+            else {
+                player.velocityX /= 1.025;   // inair stopspeed.
+            }
+        }
+    } else {
+        //completelly stop if velocityX less then 0.2
+        player.velocityX = 0;
+    }
+
+    player.x += player.velocityX;
+    player.y += player.velocityY;
+
+    // wall CLIPPING
+
+    if (player.crouch) {
+
+        //VERTICAL CHECNING
+        if (isBrickCrouchOnHead(player.x, player.y) && isOnGround(player.x, player.y)) {
+            player.velocityY = 0;
+            player.y = Math.floor(Math.round(player.y) / 16) * 16 + 8;
+        } else if (isBrickCrouchOnHead(player.x, player.y) && player.velocityY < 0) {      // fly up
+            player.velocityY = 0;
+            player.doublejumpCountdown = 3;
+            player.y = Math.floor(Math.round(player.y) / 16) * 16 + 8;
+        } else if (isOnGround(player.x, player.y) && player.velocityY > 0) {
+            player.velocityY = 0;
+            player.y = Math.floor(Math.round(player.y) / 16) * 16 + 8;
+        }
+
+        // HORZ CHECK
+        if (player.velocityX < 0) {    // check clip wallz.
+            if (isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(player.y - 8))
+                || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(player.y))
+                || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(player.y + 16))) {
+                player.x = Math.floor(defx / 32) * 32 + 9;
+                player.velocityX = 0;
+            }
+        }
+        if (player.velocityX > 0) {
+            if (isBrick(Utils.getRightBorderCol(defx + 10), Utils.getTopBorderRow(player.y - 8))
+                || isBrick(Utils.getRightBorderCol(defx + 10), Utils.getBottomBorderRow(player.y))
+                || isBrick(Utils.getRightBorderCol(defx + 10), Utils.getBottomBorderRow(player.y + 16))) {
+                player.x = Math.floor(defx / 32) * 32 + 22;
+                player.velocityX = 0;
+            }
+        }
+
+    } else {
+        if (player.velocityX < 0) {    // check clip wallz.
+            if (isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(defy - 16))
+                || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getBottomBorderRow(defy))
+                || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getBottomBorderRow(defy + 16))) {
+                player.x = Math.floor(defx / 32) * 32 + 9;
+                player.velocityX = 0;
+            }
+        }
+        if (player.velocityX > 0) {
+            if (isBrick(Utils.getRightBorderCol(defx + 10), Utils.getTopBorderRow(defy - 16))
+                || isBrick(Utils.getRightBorderCol(defx + 10), Utils.getBottomBorderRow(defy))
+                || isBrick(Utils.getRightBorderCol(defx + 10), Utils.getBottomBorderRow(defy + 16))) {
+                player.x = Math.floor(defx / 32) * 32 + 22;
+                player.velocityX = 0;
+            }
+        }
+    }
+
+    if (isBrickOnHead(player.x, player.y) && isOnGround(player.x, player.y)) {
+        player.velocityY = 0;
+        player.y = Math.floor(player.y / 16) * 16 + 8;
+    } else if (isBrickOnHead(player.x, player.y) && player.velocityY < 0) {      // fly up
+        player.velocityY = 0;
+        player.doublejumpCountdown = 3;
+        //player.y = Math.round(player.y / 16) * 16 + 8;
+    } else if (isOnGround(player.x, player.y) && (player.velocityY > 0)) {
+        player.velocityY = 0;
+        player.y = Math.floor(player.y / 16) * 16 + 8;
+    }
+
+    if (player.velocityX < -5)  player.velocityX = -5;
+    if (player.velocityX > 5)  player.velocityX = 5;
+    if (player.velocityY < -5) player.velocityY = -5;
+    if (player.velocityY > 5)  player.velocityY = 5;
+}
+
+var onGround = false;
+var brickOnHead = false;
+var brickCrouchOnHead = false;
+function playermove(player) {
+    
+    playerphysic(player);
+
+    if (player.doublejump > 0) {
+        player.doublejump--;
+    }
+    
+    onGround = isOnGround(player.x, player.y);
+    brickOnHead = isBrickOnHead(player.x, player.y);
+    brickCrouchOnHead = isBrickCrouchOnHead(player.x, player.y);
+
+    if (onGround) {
+        player.velocityY = 0;  // really nice thing :)
+    }
+
+    if (player.keyUp) {
+        // JUMP!
+        if (onGround && !brickOnHead) {
+            if (player.doublejumpCountdown > 4) {
+                // double jumpz
+                player.doublejumpCountdown = 14;
+                player.velocityY = -3;
+                player.crouch = false;
+            } else {
+                if (player.doublejumpCountdown === 0) {
+                    player.doublejumpCountdown = 14;
+                }
+                player.velocityY = -2.9;
+            }
+        }
+    }
+
+    // CROUCH
+    if (!player.keyUp && player.keyDown) {
+        if (isOnGround(player.x, player.y)) {
+            player.crouch = true;
+        }
+        else if (!brickCrouchOnHead) {
+            player.crouch = false;
+        }
+    } else {
+        player.crouch = false;
+    }
+
+    if (!brickCrouchOnHead && !onGround) {
+        player.crouch = false;
+    }
+
+    if (player.keyLeft !== player.keyRight) {
+        //One of the keys pressed - left or right, starting calculation
+        var maxSpeed = PLAYER_MAX_VELOCITY_X;
+        if (player.crouch) {
+            maxSpeed--;
+        }
+
+        //While moving left - speed should be negative value
+        var sign = player.keyLeft ? -1 : 1;
+
+        if (player.velocityX * sign < 0) {
+            //We are currently moving in opposite direction
+            //So we make a fast turn with 0.8 acceleration
+            player.velocityX += sign * 0.8;
+        }
+
+        var absVelocityX = Math.abs(player.velocityX);
+        if (absVelocityX < maxSpeed) {
+            //We are not at the maximum speed yet, continue acceleration
+            player.velocityX += sign * 0.35;
+        } else if (absVelocityX > maxSpeed) {
+            //Somehow we are out of the speed limit. Let's limit it!
+            player.velocityX = sign * maxSpeed;
+        }
+
+        //Finally change current direction flag
+        //player.dir = player.keyLeft ? 0 : 1;
+    }
+}
+
 function runPhysicsOneFrame(player) {
 
     //Стратегия расчёта физики следующая:
     //Используя текущие значения скорости (расчитанные в предыдущем кадре) сделаем перемещение игрока
     //Проверим столкновения со стенами, сделаем корректировку позиции игрока, если он провалился внутрь какой-нибудь стены
     //Перед обновлением позиции игрока запомним старые значения колонки
-    updatePlayerPosition(player);
-
-    //После корректировки позиции игрока, обновим кеширующие поля, показывающие упёрся ли игрок в какую-то стену или пол или потолок
-    //Благодаря этим кеширующим полям мы сможем обнулить скорости в следующем методе
-    updatePlayerBlockedDirections(player);
-
-    //Расчитаем новые значения скоростей на основе нажатых кнопок и констант с ускорениями (гравитация, трение и проч)
-    //(новые скорости будут применены только в следующем фрейме)
-    updatePlayerVelocity(player);
+    playermove(player);
 }
 
 var time = 0;

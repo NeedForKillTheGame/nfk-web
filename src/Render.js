@@ -43,6 +43,7 @@ export function renderMap() {
 }
 
 export function renderGame(player) {
+    /*
     localPlayerGraphics.x = player.left;
 
     if (player.crouch) {
@@ -50,6 +51,16 @@ export function renderGame(player) {
         localPlayerGraphics.y = player.bottom - BRICK_HEIGHT * 2 + 1;
     } else {
         localPlayerGraphics.y = player.bottom - BRICK_HEIGHT * 3 + 1;
+        localPlayerGraphics.height = 1;
+    }
+    */
+
+    localPlayerGraphics.x = player.x - 10;
+    if (player.crouch) {
+        localPlayerGraphics.y = player.y - 8;
+        localPlayerGraphics.height = 2 / 3;
+    } else {
+        localPlayerGraphics.y = player.y - 24;
         localPlayerGraphics.height = 1;
     }
     /*
