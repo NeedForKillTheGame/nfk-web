@@ -23,6 +23,11 @@ localPlayerGraphics.drawRect(0, 0, Constants.PLAYER_WIDTH, BRICK_HEIGHT * 3);
 localPlayerGraphics.endFill();
 stage.addChild(localPlayerGraphics);
 
+var localPlayerCenter = new PIXI.Graphics();
+localPlayerCenter.beginFill(0xFF0000);
+localPlayerCenter.drawRect(0, 0, 1, 1);
+localPlayerCenter.endFill();
+stage.addChild(localPlayerCenter);
 
 var dot1 = new PIXI.Graphics();
 stage.addChild(dot1);
@@ -34,7 +39,7 @@ export function renderMap() {
     for (var row = 0; row < Constants.MAP_ROWS; row++) {
         for (var col = 0; col < Constants.MAP_COLS; col++) {
             if (Map.isBrick(row, col)) {
-                mapGraphics.drawRect(col * BRICK_WIDTH, row * BRICK_HEIGHT, BRICK_WIDTH, BRICK_HEIGHT);
+                mapGraphics.drawRect(col * BRICK_WIDTH, row * BRICK_HEIGHT, BRICK_WIDTH-1, BRICK_HEIGHT - 1);
             }
         }
     }
@@ -63,6 +68,9 @@ export function renderGame(player) {
         localPlayerGraphics.y = player.y - 24;
         localPlayerGraphics.height = 1;
     }
+
+    localPlayerCenter.x = player.x;
+    localPlayerCenter.y = player.y;
     /*
     var mapBricks = Map.getMapBricks();
     if (mapBricks.length) {

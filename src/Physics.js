@@ -498,8 +498,8 @@ function isOnGround(playerX, playerY) {
 }
 
 function isBrickCrouchOnHead(playerX, playerY) {
-    return isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(playerX - 8, Utils.getBottomBorderRow(playerY - 7))
-        || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(playerX + 8, Utils.getBottomBorderRow(playerY - 7))
+    return isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getBottomBorderRow(playerY - 7))
+        || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(Utils.getLeftBorderCol(playerX + 8), Utils.getBottomBorderRow(playerY - 7))
         || isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 23))
         || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 23))
         || isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 16))
@@ -587,7 +587,7 @@ function playerphysic(player) {
             if (isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(defy - 16))
                 || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getBottomBorderRow(defy))
                 || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getBottomBorderRow(defy + 16))) {
-                player.x = Math.floor(defx / 32) * 32 + 9;
+                player.x = Math.floor(defx / 32) * 32 + 10;
                 player.velocityX = 0;
             }
         }
@@ -619,38 +619,35 @@ function playerphysic(player) {
     if (player.velocityY > 5)  player.velocityY = 5;
 }
 
-var onGround = false;
-var brickOnHead = false;
-var brickCrouchOnHead = false;
 function playermove(player) {
     
     playerphysic(player);
 
-    if (player.doublejump > 0) {
-        player.doublejump--;
+    if (player.doublejumpCountdown > 0) {
+        player.doublejumpCountdown--;
     }
     
-    onGround = isOnGround(player.x, player.y);
-    brickOnHead = isBrickOnHead(player.x, player.y);
-    brickCrouchOnHead = isBrickCrouchOnHead(player.x, player.y);
-
-    if (onGround) {
+    if (isOnGround(player.x, player.y)) {
         player.velocityY = 0;  // really nice thing :)
     }
 
     if (player.keyUp) {
         // JUMP!
-        if (onGround && !brickOnHead) {
+        if (isOnGround(player.x, player.y) && !isBrickOnHead(player.x, player.y)) {
             if (player.doublejumpCountdown > 4) {
                 // double jumpz
                 player.doublejumpCountdown = 14;
                 player.velocityY = -3;
                 player.crouch = false;
+                log('double jump ' + player.x + ' ' + player.y);
+                Sound.jump();
             } else {
                 if (player.doublejumpCountdown === 0) {
                     player.doublejumpCountdown = 14;
                 }
                 player.velocityY = -2.9;
+                log('jump ' + player.x + ' ' + player.y);
+                Sound.jump();
             }
         }
     }
@@ -660,14 +657,14 @@ function playermove(player) {
         if (isOnGround(player.x, player.y)) {
             player.crouch = true;
         }
-        else if (!brickCrouchOnHead) {
+        else if (!isBrickCrouchOnHead(player.x, player.y)) {
             player.crouch = false;
         }
     } else {
         player.crouch = false;
     }
 
-    if (!brickCrouchOnHead && !onGround) {
+    if (!isBrickCrouchOnHead(player.x, player.y) && !isOnGround(player.x, player.y)) {
         player.crouch = false;
     }
 
