@@ -304,7 +304,7 @@
 
 	        this.crouch = false; //current crouch state
 
-	        this.doubleJumpCountdown = 0;
+	        this.doublejumpCountdown = 0;
 
 	        this.cacheBottomRow = 0;
 	        this.cacheTopRow = 0;
@@ -973,15 +973,15 @@
 	}
 
 	function isOnGround(playerX, playerY) {
-	    return isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY + 25)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY + 23)) || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY + 25)) && !isBrick(Utils.getLeftBorderCol(playerX + 9), Utils.getTopBorderRow(playerY + 23)) || isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY + 24)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY + 8)) || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY + 24)) && !isBrick(Utils.getLeftBorderCol(playerX + 9), Utils.getTopBorderRow(playerY + 8));
+	    return isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY + 25)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY + 23)) || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY + 25)) && !isBrick(Utils.getLeftBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY + 23)) || isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY + 24)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY + 8)) || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY + 24)) && !isBrick(Utils.getLeftBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY + 8));
 	}
 
 	function isBrickCrouchOnHead(playerX, playerY) {
-	    return isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getBottomBorderRow(playerY - 7)) || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(Utils.getLeftBorderCol(playerX + 8), Utils.getBottomBorderRow(playerY - 7)) || isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 23)) || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 23)) || isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 16)) || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 16));
+	    return isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 7)) || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 9)) && !isBrick(Utils.getLeftBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 7)) || isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 23)) || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 23)) || isBrick(Utils.getLeftBorderCol(playerX - 8), Utils.getTopBorderRow(playerY - 16)) || isBrick(Utils.getRightBorderCol(playerX + 8), Utils.getTopBorderRow(playerY - 16));
 	}
 
 	function isBrickOnHead(playerX, playerY) {
-	    return isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY - 25)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY - 23)) || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getTopBorderRow(playerY - 25)) && !isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY - 23)) || isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY - 24)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getBottomBorderRow(playerY - 8)) || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getTopBorderRow(playerY - 24)) && !isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getBottomBorderRow(playerY - 8));
+	    return isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY - 25)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY - 23)) || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getTopBorderRow(playerY - 25)) && !isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getTopBorderRow(playerY - 23)) || isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY - 24)) && !isBrick(Utils.getLeftBorderCol(playerX - 9), Utils.getTopBorderRow(playerY - 8)) || isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getTopBorderRow(playerY - 24)) && !isBrick(Utils.getRightBorderCol(playerX + 9), Utils.getTopBorderRow(playerY - 8));
 	}
 
 	var defx = 0;
@@ -1038,13 +1038,13 @@
 	        // HORZ CHECK
 	        if (player.velocityX < 0) {
 	            // check clip wallz.
-	            if (isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(player.y - 8)) || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(player.y)) || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(player.y + 16))) {
-	                player.x = Math.floor(defx / 32) * 32 + 9;
+	            if (isBrick(Utils.getLeftBorderCol(defx - 11), Utils.getTopBorderRow(player.y - 8)) || isBrick(Utils.getLeftBorderCol(defx - 11), Utils.getTopBorderRow(player.y)) || isBrick(Utils.getLeftBorderCol(defx - 11), Utils.getTopBorderRow(player.y + 16))) {
+	                player.x = Math.floor(defx / 32) * 32 + 10;
 	                player.velocityX = 0;
 	            }
 	        }
 	        if (player.velocityX > 0) {
-	            if (isBrick(Utils.getRightBorderCol(defx + 10), Utils.getTopBorderRow(player.y - 8)) || isBrick(Utils.getRightBorderCol(defx + 10), Utils.getBottomBorderRow(player.y)) || isBrick(Utils.getRightBorderCol(defx + 10), Utils.getBottomBorderRow(player.y + 16))) {
+	            if (isBrick(Utils.getRightBorderCol(defx + 11), Utils.getTopBorderRow(player.y - 8)) || isBrick(Utils.getRightBorderCol(defx + 11), Utils.getBottomBorderRow(player.y)) || isBrick(Utils.getRightBorderCol(defx + 11), Utils.getBottomBorderRow(player.y + 16))) {
 	                player.x = Math.floor(defx / 32) * 32 + 22;
 	                player.velocityX = 0;
 	            }
@@ -1052,13 +1052,13 @@
 	    } else {
 	        if (player.velocityX < 0) {
 	            // check clip wallz.
-	            if (isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getTopBorderRow(defy - 16)) || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getBottomBorderRow(defy)) || isBrick(Utils.getLeftBorderCol(defx - 10), Utils.getBottomBorderRow(defy + 16))) {
+	            if (isBrick(Utils.getLeftBorderCol(defx - 11), Utils.getTopBorderRow(defy - 16)) || isBrick(Utils.getLeftBorderCol(defx - 11), Utils.getTopBorderRow(defy)) || isBrick(Utils.getLeftBorderCol(defx - 11), Utils.getTopBorderRow(defy + 16))) {
 	                player.x = Math.floor(defx / 32) * 32 + 10;
 	                player.velocityX = 0;
 	            }
 	        }
 	        if (player.velocityX > 0) {
-	            if (isBrick(Utils.getRightBorderCol(defx + 10), Utils.getTopBorderRow(defy - 16)) || isBrick(Utils.getRightBorderCol(defx + 10), Utils.getBottomBorderRow(defy)) || isBrick(Utils.getRightBorderCol(defx + 10), Utils.getBottomBorderRow(defy + 16))) {
+	            if (isBrick(Utils.getRightBorderCol(defx + 11), Utils.getTopBorderRow(defy - 16)) || isBrick(Utils.getRightBorderCol(defx + 11), Utils.getTopBorderRow(defy)) || isBrick(Utils.getRightBorderCol(defx + 11), Utils.getTopBorderRow(defy + 16))) {
 	                player.x = Math.floor(defx / 32) * 32 + 22;
 	                player.velocityX = 0;
 	            }
@@ -1109,10 +1109,10 @@
 	            } else {
 	                if (player.doublejumpCountdown === 0) {
 	                    player.doublejumpCountdown = 14;
+	                    Sound.jump();
 	                }
 	                player.velocityY = -2.9;
 	                log("jump " + player.x + " " + player.y);
-	                Sound.jump();
 	            }
 	        }
 	    }
@@ -1125,7 +1125,11 @@
 	            player.crouch = false;
 	        }
 	    } else {
-	        player.crouch = false;
+	        if (isOnGround(player.x, player.y) && isBrickCrouchOnHead(player.x, player.y)) {
+	            player.crouch = true;
+	        } else {
+	            player.crouch = false;
+	        }
 	    }
 
 	    if (!isBrickCrouchOnHead(player.x, player.y) && !isOnGround(player.x, player.y)) {
