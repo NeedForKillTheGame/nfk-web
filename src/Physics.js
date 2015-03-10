@@ -119,7 +119,7 @@ function updatePlayerPosition(player) {
     if (player.velocityY !== 0) {
         if (player.velocityX !== 0 || player.keyLeft != player.keyRight) {
             if (player.velocityX === 0) {
-                tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - (player.keyUp ? 8 : 4));
+                tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - 4);
             } else {
                 tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - 8);
             }
@@ -346,15 +346,12 @@ function isEdgeBrickJumpPossible(player) {
 }
 
 function makeJump(player, fromEdge) {
-    if (false && player.doubleJumpCountdown >= 6) {
-        return false;
-    }
     if (player.doubleJumpCountdown > 0) {
-        player.velocityY = -3;
+        player.velocityY = -3.05;
         player.doubleJumpCountdown = 0;
         log('double jump ' + player.left + 'x' + player.bottom + ' ' + (fromEdge ? ' from edge' : ''));
     } else {
-        player.velocityY = -2.9;
+        player.velocityY = -3;
         player.doubleJumpCountdown = 8;
         log('jump ' + player.left + 'x' + player.bottom + ' ' + (fromEdge ? ' from edge' : ''));
     }

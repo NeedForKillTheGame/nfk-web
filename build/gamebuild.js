@@ -110,7 +110,7 @@
 
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
-	var MapEditor = _interopRequire(__webpack_require__(9));
+	var MapEditor = _interopRequire(__webpack_require__(8));
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
@@ -372,7 +372,7 @@
 	exports.renderMap = renderMap;
 	exports.renderGame = renderGame;
 
-	var PIXI = _interopRequire(__webpack_require__(8));
+	var PIXI = _interopRequire(__webpack_require__(11));
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
@@ -477,7 +477,7 @@
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
-	var Sound = _interopRequire(__webpack_require__(11));
+	var Sound = _interopRequire(__webpack_require__(9));
 
 	var Map = _interopRequire(__webpack_require__(2));
 
@@ -596,7 +596,7 @@
 	    if (player.velocityY !== 0) {
 	        if (player.velocityX !== 0 || player.keyLeft != player.keyRight) {
 	            if (player.velocityX === 0) {
-	                tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - (player.keyUp ? 8 : 4));
+	                tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - 4);
 	            } else {
 	                tmpNewBottomBorderRowMinus4 = Utils.getBottomBorderRow(tmpNewBottom - 8);
 	            }
@@ -811,15 +811,12 @@
 	}
 
 	function makeJump(player, fromEdge) {
-	    if (false) {
-	        return false;
-	    }
 	    if (player.doubleJumpCountdown > 0) {
-	        player.velocityY = -3;
+	        player.velocityY = -3.05;
 	        player.doubleJumpCountdown = 0;
 	        log("double jump " + player.left + "x" + player.bottom + " " + (fromEdge ? " from edge" : ""));
 	    } else {
-	        player.velocityY = -2.9;
+	        player.velocityY = -3;
 	        player.doubleJumpCountdown = 8;
 	        log("jump " + player.left + "x" + player.bottom + " " + (fromEdge ? " from edge" : ""));
 	    }
@@ -845,6 +842,9 @@
 	            if (!player.cacheBlockedTop) {
 	                //Можно прыгать, т.к. над головой ничего не мешает!
 	                makeJump(player);
+	            } else {
+	                //Над головой заблокировано, прыгнуть нельзя, вниз тоже упасть нельзя - обнуляем скорость
+	                player.velocityY = 0;
 	            }
 	        } else {
 
@@ -1023,12 +1023,6 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = PIXI;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
 	"use strict";
 
 	var mapEditorForm = document.getElementById("mapeditor");
@@ -1049,6 +1043,36 @@
 	};
 
 	module.exports = MapEditor;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+	var Howl = _interopRequire(__webpack_require__(12));
+
+	var jump = new Howl({
+	    urls: ["sounds/jump1.wav"]
+	});
+
+	module.exports = {
+	    jump: (function (_jump) {
+	        var _jumpWrapper = function jump() {
+	            return _jump.apply(this, arguments);
+	        };
+
+	        _jumpWrapper.toString = function () {
+	            return _jump.toString();
+	        };
+
+	        return _jumpWrapper;
+	    })(function () {
+	        jump.play();
+	    })
+	};
 
 /***/ },
 /* 10 */
@@ -1153,31 +1177,7 @@
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-
-	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-	var Howl = _interopRequire(__webpack_require__(12));
-
-	var jump = new Howl({
-	    urls: ["sounds/jump1.wav"]
-	});
-
-	module.exports = {
-	    jump: (function (_jump) {
-	        var _jumpWrapper = function jump() {
-	            return _jump.apply(this, arguments);
-	        };
-
-	        _jumpWrapper.toString = function () {
-	            return _jump.toString();
-	        };
-
-	        return _jumpWrapper;
-	    })(function () {
-	        jump.play();
-	    })
-	};
+	module.exports = PIXI;
 
 /***/ },
 /* 12 */
