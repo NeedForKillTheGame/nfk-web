@@ -1,9 +1,11 @@
+import Map from "./Map.js";
 import Utils from "./Utils.js";
 import Constants from "./Constants.js";
 
-const PLAYER_WIDTH = Constants.PLAYER_WIDTH;
+var isBrick = Map.isBrick;
 
-export default class Player {
+export default
+class Player {
     constructor() {
 
         this.x = 0.0;
@@ -22,43 +24,71 @@ export default class Player {
 
         this.doublejumpCountdown = 0;
 
-        this.cacheBottomRow = 0;
-        this.cacheTopRow = 0;
-        this.cacheLeftCol = 0;
-        this.cacheRightCol = 0;
-
-        //Кеширующий флаг - находится ли игрок по вертикали ровно на каком-то брике
-        //Проверить это просто: координата игрока по вертикали+1 целочисленно делится на высоту бриков
-        //((player.bottom + 1) % BRICK_HEIGHT) === 0
-        this.cacheJustOnBrick = false;
-
-        this.cacheBlockedBottom = false;
-        this.cacheBlockedTop = false;
-        this.cacheBlockedLeft = false;
-        this.cacheBlockedRight = false;
+        this.cacheOnGround = false;
+        this.cacheBrickOnHead = false;
+        this.cacheBrickCrouchOnHead = false;
     }
 
-    setLeft(newLeft) {
-        if (newLeft !== this.left) {
-            this.left = newLeft;
-            this.cacheLeftCol = Utils.getLeftBorderCol(newLeft);
-            this.cacheRightCol = Utils.getRightBorderCol(newLeft + PLAYER_WIDTH);
+    setX(newX) {
+        if (newX != this.x) {
+            this.x = newX;
+            this.updateCaches();
         }
     }
 
-    setBottom(newBottom) {
-        if (newBottom !== this.bottom) {
-            this.bottom = newBottom;
-            this.cacheJustOnBrick = Utils.getPlayerJustOnBrick(newBottom);
-            this.cacheBottomRow = Utils.getBottomBorderRow(newBottom);
-            this.cacheTopRow = Utils.getPlayerTopRow(newBottom, this.crouch);
+    setY(newY) {
+        if (newY != this.y) {
+            this.y = newY;
+            this.updateCaches();
         }
     }
 
-    setCrouch(newCrouch) {
-        if (newCrouch !== this.crouch) {
-            this.crouch = newCrouch;
-            this.cacheTopRow = Utils.getPlayerTopRow(this.bottom, newCrouch);
+    setXY(newX, newY) {
+        if (newX !== this.x || newY !== this.y) {
+            this.x = newX;
+            this.y = newY;
+            this.updateCaches();
         }
+    }
+
+    updateCaches() {
+        this.updateCacheOnGround();
+        this.updateCacheBrickOnHead();
+        this.updateCacheBrickCrouchOnHead();
+    }
+
+    updateCacheOnGround() {
+        this.cacheOnGround = isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 25)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 23))
+        || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 25)) && !isBrick(Utils.getLeftBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 23))
+        || isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 24)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 8))
+        || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 24)) && !isBrick(Utils.getLeftBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 8));
+    }
+
+    updateCacheBrickCrouchOnHead() {
+        this.cacheBrickCrouchOnHead = isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 9)) && !isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 7))
+        || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 9)) && !isBrick(Utils.getLeftBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 7))
+        || isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 23))
+        || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 23))
+        || isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 16))
+        || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 16));
+    }
+
+    updateCacheBrickOnHead() {
+        this.cacheBrickOnHead = isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 25)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 23))
+        || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 25)) && !isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 23))
+        || isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 24)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 8))
+        || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 24)) && !isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 8));
+    }
+
+    isOnGround() {
+        return this.cacheOnGround;
+    }
+
+    isBrickOnHead() {
+        return this.cacheBrickOnHead;
+    }
+
+    isBrickCrouchOnHead() {
+        return this.cacheBrickCrouchOnHead;
     }
 }

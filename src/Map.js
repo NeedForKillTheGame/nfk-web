@@ -1,17 +1,26 @@
 import MapEditor from "./MapEditor.js";
 import Constants from "./Constants.js";
 
+var rows = 0;
+var cols = 0;
 var bricks = [];
 var respawns = [];
 
 function parseMapText(mapText) {
-    var lines = mapText.split("\n");
+    var lines = mapText.replace("\r", '').split("\n");
+    rows = lines.length;
+    //Determine max cols trough all rows
+    for (row = 0; row < rows; row++) {
+        if (lines[row] !== undefined && cols < lines[row].length) {
+            cols = lines[row].length;
+        }
+    }
     bricks = [];
     var row, col, char;
-    for (row = 0; row < Constants.MAP_ROWS; row++) {
+    for (row = 0; row < rows; row++) {
         bricks[row] = [];
-        for (col = 0; col < Constants.MAP_COLS; col++) {
-            if (typeof lines[row] !== "undefined" || typeof lines[row][col] !== "undefined") {
+        for (col = 0; col < cols; col++) {
+            if (lines[row] !== undefined || lines[row][col] !== undefined) {
                 char = lines[row][col];
             } else {
                 char = ' ';
@@ -51,12 +60,16 @@ export default {
         parseMapText(mapText);
     },
 
-    isBrick(row, col) {
+    isBrick(col, row) {
         return bricks[row][col];
     },
 
-    getMapBricks() {
-        return bricks;
+    getRows() {
+        return rows;
+    },
+
+    getCols() {
+        return cols;
     },
 
     getRandomRespawn() {

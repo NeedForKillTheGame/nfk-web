@@ -13,19 +13,19 @@ gameEl.appendChild(renderer.view);
 var stage = new PIXI.Stage(0x000000);
 var mapGraphics = new PIXI.Graphics();
 mapGraphics.beginFill(0x999999);
-mapGraphics.lineStyle(1, 0xBBBBBB);
+mapGraphics.lineStyle(1, 0xAAAAAA);
 stage.addChild(mapGraphics);
 
 var localPlayerGraphics = new PIXI.Graphics();
 localPlayerGraphics.beginFill(0xAAAAFF);
 //localPlayerGraphics.lineStyle(1, 0xFFFFFF);
-localPlayerGraphics.drawRect(0, 0, Constants.PLAYER_WIDTH, BRICK_HEIGHT * 3);
+localPlayerGraphics.drawRect(0, 0, 20, BRICK_HEIGHT * 3);
 localPlayerGraphics.endFill();
 stage.addChild(localPlayerGraphics);
 
 var localPlayerCenter = new PIXI.Graphics();
-localPlayerCenter.beginFill(0xFF0000);
-localPlayerCenter.drawRect(0, 0, 1, 1);
+localPlayerCenter.beginFill(0x0000AA);
+localPlayerCenter.drawRect(0, 0, 2, 2);
 localPlayerCenter.endFill();
 stage.addChild(localPlayerCenter);
 
@@ -36,10 +36,10 @@ var dot2 = new PIXI.Graphics();
 stage.addChild(dot2);
 
 export function renderMap() {
-    for (var row = 0; row < Constants.MAP_ROWS; row++) {
-        for (var col = 0; col < Constants.MAP_COLS; col++) {
-            if (Map.isBrick(row, col)) {
-                mapGraphics.drawRect(col * BRICK_WIDTH, row * BRICK_HEIGHT, BRICK_WIDTH-1, BRICK_HEIGHT - 1);
+    for (var row = 0; row < Map.getRows(); row++) {
+        for (var col = 0; col < Map.getCols(); col++) {
+            if (Map.isBrick(col, row)) {
+                mapGraphics.drawRect(col * BRICK_WIDTH, row * BRICK_HEIGHT, BRICK_WIDTH - 1, BRICK_HEIGHT - 1);
             }
         }
     }
@@ -48,17 +48,6 @@ export function renderMap() {
 }
 
 export function renderGame(player) {
-    /*
-    localPlayerGraphics.x = player.left;
-
-    if (player.crouch) {
-        localPlayerGraphics.height = 2 / 3;
-        localPlayerGraphics.y = player.bottom - BRICK_HEIGHT * 2 + 1;
-    } else {
-        localPlayerGraphics.y = player.bottom - BRICK_HEIGHT * 3 + 1;
-        localPlayerGraphics.height = 1;
-    }
-    */
 
     localPlayerGraphics.x = player.x - 10;
     if (player.crouch) {
@@ -69,41 +58,8 @@ export function renderGame(player) {
         localPlayerGraphics.height = 1;
     }
 
-    localPlayerCenter.x = player.x;
-    localPlayerCenter.y = player.y;
-    /*
-    var mapBricks = Map.getMapBricks();
-    if (mapBricks.length) {
+    localPlayerCenter.x = player.x-1;
+    localPlayerCenter.y = player.y-1;
 
-        var z = 9;
-        var y = localPlayerGraphics.y + 23;
-        var x = localPlayerGraphics.x + 10;
-
-        dot1.x = Math.floor(x - z);
-        dot1.y = Math.floor(y + 24);
-        dot2.x = Math.floor(x - z);
-        dot2.y = Math.floor(y + 8);
-        if (mapBricks[Math.floor(dot1.y / 16)][Math.floor(dot1.x / 32)]
-        && !mapBricks[Math.floor(dot2.y / 16)][Math.floor(dot2.x / 32)]) {
-            dot1.beginFill(0x00FF00);
-            dot1.drawRect(0, 0, 1, 1);
-            dot2.beginFill(0x00FF00);
-            dot2.drawRect(0, 0, 1, 1);
-        } else {
-            dot1.beginFill(0xFF0000);
-            dot1.drawRect(0, 0, 1, 1);
-            dot2.beginFill(0xFF0000);
-            dot2.drawRect(0, 0, 1, 1);
-        }
-
-         if (bbb[ trunc(x-z) div 32, trunc(y+25) div 16].block = true) and
-         (bbb[ trunc(x-z) div 32, trunc(y+23) div 16].block = false) then begin result := true; exit; end;
-         if (bbb[ trunc(x+z) div 32, trunc(y+25) div 16].block = true) and
-         (bbb[ trunc(x+z) div 32, trunc(y+23) div 16].block = false) then begin result := true; exit; end;
-         if (bbb[ trunc(x-z) div 32, trunc(y+24) div 16].block = true) and
-         (bbb[ trunc(x-z) div 32, trunc(y+8)  div 16].block = false) then begin result := true; exit; end;
-         if (bbb[ trunc(x+z) div 32, trunc(y+24) div 16].block = true) and
-         (bbb[ trunc(x+z) div 32, trunc(y+8)  div 16].block = false) then begin result := true; exit; end;
-    }*/
     renderer.render(stage);
 }
