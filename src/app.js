@@ -7,7 +7,7 @@ import {updateGame} from "./Physics.js";
 import Stats from "Stats";
 
 var stats = new Stats();
-document.getElementById('fpsstats').appendChild(stats.domElement);
+document.getElementById('fps').appendChild(stats.domElement);
 
 Map.loadFromQuery();
 renderMap();

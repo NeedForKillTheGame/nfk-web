@@ -27,6 +27,8 @@ class Player {
         this.cacheOnGround = false;
         this.cacheBrickOnHead = false;
         this.cacheBrickCrouchOnHead = false;
+
+        this.speedJump = 0;
     }
 
     setX(newX) {

@@ -13,7 +13,7 @@ var defx = 0;
 var defy = 0;
 
 var tmpCol = 0;
-
+var tmpSpeedX = 0;
 function playerphysic(player) {
     // --!-!-!=!=!= ULTIMATE 3d[Power]'s PHYSIX M0DEL =!=!=!-!-!--
 
@@ -43,7 +43,10 @@ function playerphysic(player) {
         player.velocityX = 0;
     }
 
-    player.setXY(player.x + player.velocityX, player.y + player.velocityY);
+    if (player.velocityX !== 0) {
+        tmpSpeedX = (player.velocityX < 0 ? -1 : 1) * velocityXSpeedJump[player.speedJump];
+    }
+    player.setXY(player.x + player.velocityX + tmpSpeedX, player.y + player.velocityY);
 
     // wall CLIPPING
     if (player.crouch) {
@@ -65,6 +68,7 @@ function playerphysic(player) {
         || isBrick(tmpCol, Utils.getTopBorderRow(player.y + 16))) {
         player.setX(Math.floor(defx / 32) * 32 + (player.velocityX < 0 ? 10 : 22));
         player.velocityX = 0;
+        player.speedJump = 0;
     }
 
     //Vertical check again after x change
@@ -85,6 +89,10 @@ function playerphysic(player) {
 
 var tmpAbsMaxVelocityX = 0;
 var tmpSign = 0;
+var velocityYSpeedJump = [0, 0, 0, 0.4, 0.8, 1.0, 1.2, 1.4];
+var velocityXSpeedJump = [0, 0, 0.33, 0.8, 1.1, 1.4, 1.8, 2.2];
+var tmpLastWasJump = false;
+var tmpCurJump = false;
 function playermove(player) {
 
     playerphysic(player);
@@ -97,9 +105,12 @@ function playermove(player) {
         player.velocityY = 0;  // really nice thing :)
     }
 
+    tmpCurJump = false;
+
     if (player.keyUp) {
         // JUMP!
         if (player.isOnGround() && !player.isBrickOnHead()) {
+
             if (player.doublejumpCountdown > 4) {
                 // double jumpz
                 player.doublejumpCountdown = 14;
@@ -115,11 +126,29 @@ function playermove(player) {
                 player.velocityY = -2.9;
                 log('jump ' + player.x + ' ' + player.y);
             }
+
+            player.velocityY += velocityYSpeedJump[player.speedJump];
+
+            if (player.speedJump < 7 && !tmpLastWasJump && player.keyLeft !== player.keyRight) {
+                player.speedJump++;
+                log('speedjump ' + player.speedJump);
+            }
+
+            tmpCurJump = true;
         }
+    } else {
+        if (player.isOnGround()) {
+            player.speedJump = 0;
+        }
+    }
+
+    if (player.keyLeft === player.keyRight) {
+        player.speedJump = 0;
     }
 
     // CROUCH
     if (!player.keyUp && player.keyDown) {
+        player.speedJump = 0;
         if (player.isOnGround()) {
             player.crouch = true;
         }
@@ -129,6 +158,8 @@ function playermove(player) {
     } else {
         player.crouch = player.isOnGround() && player.isBrickCrouchOnHead();
     }
+
+    tmpLastWasJump = tmpCurJump;
 
     if (player.keyLeft !== player.keyRight) {
         //One of the keys pressed - left or right, starting calculation
