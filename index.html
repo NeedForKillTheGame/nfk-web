@@ -16,7 +16,7 @@
             <form id="mapeditor" style="display: none" action=".">
                 <textarea id="maptext" name="maptext" style="width: 580px; height: 480px; font-family: courier, monospace; font-size: 12px; line-height: 16px; letter-spacing:20px; font-weight: bold"></textarea>
                 <br><input type="submit" value="Apply map">
-                <a href="#" id="short-link" style="margin-left: 15px; border-bottom: 1px dashed; text-decoration: none">Create short link</a> <input id="shorturl" style="width: 100%">
+                <a href="#" id="short-link" style="margin-left: 15px; border-bottom: 1px dashed; text-decoration: none; display: none">Create short link</a> <input id="shorturl" style="width: 100%">
             </form>
 
 
@@ -26,13 +26,17 @@
                 <li><a href="?mapfile=t4">t4</a></li>
             </ul>
 
-            <textarea id="log" style="width: 300px; height: 200px"></textarea>
+            <textarea id="log" style="width: 600px; height: 200px"></textarea>
         </td>
     </tr>
 </table>
 <div id="fps"></div>
 <textarea style="word-wrap: break-word; width: 640px; height: 300px">
 CHANGELOG
+2015-03-13 Распрыг больше не сбрасывается, если отпустить кнопку вбок; распрыг не увиличивается при double jump (но сохраняется), при этом непосредсвенно на высоту double jump номер прыжка при распрыге не влияет; высота double jump зависит от горизонтальной скорости (если на скорости влететь в уголок и сделать double jump, то высота будет больше)
+
+2015-03-12 Распрыг сбрасывается, если отпустить кнопку вверх или вбок; распрыг не увиличивается при double jump (но сохраняется); tripple jump - ещё выше чем double jump; фикс автоматического приседания
+
 2015-03-11 Добавлена распрыжка по значениям скоростей дизасмблированным бубликом; автоматическая сокращалка url для собственных карт
 
 2015-03-10 Возврат к класическому коду физики портированному из Delphi исходников

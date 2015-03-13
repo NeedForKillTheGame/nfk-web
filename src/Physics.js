@@ -8,11 +8,13 @@ const PLAYER_MAX_VELOCITY_X = Constants.PLAYER_MAX_VELOCITY_X;
 
 //Вынесем указатель на функцию в отедельную переменную, чтобы не писать везде Map.isBrick(...)
 var isBrick = Map.isBrick;
+var trunc = Utils.trunc;
 
 var defx = 0;
 var defy = 0;
 
 var tmpCol = 0;
+var tmpY = 0;
 var tmpSpeedX = 0;
 function playerphysic(player) {
     // --!-!-!=!=!= ULTIMATE 3d[Power]'s PHYSIX M0DEL =!=!=!-!-!--
@@ -45,6 +47,8 @@ function playerphysic(player) {
 
     if (player.velocityX !== 0) {
         tmpSpeedX = (player.velocityX < 0 ? -1 : 1) * velocityXSpeedJump[player.speedJump];
+    } else {
+        tmpSpeedX = 0;
     }
     player.setXY(player.x + player.velocityX + tmpSpeedX, player.y + player.velocityY);
 
@@ -53,28 +57,34 @@ function playerphysic(player) {
         //VERTICAL CHECNING WHEN CROUCH FIRST
         if (player.isOnGround() && (player.isBrickCrouchOnHead() || player.velocityY > 0)) {
             player.velocityY = 0;
-            player.setY(Math.floor(Math.round(player.y) / 16) * 16 + 8);
+            player.setY(trunc(Math.round(player.y) / 16) * 16 + 8);
         } else if (player.isBrickCrouchOnHead() && player.velocityY < 0) {      // fly up
             player.velocityY = 0;
             player.doublejumpCountdown = 3;
-            player.setY(Math.floor(Math.round(player.y) / 16) * 16 + 8);
+            player.setY(trunc(Math.round(player.y) / 16) * 16 + 8);
         }
     }
 
     // HORZ CHECK
-    tmpCol = player.velocityX < 0 ? Utils.getLeftBorderCol(defx - 10) : Utils.getRightBorderCol(defx + 10);
-    if (isBrick(tmpCol, Utils.getTopBorderRow(player.y - (player.crouch ? 8 : 16)))
-        || isBrick(tmpCol, Utils.getTopBorderRow(player.y))
-        || isBrick(tmpCol, Utils.getTopBorderRow(player.y + 16))) {
-        player.setX(Math.floor(defx / 32) * 32 + (player.velocityX < 0 ? 10 : 22));
+    tmpCol = trunc(Math.round(defx + (player.velocityX < 0 ? -11 : 11)) / 32);
+    tmpY = player.crouch ? player.y : defy;
+    if (
+        isBrick(tmpCol, trunc(Math.round(tmpY - (player.crouch ? 8 : 16)) / 16))
+        || isBrick(tmpCol, trunc(Math.round(tmpY) / 16))
+        || isBrick(tmpCol, trunc(Math.round(tmpY + 16) / 16))
+    ) {
+        player.setX(trunc(defx / 32) * 32 + (player.velocityX < 0 ? 9 : 22));
         player.velocityX = 0;
-        player.speedJump = 0;
+        if (player.speedJump > 0) {
+            player.speedJump = 0;
+            log('speedjump 0 - wall', player);
+        }
     }
 
     //Vertical check again after x change
     if (player.isOnGround() && (player.isBrickOnHead() || player.velocityY > 0)) {
         player.velocityY = 0;
-        player.setY(Math.floor(player.y / 16) * 16 + 8);
+        player.setY(trunc(Math.round(player.y) / 16) * 16 + 8);
     } else if (player.isBrickOnHead() && player.velocityY < 0) {
         // fly up
         player.velocityY = 0;
@@ -89,10 +99,12 @@ function playerphysic(player) {
 
 var tmpAbsMaxVelocityX = 0;
 var tmpSign = 0;
-var velocityYSpeedJump = [0, 0, 0, 0.4, 0.8, 1.0, 1.2, 1.4];
-var velocityXSpeedJump = [0, 0, 0.33, 0.8, 1.1, 1.4, 1.8, 2.2];
+var velocityYSpeedJump = [0, 0, 0.4, 0.8, 1.0, 1.2, 1.4];
+var velocityXSpeedJump = [0, 0.33, 0.8, 1.1, 1.4, 1.8, 2.2];
 var tmpLastWasJump = false;
 var tmpCurJump = false;
+var speedJumpDirection = 0;
+var tmpLastKeyUp = false;
 function playermove(player) {
 
     playerphysic(player);
@@ -107,6 +119,17 @@ function playermove(player) {
 
     tmpCurJump = false;
 
+    if (player.speedJump > 0
+        && (player.keyUp !== tmpLastKeyUp
+            ||player.keyLeft && speedJumpDirection !== -1
+            ||player.keyRight && speedJumpDirection !== 1)
+    ) {
+        player.speedJump = 0;
+        log('speedjump 0 - change keys', player);
+    }
+
+    tmpLastKeyUp = player.keyUp;
+
     if (player.keyUp) {
         // JUMP!
         if (player.isOnGround() && !player.isBrickOnHead()) {
@@ -115,40 +138,47 @@ function playermove(player) {
                 // double jumpz
                 player.doublejumpCountdown = 14;
                 player.velocityY = -3;
+                if (player.velocityX > 2) {
+                    player.velocityY -= Math.abs(player.velocityX) - 2;
+                    log('double jump higher', player);
+                } else {
+                    log('double jump standart', player);
+                }
                 player.crouch = false;
-                log('double jump ' + player.x + ' ' + player.y);
                 Sound.jump();
+
+                //player.velocityY += velocityYSpeedJump[player.speedJump];
             } else {
                 if (player.doublejumpCountdown === 0) {
                     player.doublejumpCountdown = 14;
                     Sound.jump();
                 }
                 player.velocityY = -2.9;
-                log('jump ' + player.x + ' ' + player.y);
-            }
+                player.velocityY += velocityYSpeedJump[player.speedJump];
 
-            player.velocityY += velocityYSpeedJump[player.speedJump];
+                if (player.speedJump > 0) {
+                    log('speedjump ' + player.speedJump, player);
+                } else {
+                    log('jump', player);
+                }
 
-            if (player.speedJump < 7 && !tmpLastWasJump && player.keyLeft !== player.keyRight) {
-                player.speedJump++;
-                log('speedjump ' + player.speedJump);
+                if (player.speedJump < 6 && !tmpLastWasJump && player.keyLeft !== player.keyRight) {
+                    speedJumpDirection = player.keyLeft ? -1: 1;
+                    player.speedJump++;
+                }
             }
 
             tmpCurJump = true;
         }
     } else {
-        if (player.isOnGround()) {
+        if (player.isOnGround() && player.speedJump > 0) {
             player.speedJump = 0;
+            log('speedjump 0 - on ground', player);
         }
-    }
-
-    if (player.keyLeft === player.keyRight) {
-        player.speedJump = 0;
     }
 
     // CROUCH
     if (!player.keyUp && player.keyDown) {
-        player.speedJump = 0;
         if (player.isOnGround()) {
             player.crouch = true;
         }
@@ -217,7 +247,7 @@ export function updateGame(player, timestamp) {
     tmpDeltaTime = timestamp - time;
     //Назовём 20милисекундный интервал "физическим фреймом"
     //Посчитаем, сколько физических фреймов прошло за delltaTime?
-    tmpDeltaPhysicFrames = Math.floor(tmpDeltaTime / 16);
+    tmpDeltaPhysicFrames = trunc(tmpDeltaTime / 16);
     if (tmpDeltaPhysicFrames === 0) {
         //Ещё не накопилось достаточно времени, чтобы начёт расчёт хотя бы одного физического фрейма!
         //Прерываем выполнение функции
@@ -242,7 +272,16 @@ export function updateGame(player, timestamp) {
 
 var logLine = 0;
 var textarea = document.getElementById('log');
-function log(text) {
+function log(text, player) {
     logLine++;
-    textarea.innerHTML = logLine + ' ' + text + "\n" + textarea.innerHTML.substring(0, 1000);
+    tmpSpeedX = player.velocityX + (player.velocityX < 0 ? -1 : 1) * velocityXSpeedJump[player.speedJump];
+    textarea.value = logLine
+    + ' '
+    + text
+    + ' (x: ' + trunc(player.x) + '.' + Math.abs(trunc(player.x * 10) - trunc(player.x) * 10)
+    + ', y: ' + trunc(player.y) + '.' + Math.abs(trunc(player.y * 10) - trunc(player.y) * 10)
+    + ', dx: ' + trunc(tmpSpeedX) + '.' + Math.abs(trunc(tmpSpeedX * 10) - trunc(tmpSpeedX) * 10)
+    + ', dy: ' + trunc(player.velocityY) + '.' + Math.abs(trunc(player.velocityY * 10) - trunc(player.velocityY) * 10)
+    + ')'
+    + "\n" + textarea.value.substring(0, 1000);
 }

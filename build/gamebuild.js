@@ -290,6 +290,7 @@
 	var Constants = _interopRequire(__webpack_require__(3));
 
 	var isBrick = Map.isBrick;
+	var trunc = Utils.trunc;
 
 	var Player = (function () {
 	    function Player() {
@@ -361,21 +362,21 @@
 	        },
 	        updateCacheOnGround: {
 	            value: function updateCacheOnGround() {
-	                this.cacheOnGround = isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 25)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 23)) || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 25)) && !isBrick(Utils.getLeftBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 23)) || isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 24)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 8)) || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 24)) && !isBrick(Utils.getLeftBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 8));
+	                this.cacheOnGround = isBrick(trunc((this.x - 9) / 32), trunc((this.y + 25) / 16)) && !isBrick(trunc((this.x - 9) / 32), trunc((this.y + 23) / 16)) || isBrick(trunc(trunc(this.x + 9) / 32), trunc(trunc(this.y + 25) / 16)) && !isBrick(trunc(trunc(this.x + 9) / 32), trunc(trunc(this.y + 23) / 16)) || isBrick(trunc((this.x - 9) / 32), trunc((this.y + 24) / 16)) && !isBrick(trunc((this.x - 9) / 32), trunc((this.y + 8) / 16)) || isBrick(trunc((this.x + 9) / 32), trunc((this.y + 24) / 16)) && !isBrick(trunc((this.x + 9) / 32), trunc((this.y + 8) / 16));
 	            },
 	            writable: true,
 	            configurable: true
 	        },
 	        updateCacheBrickCrouchOnHead: {
 	            value: function updateCacheBrickCrouchOnHead() {
-	                this.cacheBrickCrouchOnHead = isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 9)) && !isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 7)) || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 9)) && !isBrick(Utils.getLeftBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 7)) || isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 23)) || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 23)) || isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 16)) || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 16));
+	                this.cacheBrickCrouchOnHead = isBrick(trunc((this.x - 8) / 32), trunc((this.y - 9) / 16)) && !isBrick(trunc((this.x - 8) / 32), trunc((this.y - 7) / 16)) || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 9) / 16)) && !isBrick(trunc((this.x + 8) / 32), trunc((this.y - 7) / 16)) || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 23) / 16)) || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 23) / 16)) || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 16) / 16)) || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 16) / 16));
 	            },
 	            writable: true,
 	            configurable: true
 	        },
 	        updateCacheBrickOnHead: {
 	            value: function updateCacheBrickOnHead() {
-	                this.cacheBrickOnHead = isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 25)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 23)) || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 25)) && !isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 23)) || isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 24)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 8)) || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 24)) && !isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 8));
+	                this.cacheBrickOnHead = isBrick(trunc((this.x - 9) / 32), trunc((this.y - 25) / 16)) && !isBrick(trunc((this.x - 9) / 32), trunc((this.y - 23) / 16)) || isBrick(trunc((this.x + 9) / 32), trunc((this.y - 25) / 16)) && !isBrick(trunc((this.x + 9) / 32), trunc((this.y - 23) / 16)) || isBrick(trunc((this.x - 9) / 32), trunc((this.y - 24) / 16)) && !isBrick(trunc((this.x - 9) / 32), trunc((this.y - 8) / 16)) || isBrick(trunc((this.x + 9) / 32), trunc((this.y - 24) / 16)) && !isBrick(trunc((this.x + 9) / 32), trunc((this.y - 8) / 16));
 	            },
 	            writable: true,
 	            configurable: true
@@ -514,11 +515,13 @@
 
 	//Вынесем указатель на функцию в отедельную переменную, чтобы не писать везде Map.isBrick(...)
 	var isBrick = Map.isBrick;
+	var trunc = Utils.trunc;
 
 	var defx = 0;
 	var defy = 0;
 
 	var tmpCol = 0;
+	var tmpY = 0;
 	var tmpSpeedX = 0;
 	function playerphysic(player) {
 	    // --!-!-!=!=!= ULTIMATE 3d[Power]'s PHYSIX M0DEL =!=!=!-!-!--
@@ -550,6 +553,8 @@
 
 	    if (player.velocityX !== 0) {
 	        tmpSpeedX = (player.velocityX < 0 ? -1 : 1) * velocityXSpeedJump[player.speedJump];
+	    } else {
+	        tmpSpeedX = 0;
 	    }
 	    player.setXY(player.x + player.velocityX + tmpSpeedX, player.y + player.velocityY);
 
@@ -558,27 +563,31 @@
 	        //VERTICAL CHECNING WHEN CROUCH FIRST
 	        if (player.isOnGround() && (player.isBrickCrouchOnHead() || player.velocityY > 0)) {
 	            player.velocityY = 0;
-	            player.setY(Math.floor(Math.round(player.y) / 16) * 16 + 8);
+	            player.setY(trunc(Math.round(player.y) / 16) * 16 + 8);
 	        } else if (player.isBrickCrouchOnHead() && player.velocityY < 0) {
 	            // fly up
 	            player.velocityY = 0;
 	            player.doublejumpCountdown = 3;
-	            player.setY(Math.floor(Math.round(player.y) / 16) * 16 + 8);
+	            player.setY(trunc(Math.round(player.y) / 16) * 16 + 8);
 	        }
 	    }
 
 	    // HORZ CHECK
-	    tmpCol = player.velocityX < 0 ? Utils.getLeftBorderCol(defx - 10) : Utils.getRightBorderCol(defx + 10);
-	    if (isBrick(tmpCol, Utils.getTopBorderRow(player.y - (player.crouch ? 8 : 16))) || isBrick(tmpCol, Utils.getTopBorderRow(player.y)) || isBrick(tmpCol, Utils.getTopBorderRow(player.y + 16))) {
-	        player.setX(Math.floor(defx / 32) * 32 + (player.velocityX < 0 ? 10 : 22));
+	    tmpCol = trunc(Math.round(defx + (player.velocityX < 0 ? -11 : 11)) / 32);
+	    tmpY = player.crouch ? player.y : defy;
+	    if (isBrick(tmpCol, trunc(Math.round(tmpY - (player.crouch ? 8 : 16)) / 16)) || isBrick(tmpCol, trunc(Math.round(tmpY) / 16)) || isBrick(tmpCol, trunc(Math.round(tmpY + 16) / 16))) {
+	        player.setX(trunc(defx / 32) * 32 + (player.velocityX < 0 ? 9 : 22));
 	        player.velocityX = 0;
-	        player.speedJump = 0;
+	        if (player.speedJump > 0) {
+	            player.speedJump = 0;
+	            log("speedjump 0 - wall", player);
+	        }
 	    }
 
 	    //Vertical check again after x change
 	    if (player.isOnGround() && (player.isBrickOnHead() || player.velocityY > 0)) {
 	        player.velocityY = 0;
-	        player.setY(Math.floor(player.y / 16) * 16 + 8);
+	        player.setY(trunc(Math.round(player.y) / 16) * 16 + 8);
 	    } else if (player.isBrickOnHead() && player.velocityY < 0) {
 	        // fly up
 	        player.velocityY = 0;
@@ -593,10 +602,12 @@
 
 	var tmpAbsMaxVelocityX = 0;
 	var tmpSign = 0;
-	var velocityYSpeedJump = [0, 0, 0, 0.4, 0.8, 1, 1.2, 1.4];
-	var velocityXSpeedJump = [0, 0, 0.33, 0.8, 1.1, 1.4, 1.8, 2.2];
+	var velocityYSpeedJump = [0, 0, 0.4, 0.8, 1, 1.2, 1.4];
+	var velocityXSpeedJump = [0, 0.33, 0.8, 1.1, 1.4, 1.8, 2.2];
 	var tmpLastWasJump = false;
 	var tmpCurJump = false;
+	var speedJumpDirection = 0;
+	var tmpLastKeyUp = false;
 	function playermove(player) {
 
 	    playerphysic(player);
@@ -611,6 +622,13 @@
 
 	    tmpCurJump = false;
 
+	    if (player.speedJump > 0 && (player.keyUp !== tmpLastKeyUp || player.keyLeft && speedJumpDirection !== -1 || player.keyRight && speedJumpDirection !== 1)) {
+	        player.speedJump = 0;
+	        log("speedjump 0 - change keys", player);
+	    }
+
+	    tmpLastKeyUp = player.keyUp;
+
 	    if (player.keyUp) {
 	        // JUMP!
 	        if (player.isOnGround() && !player.isBrickOnHead()) {
@@ -619,40 +637,47 @@
 	                // double jumpz
 	                player.doublejumpCountdown = 14;
 	                player.velocityY = -3;
+	                if (player.velocityX > 2) {
+	                    player.velocityY -= Math.abs(player.velocityX) - 2;
+	                    log("double jump higher", player);
+	                } else {
+	                    log("double jump standart", player);
+	                }
 	                player.crouch = false;
-	                log("double jump " + player.x + " " + player.y);
 	                Sound.jump();
+
+	                //player.velocityY += velocityYSpeedJump[player.speedJump];
 	            } else {
 	                if (player.doublejumpCountdown === 0) {
 	                    player.doublejumpCountdown = 14;
 	                    Sound.jump();
 	                }
 	                player.velocityY = -2.9;
-	                log("jump " + player.x + " " + player.y);
-	            }
+	                player.velocityY += velocityYSpeedJump[player.speedJump];
 
-	            player.velocityY += velocityYSpeedJump[player.speedJump];
+	                if (player.speedJump > 0) {
+	                    log("speedjump " + player.speedJump, player);
+	                } else {
+	                    log("jump", player);
+	                }
 
-	            if (player.speedJump < 7 && !tmpLastWasJump && player.keyLeft !== player.keyRight) {
-	                player.speedJump++;
-	                log("speedjump " + player.speedJump);
+	                if (player.speedJump < 6 && !tmpLastWasJump && player.keyLeft !== player.keyRight) {
+	                    speedJumpDirection = player.keyLeft ? -1 : 1;
+	                    player.speedJump++;
+	                }
 	            }
 
 	            tmpCurJump = true;
 	        }
 	    } else {
-	        if (player.isOnGround()) {
+	        if (player.isOnGround() && player.speedJump > 0) {
 	            player.speedJump = 0;
+	            log("speedjump 0 - on ground", player);
 	        }
-	    }
-
-	    if (player.keyLeft === player.keyRight) {
-	        player.speedJump = 0;
 	    }
 
 	    // CROUCH
 	    if (!player.keyUp && player.keyDown) {
-	        player.speedJump = 0;
 	        if (player.isOnGround()) {
 	            player.crouch = true;
 	        } else if (!player.isBrickCrouchOnHead()) {
@@ -720,7 +745,7 @@
 	    tmpDeltaTime = timestamp - time;
 	    //Назовём 20милисекундный интервал "физическим фреймом"
 	    //Посчитаем, сколько физических фреймов прошло за delltaTime?
-	    tmpDeltaPhysicFrames = Math.floor(tmpDeltaTime / 16);
+	    tmpDeltaPhysicFrames = trunc(tmpDeltaTime / 16);
 	    if (tmpDeltaPhysicFrames === 0) {
 	        //Ещё не накопилось достаточно времени, чтобы начёт расчёт хотя бы одного физического фрейма!
 	        //Прерываем выполнение функции
@@ -745,9 +770,10 @@
 
 	var logLine = 0;
 	var textarea = document.getElementById("log");
-	function log(text) {
+	function log(text, player) {
 	    logLine++;
-	    textarea.innerHTML = logLine + " " + text + "\n" + textarea.innerHTML.substring(0, 1000);
+	    tmpSpeedX = player.velocityX + (player.velocityX < 0 ? -1 : 1) * velocityXSpeedJump[player.speedJump];
+	    textarea.value = logLine + " " + text + " (x: " + trunc(player.x) + "." + Math.abs(trunc(player.x * 10) - trunc(player.x) * 10) + ", y: " + trunc(player.y) + "." + Math.abs(trunc(player.y * 10) - trunc(player.y) * 10) + ", dx: " + trunc(tmpSpeedX) + "." + Math.abs(trunc(tmpSpeedX * 10) - trunc(tmpSpeedX) * 10) + ", dy: " + trunc(player.velocityY) + "." + Math.abs(trunc(player.velocityY * 10) - trunc(player.velocityY) * 10) + ")" + "\n" + textarea.value.substring(0, 1000);
 	}
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -800,50 +826,9 @@
 
 	"use strict";
 
-	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-	var Constants = _interopRequire(__webpack_require__(3));
-
-	//Вынесем константы из объекта Constants в отедельные константы, чтобы не писать везде Constants.<название_константы>
-	var BRICK_WIDTH = Constants.BRICK_WIDTH;
-	var BRICK_HEIGHT = Constants.BRICK_HEIGHT;
-
 	module.exports = {
-
-	    /**
-	     * Возвращает номер колонки бриков (считая от 0) внутри которой находится координата X левого края игрока
-	     * @param {number} x координата левого края игрока
-	     * @returns {number} номер колонки бриков (считая от 0)
-	     */
-	    getLeftBorderCol: function getLeftBorderCol(x) {
-	        return Math.floor(x / BRICK_WIDTH);
-	    },
-
-	    /**
-	     * Возвращает номер колонки бриков (считая от 0) внутри которой находится координата X правого края игрока
-	     * @param {number} x правого края игрока
-	     * @returns {number} номер колонки бриков (считая от 0)
-	     */
-	    getRightBorderCol: function getRightBorderCol(x) {
-	        return Math.ceil(x / BRICK_WIDTH) - 1;
-	    },
-
-	    /**
-	     * Возвращает номер строки бриков (считая от 0) внутри которой находится координата Y верхнего края игрока
-	     * @param {number} y верхнего края игрока
-	     * @returns {number} номер строки бриков (считая от 0)
-	     */
-	    getTopBorderRow: function getTopBorderRow(y) {
-	        return Math.floor(y / BRICK_HEIGHT);
-	    },
-
-	    /**
-	     * Возвращает номер строки бриков (считая от 0) внутри которой находится координата Y верхнего края игрока
-	     * @param {number} y верхнего края игрока
-	     * @returns {number} номер строки бриков (считая от 0)
-	     */
-	    getBottomBorderRow: function getBottomBorderRow(y) {
-	        return Math.ceil(y / BRICK_HEIGHT) - 1;
+	    trunc: Math.trunc || function (val) {
+	        return val < 0 ? Math.ceil(val) : Math.floor(val);
 	    }
 	};
 

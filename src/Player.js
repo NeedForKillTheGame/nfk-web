@@ -3,6 +3,7 @@ import Utils from "./Utils.js";
 import Constants from "./Constants.js";
 
 var isBrick = Map.isBrick;
+var trunc = Utils.trunc;
 
 export default
 class Player {
@@ -60,26 +61,50 @@ class Player {
     }
 
     updateCacheOnGround() {
-        this.cacheOnGround = isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 25)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 23))
-        || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 25)) && !isBrick(Utils.getLeftBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 23))
-        || isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 24)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getBottomBorderRow(this.y + 8))
-        || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 24)) && !isBrick(Utils.getLeftBorderCol(this.x + 9), Utils.getBottomBorderRow(this.y + 8));
+        this.cacheOnGround =
+            isBrick(trunc((this.x - 9) / 32), trunc((this.y + 25) / 16))
+            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y + 23) / 16))
+
+            || isBrick(trunc(trunc(this.x + 9) / 32), trunc(trunc(this.y + 25) / 16))
+            && !isBrick(trunc(trunc(this.x + 9) / 32), trunc(trunc(this.y + 23) / 16))
+
+            || isBrick(trunc((this.x - 9) / 32), trunc((this.y + 24) / 16))
+            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y + 8) / 16))
+
+            || isBrick(trunc((this.x + 9) / 32), trunc((this.y + 24) / 16))
+            && !isBrick(trunc((this.x + 9) / 32), trunc((this.y + 8) / 16));
     }
 
     updateCacheBrickCrouchOnHead() {
-        this.cacheBrickCrouchOnHead = isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 9)) && !isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 7))
-        || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 9)) && !isBrick(Utils.getLeftBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 7))
-        || isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 23))
-        || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 23))
-        || isBrick(Utils.getLeftBorderCol(this.x - 8), Utils.getTopBorderRow(this.y - 16))
-        || isBrick(Utils.getRightBorderCol(this.x + 8), Utils.getTopBorderRow(this.y - 16));
+        this.cacheBrickCrouchOnHead =
+            isBrick(trunc((this.x - 8) / 32), trunc((this.y - 9) / 16))
+            && !isBrick(trunc((this.x - 8) / 32), trunc((this.y - 7) / 16))
+
+            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 9) / 16))
+            && !isBrick(trunc((this.x + 8) / 32), trunc((this.y - 7) / 16))
+
+            || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 23) / 16))
+
+            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 23) / 16))
+
+            || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 16) / 16))
+
+            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 16) / 16));
     }
 
     updateCacheBrickOnHead() {
-        this.cacheBrickOnHead = isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 25)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 23))
-        || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 25)) && !isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 23))
-        || isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 24)) && !isBrick(Utils.getLeftBorderCol(this.x - 9), Utils.getTopBorderRow(this.y - 8))
-        || isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 24)) && !isBrick(Utils.getRightBorderCol(this.x + 9), Utils.getTopBorderRow(this.y - 8));
+        this.cacheBrickOnHead =
+            isBrick(trunc((this.x - 9) / 32), trunc((this.y - 25) / 16))
+            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y - 23) / 16))
+
+            || isBrick(trunc((this.x + 9) / 32), trunc((this.y - 25) / 16))
+            && !isBrick(trunc((this.x + 9) / 32), trunc((this.y - 23) / 16))
+
+            || isBrick(trunc((this.x - 9) / 32), trunc((this.y - 24) / 16))
+            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y - 8) / 16))
+
+            || isBrick(trunc((this.x + 9) / 32), trunc((this.y - 24) / 16))
+            && !isBrick(trunc((this.x + 9) / 32), trunc((this.y - 8) / 16));
     }
 
     isOnGround() {

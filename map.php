@@ -6,8 +6,19 @@ if (file_exists('maps.txt')) {
 }
 
 if (isset($_GET['maptext'])) {
+    if (strlen($_GET['maptext']) > 10000) {
+        print 'too big map';
+        exit();
+    }
+    $newMap = rawurlencode($_GET['maptext']);
+    foreach($maps as $i => $map) {
+        if ($map == $newMap) {
+            print $i;
+            exit();
+        }
+    }
     $count = count($maps);
-    $maps[] = rawurlencode($_GET['maptext']);
+    $maps[] = $newMap;
     file_put_contents('maps.txt', implode("\n", $maps));
     print $count;
 } elseif (isset($_GET['mapid'])) {
