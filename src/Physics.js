@@ -148,8 +148,8 @@ function playermove(player) {
                     tmpSpeedX = 0;
                 }
 
-                if (tmpSpeedX > 2) {
-                    tmpDjBonus = tmpSpeedX - 2;
+                if (tmpSpeedX > 3) {
+                    tmpDjBonus = tmpSpeedX - 3;
                     player.velocityY -= tmpDjBonus;
                     log('dj higher (bonus +' + round(tmpDjBonus) + ')', player);
                 } else {

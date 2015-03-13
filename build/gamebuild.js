@@ -285,7 +285,7 @@
 
 	var Map = _interopRequire(__webpack_require__(2));
 
-	var Utils = _interopRequire(__webpack_require__(9));
+	var Utils = _interopRequire(__webpack_require__(10));
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
@@ -459,31 +459,49 @@
 	var dot2 = new PIXI.Graphics();
 	stage.addChild(dot2);
 
+	var floatCamera = false;
+
 	function renderMap() {
-	    for (var row = 0; row < Map.getRows(); row++) {
-	        for (var col = 0; col < Map.getCols(); col++) {
-	            if (Map.isBrick(col, row)) {
-	                mapGraphics.drawRect(col * BRICK_WIDTH, row * BRICK_HEIGHT, BRICK_WIDTH - 1, BRICK_HEIGHT - 1);
+	    var tmpRows = Map.getRows();
+	    var tmpCols = Map.getCols();
+	    var tmpRow, tmpCol;
+	    floatCamera = tmpRows > 30 || tmpCols > 20;
+	    for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
+	        for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
+	            if (Map.isBrick(tmpCol, tmpRow)) {
+	                mapGraphics.drawRect(tmpCol * 32, tmpRow * 16, 31, 15);
 	            }
 	        }
 	    }
-
 	    renderer.render(stage);
 	}
 
+	var tmpX = 0;
+	var tmpY = 0;
+
 	function renderGame(player) {
 
-	    localPlayerGraphics.x = player.x - 10;
+	    if (floatCamera) {
+	        tmpX = 320;
+	        tmpY = 240;
+	        mapGraphics.x = 320 - player.x;
+	        mapGraphics.y = 240 - player.y;
+	    } else {
+	        tmpX = player.x;
+	        tmpY = player.y;
+	    }
+
+	    localPlayerGraphics.x = tmpX - 10; //player.x - 10;
 	    if (player.crouch) {
-	        localPlayerGraphics.y = player.y - 8;
+	        localPlayerGraphics.y = tmpY - 8; //player.y - 8;
 	        localPlayerGraphics.height = 2 / 3;
 	    } else {
-	        localPlayerGraphics.y = player.y - 24;
+	        localPlayerGraphics.y = tmpY - 24; //player.y - 24;
 	        localPlayerGraphics.height = 1;
 	    }
 
-	    localPlayerCenter.x = player.x - 1;
-	    localPlayerCenter.y = player.y - 1;
+	    localPlayerCenter.x = tmpX - 1; //player.x-1;
+	    localPlayerCenter.y = tmpY - 1;
 
 	    renderer.render(stage);
 	}
@@ -504,11 +522,11 @@
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
-	var Sound = _interopRequire(__webpack_require__(10));
+	var Sound = _interopRequire(__webpack_require__(9));
 
 	var Map = _interopRequire(__webpack_require__(2));
 
-	var Utils = _interopRequire(__webpack_require__(9));
+	var Utils = _interopRequire(__webpack_require__(10));
 
 	//Вынесем константы из объекта Constants в отедельные константы, чтобы не писать везде Constants.<название_константы>
 	var PLAYER_MAX_VELOCITY_X = Constants.PLAYER_MAX_VELOCITY_X;
@@ -647,8 +665,8 @@
 	                    tmpSpeedX = 0;
 	                }
 
-	                if (tmpSpeedX > 2) {
-	                    tmpDjBonus = tmpSpeedX - 2;
+	                if (tmpSpeedX > 3) {
+	                    tmpDjBonus = tmpSpeedX - 3;
 	                    player.velocityY -= tmpDjBonus;
 	                    log("dj higher (bonus +" + round(tmpDjBonus) + ")", player);
 	                } else {
@@ -807,18 +825,6 @@
 
 	"use strict";
 
-	module.exports = {
-	    trunc: Math.trunc || function (val) {
-	        return val < 0 ? Math.ceil(val) : Math.floor(val);
-	    }
-	};
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
 	var Howl = _interopRequire(__webpack_require__(12));
@@ -841,6 +847,18 @@
 	    })(function () {
 	        jump.play();
 	    })
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = {
+	    trunc: Math.trunc || function (val) {
+	        return val < 0 ? Math.ceil(val) : Math.floor(val);
+	    }
 	};
 
 /***/ },

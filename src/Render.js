@@ -35,31 +35,47 @@ stage.addChild(dot1);
 var dot2 = new PIXI.Graphics();
 stage.addChild(dot2);
 
+var floatCamera = false;
 export function renderMap() {
-    for (var row = 0; row < Map.getRows(); row++) {
-        for (var col = 0; col < Map.getCols(); col++) {
-            if (Map.isBrick(col, row)) {
-                mapGraphics.drawRect(col * BRICK_WIDTH, row * BRICK_HEIGHT, BRICK_WIDTH - 1, BRICK_HEIGHT - 1);
+    var tmpRows = Map.getRows();
+    var tmpCols = Map.getCols();
+    var tmpRow, tmpCol;
+    floatCamera = (tmpRows > 30) || (tmpCols > 20);
+    for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
+        for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
+            if (Map.isBrick(tmpCol, tmpRow)) {
+                mapGraphics.drawRect(tmpCol * 32, tmpRow * 16, 31, 15);
             }
         }
     }
-
     renderer.render(stage);
 }
 
+var tmpX = 0;
+var tmpY = 0;
 export function renderGame(player) {
 
-    localPlayerGraphics.x = player.x - 10;
+    if (floatCamera) {
+        tmpX = 320;
+        tmpY = 240;
+        mapGraphics.x = 320 - player.x;
+        mapGraphics.y = 240 - player.y;
+    } else {
+        tmpX = player.x;
+        tmpY = player.y;
+    }
+
+    localPlayerGraphics.x = tmpX - 10; //player.x - 10;
     if (player.crouch) {
-        localPlayerGraphics.y = player.y - 8;
+        localPlayerGraphics.y = tmpY - 8; //player.y - 8;
         localPlayerGraphics.height = 2 / 3;
     } else {
-        localPlayerGraphics.y = player.y - 24;
+        localPlayerGraphics.y = tmpY - 24; //player.y - 24;
         localPlayerGraphics.height = 1;
     }
 
-    localPlayerCenter.x = player.x-1;
-    localPlayerCenter.y = player.y-1;
+    localPlayerCenter.x = tmpX - 1; //player.x-1;
+    localPlayerCenter.y = tmpY - 1;
 
     renderer.render(stage);
 }
