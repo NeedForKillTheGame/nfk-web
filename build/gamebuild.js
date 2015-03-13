@@ -109,7 +109,7 @@
 
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
-	var MapEditor = _interopRequire(__webpack_require__(9));
+	var MapEditor = _interopRequire(__webpack_require__(11));
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
@@ -285,7 +285,7 @@
 
 	var Map = _interopRequire(__webpack_require__(2));
 
-	var Utils = _interopRequire(__webpack_require__(10));
+	var Utils = _interopRequire(__webpack_require__(9));
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
@@ -504,11 +504,11 @@
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
-	var Sound = _interopRequire(__webpack_require__(11));
+	var Sound = _interopRequire(__webpack_require__(10));
 
 	var Map = _interopRequire(__webpack_require__(2));
 
-	var Utils = _interopRequire(__webpack_require__(10));
+	var Utils = _interopRequire(__webpack_require__(9));
 
 	//Вынесем константы из объекта Constants в отедельные константы, чтобы не писать везде Constants.<название_константы>
 	var PLAYER_MAX_VELOCITY_X = Constants.PLAYER_MAX_VELOCITY_X;
@@ -573,14 +573,16 @@
 	    }
 
 	    // HORZ CHECK
-	    tmpCol = trunc(Math.round(defx + (player.velocityX < 0 ? -11 : 11)) / 32);
-	    tmpY = player.crouch ? player.y : defy;
-	    if (isBrick(tmpCol, trunc(Math.round(tmpY - (player.crouch ? 8 : 16)) / 16)) || isBrick(tmpCol, trunc(Math.round(tmpY) / 16)) || isBrick(tmpCol, trunc(Math.round(tmpY + 16) / 16))) {
-	        player.setX(trunc(defx / 32) * 32 + (player.velocityX < 0 ? 9 : 22));
-	        player.velocityX = 0;
-	        if (player.speedJump > 0) {
+	    if (player.velocityX != 0) {
+	        tmpCol = trunc(Math.round(defx + (player.velocityX < 0 ? -11 : 11)) / 32);
+	        tmpY = player.crouch ? player.y : defy;
+	        if (isBrick(tmpCol, trunc(Math.round(tmpY - (player.crouch ? 8 : 16)) / 16)) || isBrick(tmpCol, trunc(Math.round(tmpY) / 16)) || isBrick(tmpCol, trunc(Math.round(tmpY + 16) / 16))) {
+	            player.setX(trunc(defx / 32) * 32 + (player.velocityX < 0 ? 9 : 22));
+	            player.velocityX = 0;
 	            player.speedJump = 0;
-	            log("speedjump 0 - wall", player);
+	            if (defx != player.x) {
+	                log("wall", player);
+	            }
 	        }
 	    }
 
@@ -608,6 +610,7 @@
 	var tmpCurJump = false;
 	var speedJumpDirection = 0;
 	var tmpLastKeyUp = false;
+	var tmpDjBonus = 0;
 	function playermove(player) {
 
 	    playerphysic(player);
@@ -624,7 +627,7 @@
 
 	    if (player.speedJump > 0 && (player.keyUp !== tmpLastKeyUp || player.keyLeft && speedJumpDirection !== -1 || player.keyRight && speedJumpDirection !== 1)) {
 	        player.speedJump = 0;
-	        log("speedjump 0 - change keys", player);
+	        log("sj 0 - change keys", player);
 	    }
 
 	    tmpLastKeyUp = player.keyUp;
@@ -637,11 +640,19 @@
 	                // double jumpz
 	                player.doublejumpCountdown = 14;
 	                player.velocityY = -3;
-	                if (player.velocityX > 2) {
-	                    player.velocityY -= Math.abs(player.velocityX) - 2;
-	                    log("double jump higher", player);
+
+	                if (player.velocityX !== 0) {
+	                    tmpSpeedX = Math.abs(player.velocityX) + velocityXSpeedJump[player.speedJump];
 	                } else {
-	                    log("double jump standart", player);
+	                    tmpSpeedX = 0;
+	                }
+
+	                if (tmpSpeedX > 2) {
+	                    tmpDjBonus = tmpSpeedX - 2;
+	                    player.velocityY -= tmpDjBonus;
+	                    log("dj higher (bonus +" + round(tmpDjBonus) + ")", player);
+	                } else {
+	                    log("dj standart", player);
 	                }
 	                player.crouch = false;
 	                Sound.jump();
@@ -655,15 +666,12 @@
 	                player.velocityY = -2.9;
 	                player.velocityY += velocityYSpeedJump[player.speedJump];
 
-	                if (player.speedJump > 0) {
-	                    log("speedjump " + player.speedJump, player);
-	                } else {
-	                    log("jump", player);
-	                }
+	                log("jump", player);
 
 	                if (player.speedJump < 6 && !tmpLastWasJump && player.keyLeft !== player.keyRight) {
 	                    speedJumpDirection = player.keyLeft ? -1 : 1;
 	                    player.speedJump++;
+	                    log("increase sj", player);
 	                }
 	            }
 
@@ -672,7 +680,7 @@
 	    } else {
 	        if (player.isOnGround() && player.speedJump > 0) {
 	            player.speedJump = 0;
-	            log("speedjump 0 - on ground", player);
+	            log("sj 0 - on ground", player);
 	        }
 	    }
 
@@ -772,8 +780,16 @@
 	var textarea = document.getElementById("log");
 	function log(text, player) {
 	    logLine++;
-	    tmpSpeedX = player.velocityX + (player.velocityX < 0 ? -1 : 1) * velocityXSpeedJump[player.speedJump];
-	    textarea.value = logLine + " " + text + " (x: " + trunc(player.x) + "." + Math.abs(trunc(player.x * 10) - trunc(player.x) * 10) + ", y: " + trunc(player.y) + "." + Math.abs(trunc(player.y * 10) - trunc(player.y) * 10) + ", dx: " + trunc(tmpSpeedX) + "." + Math.abs(trunc(tmpSpeedX * 10) - trunc(tmpSpeedX) * 10) + ", dy: " + trunc(player.velocityY) + "." + Math.abs(trunc(player.velocityY * 10) - trunc(player.velocityY) * 10) + ")" + "\n" + textarea.value.substring(0, 1000);
+	    if (player.velocityX !== 0) {
+	        tmpSpeedX = (player.velocityX < 0 ? -1 : 1) * velocityXSpeedJump[player.speedJump];
+	    } else {
+	        tmpSpeedX = 0;
+	    }
+	    textarea.value = logLine + " " + text + " (x: " + round(player.x) + ", y: " + round(player.y) + ", dx: " + round(tmpSpeedX) + ", dy: " + round(player.velocityY) + ", sj: " + player.speedJump + ")" + "\n" + textarea.value.substring(0, 1000);
+	}
+
+	function round(val) {
+	    return trunc(val) + "." + Math.abs(trunc(val * 10) - trunc(val) * 10);
 	}
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -787,6 +803,48 @@
 
 /***/ },
 /* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = {
+	    trunc: Math.trunc || function (val) {
+	        return val < 0 ? Math.ceil(val) : Math.floor(val);
+	    }
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+	var Howl = _interopRequire(__webpack_require__(12));
+
+	var jump = new Howl({
+	    urls: ["sounds/jump1.wav"]
+	});
+
+	module.exports = {
+	    jump: (function (_jump) {
+	        var _jumpWrapper = function jump() {
+	            return _jump.apply(this, arguments);
+	        };
+
+	        _jumpWrapper.toString = function () {
+	            return _jump.toString();
+	        };
+
+	        return _jumpWrapper;
+	    })(function () {
+	        jump.play();
+	    })
+	};
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -819,48 +877,6 @@
 	};
 
 	module.exports = MapEditor;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	module.exports = {
-	    trunc: Math.trunc || function (val) {
-	        return val < 0 ? Math.ceil(val) : Math.floor(val);
-	    }
-	};
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-	var Howl = _interopRequire(__webpack_require__(12));
-
-	var jump = new Howl({
-	    urls: ["sounds/jump1.wav"]
-	});
-
-	module.exports = {
-	    jump: (function (_jump) {
-	        var _jumpWrapper = function jump() {
-	            return _jump.apply(this, arguments);
-	        };
-
-	        _jumpWrapper.toString = function () {
-	            return _jump.toString();
-	        };
-
-	        return _jumpWrapper;
-	    })(function () {
-	        jump.play();
-	    })
-	};
 
 /***/ },
 /* 12 */
