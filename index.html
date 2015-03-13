@@ -3,37 +3,93 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>NFK-WEB</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        #fps {
+            position: absolute;
+            top: 0;
+            right: 10px
+        }
+
+        #console {
+            position: absolute;
+            top: -380px;
+            left: 0;
+            width: 100%;
+            height: 400px;
+            background-color: transparent;
+            opacity: 0.8;
+            color: white;
+        }
+
+        #console.open {
+            top: 0;
+            background-color: dimgrey;
+        }
+
+        #console.open #console-content {
+            bottom: 20px;
+        }
+
+        #console-content {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            overflow-y: scroll;
+            max-height: 380px;
+        }
+
+        #console-input {
+            display: none;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            /*border: none;*/
+            padding-left: 5px;
+            font-weight: bold;
+        }
+
+        #console.open #console-input {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-<a href="https://github.com/NeedForKillTheGame/nfk-web"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
-<table style="margin-top: 30px">
-    <tr valign="top">
-        <td id="game">
+<div id="game"></div>
+<div id="fps" style=""></div>
+<div id="console">
+    <div id="console-content">NFK-WEB<br>type <strong>help</strong> for help</div>
+    <input id="console-input">
+</div>
+<a href="#" id="mapeditor-link" style="border-bottom: 1px dashed; text-decoration: none">Show map editor</a>
 
-        </td>
-        <td style="padding-left: 10px">
-            <a href="#" id="mapeditor-link" style="border-bottom: 1px dashed; text-decoration: none">Show map editor</a>
-            <form id="mapeditor" style="display: none" action=".">
-                <textarea id="maptext" name="maptext" style="width: 580px; height: 480px; font-family: courier, monospace; font-size: 12px; line-height: 16px; letter-spacing:20px; font-weight: bold"></textarea>
-                <br><input type="submit" value="Apply map">
-                <a href="#" id="short-link" style="margin-left: 15px; border-bottom: 1px dashed; text-decoration: none; display: none">Create short link</a> <input id="shorturl" style="width: 100%">
-            </form>
+<form id="mapeditor" style="display: none" action=".">
+    <textarea id="maptext" name="maptext"
+              style="width: 100%; height: 500px; font-family: courier, monospace; font-size: 12px; line-height: 16px; letter-spacing:25px; font-weight: bold; white-space: pre; overflow-x: auto"></textarea>
+    <br><input type="submit" value="Apply map" style="font-size: 18px; font-weight: bold;">
+    <a href="#" id="short-link"
+       style="margin-left: 15px; border-bottom: 1px dashed; text-decoration: none; display: none">Create short link</a>
+    <input id="shorturl" style="width: 100%">
+</form>
 
 
+<ul>
+    <li><a href="?mapfile=dm2">dm2</a></li>
+    <li><a href="?mapfile=t4">t4</a></li>
+</ul>
 
-            <ul>
-                <li><a href="?mapfile=dm2">dm2</a></li>
-                <li><a href="?mapfile=t4">t4</a></li>
-            </ul>
+<textarea id="log" style="width: 100%; height: 300px"></textarea>
 
-            <textarea id="log" style="width: 600px; height: 200px"></textarea>
-        </td>
-    </tr>
-</table>
-<div id="fps"></div>
-<textarea style="word-wrap: break-word; width: 640px; height: 300px">
+<textarea style="word-wrap: break-word; width: 800px; height: 300px">
 CHANGELOG
-2015-03-13 Распрыг больше не сбрасывается, если отпустить кнопку вбок; распрыг не увиличивается при double jump (но сохраняется), при этом непосредсвенно на высоту double jump номер прыжка при распрыге не влияет; высота double jump зависит от горизонтальной скорости (если на скорости влететь в уголок и сделать double jump, то высота будет больше); на больших картах (больше 30х20 бриков) автоматически включается плавающая камера
+2015-03-13 Распрыг больше не сбрасывается, если отпустить кнопку вбок; распрыг не увиличивается при double jump (но сохраняется), при этом непосредсвенно на высоту double jump номер прыжка при распрыге не влияет; высота double jump зависит от горизонтальной скорости (если на скорости влететь в уголок и сделать double jump, то высота будет больше); на больших картах (больше 30х20 бриков) автоматически включается плавающая камера; область рендринга занимает всё окно браузера; по кнопке тильда ~ открывается консоль
 
 2015-03-12 Распрыг сбрасывается, если отпустить кнопку вверх или вбок; распрыг не увиличивается при double jump (но сохраняется); tripple jump - ещё выше чем double jump; фикс автоматического приседания
 
@@ -50,8 +106,8 @@ CHANGELOG
 2015-03-02 Перенесена физика NFK 0.62b на основе доступных исходников https://github.com/NeedForKillTheGame/nfk062b и добавлены карты dm2 и t4
 
 2015-03-01 Первая проба рендринга с помощью библиотеки Pixi.js - прыгабющий прямоугольник на чёрном фоне, примитивная физика без инерции и трения
-
 </textarea>
+<a href="https://github.com/NeedForKillTheGame/nfk-web">Source on GitHub (MIT)</a>
 <script src="libs/pixi.dev.js"></script>
 <script src="libs/stats.min.js"></script>
 <script src="libs/howler.min.js"></script>

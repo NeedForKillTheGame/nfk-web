@@ -2,6 +2,7 @@ import Constants from "./Constants.js";
 import Sound from "./Sound.js";
 import Map from "./Map.js";
 import Utils from "./Utils.js";
+import Console from "./Console.js";
 
 //Вынесем константы из объекта Constants в отедельные константы, чтобы не писать везде Constants.<название_константы>
 const PLAYER_MAX_VELOCITY_X = Constants.PLAYER_MAX_VELOCITY_X;
@@ -135,9 +136,9 @@ function playermove(player) {
 
     if (player.keyUp) {
         // JUMP!
-        if (player.isOnGround() && !player.isBrickOnHead()) {
+        if (player.isOnGround() && !player.isBrickOnHead() && !tmpLastWasJump) {
 
-            if (player.doublejumpCountdown > 4) {
+            if (player.doublejumpCountdown > 4 && player.doublejumpCountdown < 11) {
                 // double jumpz
                 player.doublejumpCountdown = 14;
                 player.velocityY = -3;
@@ -179,7 +180,7 @@ function playermove(player) {
             tmpCurJump = true;
         }
     } else {
-        if (player.isOnGround() && player.speedJump > 0) {
+        if (player.isOnGround() && player.speedJump > 0 && !player.keyDown) {
             player.speedJump = 0;
             log('sj 0 - on ground', player);
         }
@@ -280,6 +281,7 @@ export function updateGame(player, timestamp) {
 
 var logLine = 0;
 var textarea = document.getElementById('log');
+var newText = '';
 function log(text, player) {
     logLine++;
     if (player.velocityX !== 0) {
@@ -287,7 +289,7 @@ function log(text, player) {
     } else {
         tmpSpeedX = 0;
     }
-    textarea.value = logLine
+    newText = logLine
     + ' '
     + text
     + ' (x: ' + round(player.x)
@@ -295,8 +297,9 @@ function log(text, player) {
     + ', dx: ' + round(tmpSpeedX)
     + ', dy: ' + round(player.velocityY)
     + ', sj: ' + player.speedJump
-    + ')'
-    + "\n" + textarea.value.substring(0, 1000);
+    + ')';
+    textarea.value = newText + "\n" + textarea.value.substring(0, 1000);
+    Console.writeText(newText);
 }
 
 function round(val) {

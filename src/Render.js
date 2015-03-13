@@ -5,8 +5,8 @@ import Map from "./Map.js";
 const BRICK_HEIGHT = Constants.BRICK_HEIGHT;
 const BRICK_WIDTH = Constants.BRICK_WIDTH;
 
-var renderer = PIXI.autoDetectRenderer(640, 480);
-//renderer.view.style.display = "block";
+var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+renderer.view.style.display = "block";
 var gameEl = document.getElementById('game');
 gameEl.appendChild(renderer.view);
 
@@ -36,11 +36,31 @@ var dot2 = new PIXI.Graphics();
 stage.addChild(dot2);
 
 var floatCamera = false;
+var halfWidth = 0;
+var halfHeight = 0;
+var mapDx = 0;
+var mapDy = 0;
+function recalcFloatCamera() {
+    renderer.view.width = window.innerWidth - 20;
+    renderer.view.height = window.innerHeight;
+
+    floatCamera = Map.getRows() > (window.innerHeight) / 16 || (Map.getCols() > (window.innerWidth - 20) / 32);
+    if (floatCamera) {
+        halfWidth = Math.floor((window.innerWidth - 20) / 2);
+        halfHeight = Math.floor((window.innerHeight) / 2);
+
+    } else {
+        mapGraphics.x = mapDx = Math.floor(((window.innerWidth - 20) - Map.getCols() * 32) / 2);
+        mapGraphics.y = mapDy = Math.floor(((window.innerHeight) - Map.getRows() * 16) / 2);
+    }
+}
+
+window.addEventListener('resize', recalcFloatCamera, false);
+
 export function renderMap() {
     var tmpRows = Map.getRows();
     var tmpCols = Map.getCols();
     var tmpRow, tmpCol;
-    floatCamera = (tmpRows > 30) || (tmpCols > 20);
     for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
         for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
             if (Map.isBrick(tmpCol, tmpRow)) {
@@ -49,6 +69,7 @@ export function renderMap() {
         }
     }
     renderer.render(stage);
+    recalcFloatCamera();
 }
 
 var tmpX = 0;
@@ -56,13 +77,13 @@ var tmpY = 0;
 export function renderGame(player) {
 
     if (floatCamera) {
-        tmpX = 320;
-        tmpY = 240;
-        mapGraphics.x = 320 - player.x;
-        mapGraphics.y = 240 - player.y;
+        tmpX = halfWidth;
+        tmpY = halfHeight;
+        mapGraphics.x = halfWidth - player.x;
+        mapGraphics.y = halfHeight - player.y;
     } else {
-        tmpX = player.x;
-        tmpY = player.y;
+        tmpX = player.x + mapDx;
+        tmpY = player.y + mapDy;
     }
 
     localPlayerGraphics.x = tmpX - 10; //player.x - 10;

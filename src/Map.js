@@ -1,5 +1,6 @@
 import MapEditor from "./MapEditor.js";
 import Constants from "./Constants.js";
+import Console from "./Console.js";
 
 var rows = 0;
 var cols = 0;
@@ -42,6 +43,7 @@ export default {
         if (queryString.indexOf('maptext=') === 0) {
             mapText = decodeURIComponent(queryString.substring(8)).replace(/\+/g, ' ');
             MapEditor.show();
+            Console.writeText('ma                                                                                                                         p loaded from url');
         }
         else {
             var mapfile;
@@ -54,6 +56,8 @@ export default {
             xmlhttp.open('GET', 'maps/' + mapfile, false);
             xmlhttp.send(null);
             mapText = xmlhttp.responseText;
+
+            Console.writeText('map loaded: ' + mapfile);
         }
 
         MapEditor.setContent(mapText);
@@ -61,7 +65,7 @@ export default {
     },
 
     isBrick(col, row) {
-        return bricks[row][col];
+        return row >= rows || col >= cols || row < 0 || col < 0 || bricks[row][col];
     },
 
     getRows() {

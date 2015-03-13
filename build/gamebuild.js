@@ -58,6 +58,7 @@
 
 	var _RenderJs = __webpack_require__(6);
 
+
 	var renderMap = _RenderJs.renderMap;
 	var renderGame = _RenderJs.renderGame;
 
@@ -109,9 +110,11 @@
 
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
-	var MapEditor = _interopRequire(__webpack_require__(11));
+	var MapEditor = _interopRequire(__webpack_require__(9));
 
 	var Constants = _interopRequire(__webpack_require__(3));
+
+	var Console = _interopRequire(__webpack_require__(10));
 
 	var rows = 0;
 	var cols = 0;
@@ -154,6 +157,7 @@
 	        if (queryString.indexOf("maptext=") === 0) {
 	            mapText = decodeURIComponent(queryString.substring(8)).replace(/\+/g, " ");
 	            MapEditor.show();
+	            Console.writeText("Map loaded from url");
 	        } else {
 	            var mapfile;
 	            if (queryString.indexOf("mapfile=") === 0) {
@@ -165,6 +169,8 @@
 	            xmlhttp.open("GET", "maps/" + mapfile, false);
 	            xmlhttp.send(null);
 	            mapText = xmlhttp.responseText;
+
+	            Console.writeText("Map loaded " + mapfile);
 	        }
 
 	        MapEditor.setContent(mapText);
@@ -172,7 +178,7 @@
 	    },
 
 	    isBrick: function isBrick(col, row) {
-	        return bricks[row][col];
+	        return row >= rows || col >= cols || row < 0 || col < 0 || bricks[row][col];
 	    },
 
 	    getRows: function getRows() {
@@ -285,7 +291,7 @@
 
 	var Map = _interopRequire(__webpack_require__(2));
 
-	var Utils = _interopRequire(__webpack_require__(10));
+	var Utils = _interopRequire(__webpack_require__(11));
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
@@ -429,8 +435,8 @@
 	var BRICK_HEIGHT = Constants.BRICK_HEIGHT;
 	var BRICK_WIDTH = Constants.BRICK_WIDTH;
 
-	var renderer = PIXI.autoDetectRenderer(640, 480);
-	//renderer.view.style.display = "block";
+	var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+	renderer.view.style.display = "block";
 	var gameEl = document.getElementById("game");
 	gameEl.appendChild(renderer.view);
 
@@ -460,12 +466,30 @@
 	stage.addChild(dot2);
 
 	var floatCamera = false;
+	var halfWidth = 0;
+	var halfHeight = 0;
+	var mapDx = 0;
+	var mapDy = 0;
+	function recalcFloatCamera() {
+	    renderer.view.width = window.innerWidth - 20;
+	    renderer.view.height = window.innerHeight;
+
+	    floatCamera = Map.getRows() > window.innerHeight / 16 || Map.getCols() > (window.innerWidth - 20) / 32;
+	    if (floatCamera) {
+	        halfWidth = Math.floor((window.innerWidth - 20) / 2);
+	        halfHeight = Math.floor(window.innerHeight / 2);
+	    } else {
+	        mapGraphics.x = mapDx = Math.floor((window.innerWidth - 20 - Map.getCols() * 32) / 2);
+	        mapGraphics.y = mapDy = Math.floor((window.innerHeight - Map.getRows() * 16) / 2);
+	    }
+	}
+
+	window.addEventListener("resize", recalcFloatCamera, false);
 
 	function renderMap() {
 	    var tmpRows = Map.getRows();
 	    var tmpCols = Map.getCols();
 	    var tmpRow, tmpCol;
-	    floatCamera = tmpRows > 30 || tmpCols > 20;
 	    for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
 	        for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
 	            if (Map.isBrick(tmpCol, tmpRow)) {
@@ -474,6 +498,7 @@
 	        }
 	    }
 	    renderer.render(stage);
+	    recalcFloatCamera();
 	}
 
 	var tmpX = 0;
@@ -482,13 +507,13 @@
 	function renderGame(player) {
 
 	    if (floatCamera) {
-	        tmpX = 320;
-	        tmpY = 240;
-	        mapGraphics.x = 320 - player.x;
-	        mapGraphics.y = 240 - player.y;
+	        tmpX = halfWidth;
+	        tmpY = halfHeight;
+	        mapGraphics.x = halfWidth - player.x;
+	        mapGraphics.y = halfHeight - player.y;
 	    } else {
-	        tmpX = player.x;
-	        tmpY = player.y;
+	        tmpX = player.x + mapDx;
+	        tmpY = player.y + mapDy;
 	    }
 
 	    localPlayerGraphics.x = tmpX - 10; //player.x - 10;
@@ -522,11 +547,13 @@
 
 	var Constants = _interopRequire(__webpack_require__(3));
 
-	var Sound = _interopRequire(__webpack_require__(9));
+	var Sound = _interopRequire(__webpack_require__(12));
 
 	var Map = _interopRequire(__webpack_require__(2));
 
-	var Utils = _interopRequire(__webpack_require__(10));
+	var Utils = _interopRequire(__webpack_require__(11));
+
+	var Console = _interopRequire(__webpack_require__(10));
 
 	//Вынесем константы из объекта Constants в отедельные константы, чтобы не писать везде Constants.<название_константы>
 	var PLAYER_MAX_VELOCITY_X = Constants.PLAYER_MAX_VELOCITY_X;
@@ -652,9 +679,9 @@
 
 	    if (player.keyUp) {
 	        // JUMP!
-	        if (player.isOnGround() && !player.isBrickOnHead()) {
+	        if (player.isOnGround() && !player.isBrickOnHead() && !tmpLastWasJump) {
 
-	            if (player.doublejumpCountdown > 4) {
+	            if (player.doublejumpCountdown > 4 && player.doublejumpCountdown < 11) {
 	                // double jumpz
 	                player.doublejumpCountdown = 14;
 	                player.velocityY = -3;
@@ -696,7 +723,7 @@
 	            tmpCurJump = true;
 	        }
 	    } else {
-	        if (player.isOnGround() && player.speedJump > 0) {
+	        if (player.isOnGround() && player.speedJump > 0 && !player.keyDown) {
 	            player.speedJump = 0;
 	            log("sj 0 - on ground", player);
 	        }
@@ -796,6 +823,7 @@
 
 	var logLine = 0;
 	var textarea = document.getElementById("log");
+	var newText = "";
 	function log(text, player) {
 	    logLine++;
 	    if (player.velocityX !== 0) {
@@ -803,7 +831,9 @@
 	    } else {
 	        tmpSpeedX = 0;
 	    }
-	    textarea.value = logLine + " " + text + " (x: " + round(player.x) + ", y: " + round(player.y) + ", dx: " + round(tmpSpeedX) + ", dy: " + round(player.velocityY) + ", sj: " + player.speedJump + ")" + "\n" + textarea.value.substring(0, 1000);
+	    newText = logLine + " " + text + " (x: " + round(player.x) + ", y: " + round(player.y) + ", dx: " + round(tmpSpeedX) + ", dy: " + round(player.velocityY) + ", sj: " + player.speedJump + ")";
+	    textarea.value = newText + "\n" + textarea.value.substring(0, 1000);
+	    Console.writeText(newText);
 	}
 
 	function round(val) {
@@ -821,48 +851,6 @@
 
 /***/ },
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-	var Howl = _interopRequire(__webpack_require__(12));
-
-	var jump = new Howl({
-	    urls: ["sounds/jump1.wav"]
-	});
-
-	module.exports = {
-	    jump: (function (_jump) {
-	        var _jumpWrapper = function jump() {
-	            return _jump.apply(this, arguments);
-	        };
-
-	        _jumpWrapper.toString = function () {
-	            return _jump.toString();
-	        };
-
-	        return _jumpWrapper;
-	    })(function () {
-	        jump.play();
-	    })
-	};
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	module.exports = {
-	    trunc: Math.trunc || function (val) {
-	        return val < 0 ? Math.ceil(val) : Math.floor(val);
-	    }
-	};
-
-/***/ },
-/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -897,7 +885,85 @@
 	module.exports = MapEditor;
 
 /***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	document.addEventListener("keydown", function (e) {
+	    if (e.keyCode === 192) {
+	        openClose();
+	        e.preventDefault();
+	    }
+	});
+
+	var isOpen = false;
+	var text = "";
+	var el = document.getElementById("console");
+	var elContent = document.getElementById("console-content");
+
+	function openClose() {
+	    isOpen = !isOpen;
+	    if (isOpen) {
+	        el.classList.add("open");
+	        elContent.scrollTop = elContent.scrollHeight;
+	    } else {
+	        el.classList.remove("open");
+	    }
+	}
+
+	module.exports = {
+	    writeText: function writeText(addText) {
+	        text += "<br>" + addText;
+	        elContent.innerHTML = text;
+	        elContent.scrollTop = elContent.scrollHeight;
+	    }
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = {
+	    trunc: Math.trunc || function (val) {
+	        return val < 0 ? Math.ceil(val) : Math.floor(val);
+	    }
+	};
+
+/***/ },
 /* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+	var Howl = _interopRequire(__webpack_require__(13));
+
+	var jump = new Howl({
+	    urls: ["sounds/jump1.wav"]
+	});
+
+	module.exports = {
+	    jump: (function (_jump) {
+	        var _jumpWrapper = function jump() {
+	            return _jump.apply(this, arguments);
+	        };
+
+	        _jumpWrapper.toString = function () {
+	            return _jump.toString();
+	        };
+
+	        return _jumpWrapper;
+	    })(function () {
+	        jump.play();
+	    })
+	};
+
+/***/ },
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = Howl;
