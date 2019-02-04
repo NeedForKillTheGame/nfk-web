@@ -49,6 +49,7 @@ function htmlescape(html) {
 
 var Console = {
     writeText(addText) {
+		addText = addText.toString();
         html += '<br>' + htmlescape(addText);
         if (html.length > 5000) {
             html = html.substring(html.length - 5000);

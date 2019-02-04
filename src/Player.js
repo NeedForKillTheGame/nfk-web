@@ -7,11 +7,17 @@ var trunc = Utils.trunc;
 
 export default
 class Player {
-    constructor() {
-
+    constructor(DXID, name) {
+		this.DXID = DXID;
         this.x = 0.0;
         this.y = 0.0;
 
+        this.name = name;
+        this.health = 0;
+        this.aror = 0;
+		
+		this.follow = false;
+		
         this.velocityX = 0.0;
         this.velocityY = 0.0;
 
@@ -30,6 +36,9 @@ class Player {
         this.cacheBrickCrouchOnHead = false;
 
         this.speedJump = 0;
+		
+		this.graphics = null;		
+		this.physics = null;		
     }
 
     setX(newX) {
