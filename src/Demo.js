@@ -60,9 +60,10 @@ class Demo {
 		var demounit = unit.DemoUnit;
 
 
-		console.log(this.frameId + " / " + unit.DData.gametic  + " / " + gametic );
-		//if (gametic != unit.DData.gametic)
-		//	return;
+		//console.log(this.frameId + " / " + unit.DData.gametime + " / " + unit.DData.gametic  + " / " + gametic );
+		if (gametic != unit.DData.gametic)
+			return;
+
 		//console.log("next");
 		
 		this.frameId++;
@@ -219,6 +220,10 @@ class Demo {
 				
 				
 		}
+		
+		// increase next frame recursively until all ticks will be handled
+		this.nextFrame(gametic);
+		
 		return true;
 	}
 	

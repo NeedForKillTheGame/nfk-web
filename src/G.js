@@ -21,7 +21,12 @@ class Global {
 		
 		this.config = {
 			mode: process.env.NODE_ENV, // 'devemopment' or 'production', depends on running enviroment
-			demoSpeed: 1, // 1 is default
+			volume: 0.3,
+			default_bg: 2
+		}
+		this.const = {
+			mode: process.env.NODE_ENV, // 'devemopment' or 'production', depends on running enviroment
+			fps: 50, // do not change, 50 fps is in nfk
 			volume: 0.3,
 			default_bg: 2
 		}

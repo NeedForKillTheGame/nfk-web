@@ -1,4 +1,5 @@
 export default {
+    FPS: 50,
 
     BRICK_WIDTH: 32,
     BRICK_HEIGHT: 16,

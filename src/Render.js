@@ -10,36 +10,12 @@ class Render {
 		this.g = g;
 		this.map = g.map;
 		var that = this;
-		
-		this.renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, { antialias: false, resolution: 1, transparent: true});
-		this.renderer.view.style.display = "block";
+
+		this.app = new PIXI.Application(window.innerWidth, window.innerHeight, { antialias: false, resolution: 1, transparent: true});
+		this.app.view.style.display = "block";
 		var gameEl = document.getElementById('game');
-		gameEl.appendChild(this.renderer.view);
-		
+		gameEl.appendChild(this.app.view);
 
-		/*
-		var g_TICK = 20; // 1000/20 = 50 frames per second
-		var g_Time = 0;
-		// change fps
-		ticker.add(function (delta) {
-			// Limit to the frame rate
-			var timeNow = (new Date()).getTime();
-			var timeDiff = timeNow - g_Time;
-			if (timeDiff < g_TICK)
-				return;
-
-			// We are now meeting the frame rate, so reset the last time the animation is done
-			g_Time = timeNow;
-
-			// Now do the animation
-
-			// rotate the container!
-			// use delta to create frame-independent tranform
-			container.rotation -= 0.01 * delta;
-			g_Bunny0.x += 1;
-		});
-		*/
-		
 		// follow next player
 		gameEl.onclick = function (e) {
 			var followId = -1;
@@ -58,7 +34,7 @@ class Render {
 		};
 
 		
-		this.stage = new PIXI.Stage(0x000000);
+		this.stage = this.app.stage;
 		this.mapGraphics = new PIXI.Graphics();
 		this.mapGraphics.beginFill(0x999999);
 		this.mapGraphics.lineStyle(1, 0xAAAAAA);
@@ -133,21 +109,21 @@ class Render {
 					//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 
 					//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
 				
-					this.mapGraphics.drawRect(tmpCol * 32, tmpRow * 16, 31, 15); // (old) rectangle without a texture
+					//this.mapGraphics.drawRect(tmpCol * 32, tmpRow * 16, 31, 15); // (old) rectangle without a texture
 					this.mapGraphics.addChild(brickSprite);
 				}
 			}
 		}
 		this.recalcFloatCamera(this);
-		this.renderer.render(this.stage);
+		this.app.render(this.stage);
 	}
 	
 	// when browser size changed this event fixes the map view
 	recalcFloatCamera(render) {
 		console.log("resize event");
 		
-		render.renderer.view.width = window.innerWidth - 20;
-		render.renderer.view.height = window.innerHeight;
+		render.app.view.width = window.innerWidth - 20;
+		render.app.view.height = window.innerHeight;
 
 		render.floatCamera = render.map.getRows() > (window.innerHeight) / 16 || (render.map.getCols() > (window.innerWidth - 20) / 32);
 		if (render.floatCamera) {
@@ -177,7 +153,7 @@ class Render {
 		
 		player.graphics.adjustPosition(tmpX, tmpY);
 
-		this.renderer.render(this.stage);
+		this.app.render(this.stage);
 	}
 
 }

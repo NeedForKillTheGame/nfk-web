@@ -25,13 +25,11 @@ class PlayerGraphics  {
 
 		this.playerName = new PIXI.Text(player.displayName, { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
 		this.playerName.anchor = new PIXI.Point(0.5, 0.5);
-		this.playerName.height = 80;
 		this.playerName.scale.x = this.playerName.scale.y;
 		this.stage.addChild(this.playerName);
 		
-		this.playerHA = new PIXI.Text("0 / 0", { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
+		this.playerHA = new PIXI.Text("0 / 0", { fontFamily : 'Arial', fontSize: 12, fill : 'white', align : 'center' });
 		this.playerHA.anchor = new PIXI.Point(0.5, 0.5);
-		this.playerHA.height = 70;
 		this.playerHA.scale.x = this.playerName.scale.y;
 		this.stage.addChild(this.playerHA);
 		
@@ -63,7 +61,7 @@ class PlayerGraphics  {
 
 		this.playerHA.x = tmpX;
 		this.playerHA.y = this.playerGraphics.y - 9;
-		this.playerHA.setText(this.player.health + ' / ' + this.player.armor);
+		this.playerHA.text = this.player.health + ' / ' + this.player.armor;
 	}
 	
 	// health and armor

@@ -55,17 +55,13 @@ async function init()
 		for (var i = 0; i < G.players.length; i++)
 		{
 			// player physics
-			updateGame(G.players[i], timestamp);
+			G.players[i].physics.updateGame(timestamp);
 			// player graphics
 			G.render.renderGame(G.players[i]);
 		}
-
-		for (var i = 0; i < G.config.demoSpeed; i++)
-		{
-			G.demo.nextFrame(gametic);
-		}
+		G.demo.nextFrame(gametic);
 		
-		if (++gametic > 60)
+		if (++gametic > Constants.FPS)
 			gametic = 0;
 		
 		requestAnimationFrame(gameLoop); //infinite render loop
