@@ -17,6 +17,7 @@ class Player {
         this.y = 0.0;
 		
         this.name = name;
+        this.displayName = Utils.filterNickName(name); // filtered name
         this.health = 0;
         this.armor = 0;
 		

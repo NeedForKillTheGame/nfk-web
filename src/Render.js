@@ -7,13 +7,57 @@ import Utils from "./Utils.js";
 export default
 class Render {
 	constructor(g) {
+		this.g = g;
 		this.map = g.map;
+		var that = this;
 		
 		this.renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, { antialias: false, resolution: 1, transparent: true});
 		this.renderer.view.style.display = "block";
 		var gameEl = document.getElementById('game');
 		gameEl.appendChild(this.renderer.view);
+		
 
+		/*
+		var g_TICK = 20; // 1000/20 = 50 frames per second
+		var g_Time = 0;
+		// change fps
+		ticker.add(function (delta) {
+			// Limit to the frame rate
+			var timeNow = (new Date()).getTime();
+			var timeDiff = timeNow - g_Time;
+			if (timeDiff < g_TICK)
+				return;
+
+			// We are now meeting the frame rate, so reset the last time the animation is done
+			g_Time = timeNow;
+
+			// Now do the animation
+
+			// rotate the container!
+			// use delta to create frame-independent tranform
+			container.rotation -= 0.01 * delta;
+			g_Bunny0.x += 1;
+		});
+		*/
+		
+		// follow next player
+		gameEl.onclick = function (e) {
+			var followId = -1;
+			for (var i = 0; i < that.g.players.length; i++) {
+				if (that.g.players[i].follow) {
+					that.g.players[i].follow = false;
+					followId = i + 1;
+					if (followId > that.g.players.length - 1)
+						followId = 0;
+				}
+			}
+			if (followId == -1)
+				return;
+			that.g.players[followId].follow = true;
+			console.log('Follow player ' + that.g.players[followId].displayName);
+		};
+
+		
 		this.stage = new PIXI.Stage(0x000000);
 		this.mapGraphics = new PIXI.Graphics();
 		this.mapGraphics.beginFill(0x999999);
@@ -33,7 +77,6 @@ class Render {
 		this.bricksPerLineCustom = 0;
 
 		
-		var that = this;
 		window.addEventListener('resize', function() { that.recalcFloatCamera(that) }, false);
 	}
 	
@@ -85,7 +128,6 @@ class Render {
 					var brickSprite = new PIXI.Sprite(brickTexture);
 					brickSprite.position.x = tmpCol * Constants.BRICK_WIDTH;
 					brickSprite.position.y = tmpRow * Constants.BRICK_HEIGHT;
-					console.log(this.bricksPerLine);
 				
 					//console.log(brickIdx + " / " 
 					//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 

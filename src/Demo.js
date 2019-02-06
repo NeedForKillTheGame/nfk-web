@@ -56,17 +56,26 @@ class Demo {
 	
 	nextFrame(gametic)
 	{
-		if (++this.frameId > this.data.DemoUnits.length - 1) {
-			// end of the demo
-			// TODO: display players summary statistics
-			Sound.play('gameend');
-			return false;
-		}
-		
 		var unit = this.data.DemoUnits[this.frameId];
 		var demounit = unit.DemoUnit;
 
-		//console.log(this.frameId + " / " + unit.DData.gametic  + " / " + gametic );
+
+		console.log(this.frameId + " / " + unit.DData.gametic  + " / " + gametic );
+		//if (gametic != unit.DData.gametic)
+		//	return;
+		//console.log("next");
+		
+		this.frameId++;
+		
+		
+		if (this.frameId > this.data.DemoUnits.length - 1) {
+			// end of the demo
+			// TODO: display players summary statistics
+			Sound.play('gameend');
+			console.log("end of demo");
+			return false;
+		}
+
 
 
 		switch (unit.DData.type0)

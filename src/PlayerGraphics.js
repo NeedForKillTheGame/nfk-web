@@ -23,7 +23,7 @@ class PlayerGraphics  {
 		this.stage.addChild(this.playerCenter);
 
 
-		this.playerName = new PIXI.Text(Utils.filterNickName(player.name), { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
+		this.playerName = new PIXI.Text(player.displayName, { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
 		this.playerName.anchor = new PIXI.Point(0.5, 0.5);
 		this.playerName.height = 80;
 		this.playerName.scale.x = this.playerName.scale.y;
