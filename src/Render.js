@@ -1,88 +1,144 @@
 import PIXI from "PIXI";
 import Constants from "./Constants.js";
 import Map from "./Map.js";
-import PlayerGraphics from "./PlayerGraphics.js";
-import PlayerPhysics from "./Physics.js";
-
-var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
-renderer.view.style.display = "block";
-var gameEl = document.getElementById('game');
-gameEl.appendChild(renderer.view);
+import Utils from "./Utils.js";
 
 
-var stage = new PIXI.Stage(0x000000);
-var mapGraphics = new PIXI.Graphics();
-mapGraphics.beginFill(0x999999);
-mapGraphics.lineStyle(1, 0xAAAAAA);
-stage.addChild(mapGraphics);
+export default
+class Render {
+	constructor(g) {
+		this.map = g.map;
+		
+		this.renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, { antialias: false, resolution: 1, transparent: true});
+		this.renderer.view.style.display = "block";
+		var gameEl = document.getElementById('game');
+		gameEl.appendChild(this.renderer.view);
 
-// init graphics and physics
-export function initPlayersEntity(players)
-{
-	// init players graphics
-	for (var i = 0; i < players.length; i++)
-	{
-		players[i].graphics = new PlayerGraphics(stage, players[i]);
-		players[i].physics = new PlayerPhysics(players[i]);
+		this.stage = new PIXI.Stage(0x000000);
+		this.mapGraphics = new PIXI.Graphics();
+		this.mapGraphics.beginFill(0x999999);
+		this.mapGraphics.lineStyle(1, 0xAAAAAA);
+		this.stage.addChild(this.mapGraphics);
+
+		this.floatCamera = false;
+		this.halfWidth = 0;
+		this.halfHeight = 0;
+		this.mapDx = 0;
+		this.mapDy = 0;
+		
+		this.paletteTexture = PIXI.BaseTexture.fromImage(this.map.paletteImage);
+		this.bricksPerLine = 8; // 
+
+		this.paletteCustomTexture = null;
+		this.bricksPerLineCustom = 0;
+
+		
+		var that = this;
+		window.addEventListener('resize', function() { that.recalcFloatCamera(that) }, false);
 	}
-}
-
-
-
-var floatCamera = false;
-var halfWidth = 0;
-var halfHeight = 0;
-var mapDx = 0;
-var mapDy = 0;
-function recalcFloatCamera() {
-    renderer.view.width = window.innerWidth - 20;
-    renderer.view.height = window.innerHeight;
-
-    floatCamera = Map.getRows() > (window.innerHeight) / 16 || (Map.getCols() > (window.innerWidth - 20) / 32);
-    if (floatCamera) {
-        halfWidth = Math.floor((window.innerWidth - 20) / 2);
-        halfHeight = Math.floor((window.innerHeight) / 2);
-
-    } else {
-        mapGraphics.x = mapDx = Math.floor(((window.innerWidth - 20) - Map.getCols() * 32) / 2);
-        mapGraphics.y = mapDy = Math.floor(((window.innerHeight) - Map.getRows() * 16) / 2);
-    }
-}
-
-window.addEventListener('resize', recalcFloatCamera, false);
-
-export function renderMap() {
-    var tmpRows = Map.getRows();
-    var tmpCols = Map.getCols();
-    var tmpRow, tmpCol;
-    for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
-        for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
-            if (Map.isBrick(tmpCol, tmpRow)) {
-                mapGraphics.drawRect(tmpCol * 32, tmpRow * 16, 31, 15);
-            }
-        }
-    }
-    renderer.render(stage);
-    recalcFloatCamera();
-}
-
-var tmpX = 0;
-var tmpY = 0;
-export function renderGame(player) {
-			
-	tmpX = player.x + mapDx;
-	tmpY = player.y + mapDy;
 	
-	if (floatCamera) {
-		if (player.follow)
-		{
-			// update map position depending on the following player 
-			mapDx = mapGraphics.x = halfWidth - player.x;
-			mapDy = mapGraphics.y = halfHeight - player.y; 
+	
+	async updatePaletteTexture(image) {
+		//var texture = PIXI.Texture.from('images/palette.jpg');
+		//let sprite = new PIXI.Sprite.from('assets/image.png');
+		this.paletteCustomTexture = PIXI.BaseTexture.fromImage(image);
+		// FIXME: get size of image directly, otherwise this.paletteCustomTexture
+		var size = await Utils.getImageDimensions(image);
+
+		this.bricksPerLineCustom = Math.floor(size.w / Constants.BRICK_WIDTH);
+		console.log("palette loaded = " + this.paletteCustomTexture.hasLoaded);
+		console.log("change palette. Brickes per line " + this.paletteCustomTexture.width + " " + this.bricksPerLineCustom);
+	}
+
+
+	renderMap() {
+		document.body.style.background = "url('images/bg_" + this.map.bg + ".jpg')";
+
+		var tmpRows = this.map.getRows();
+		var tmpCols = this.map.getCols();
+		var tmpRow, tmpCol;
+		for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
+			for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
+				if (this.map.isBrick(tmpCol, tmpRow)) {
+					var brickIdx = this.map.getBrick(tmpCol, tmpRow);
+					
+					var pal = this.paletteTexture;
+					var bpr = this.bricksPerLine;
+					// custom palette from map
+					if (this.map.paletteCustomImage != null && brickIdx <= 181) {
+						pal = this.paletteCustomTexture;
+						bpr = this.bricksPerLineCustom;
+						brickIdx -= this.map.paletteCustomIndex;
+					} else {
+						brickIdx -= this.map.paletteIndex;
+					}
+
+					var brickTexture = new PIXI.Texture(
+						pal, 
+						new PIXI.Rectangle(
+							brickIdx % bpr * Constants.BRICK_WIDTH, 
+							Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT, 
+							Constants.BRICK_WIDTH, 
+							Constants.BRICK_HEIGHT));
+
+					
+					var brickSprite = new PIXI.Sprite(brickTexture);
+					brickSprite.position.x = tmpCol * Constants.BRICK_WIDTH;
+					brickSprite.position.y = tmpRow * Constants.BRICK_HEIGHT;
+					console.log(this.bricksPerLine);
+				
+					//console.log(brickIdx + " / " 
+					//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 
+					//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
+				
+					this.mapGraphics.drawRect(tmpCol * 32, tmpRow * 16, 31, 15); // (old) rectangle without a texture
+					this.mapGraphics.addChild(brickSprite);
+				}
+			}
+		}
+		this.recalcFloatCamera(this);
+		this.renderer.render(this.stage);
+	}
+	
+	// when browser size changed this event fixes the map view
+	recalcFloatCamera(render) {
+		console.log("resize event");
+		
+		render.renderer.view.width = window.innerWidth - 20;
+		render.renderer.view.height = window.innerHeight;
+
+		render.floatCamera = render.map.getRows() > (window.innerHeight) / 16 || (render.map.getCols() > (window.innerWidth - 20) / 32);
+		if (render.floatCamera) {
+			render.halfWidth = Math.floor((window.innerWidth - 20) / 2);
+			render.halfHeight = Math.floor((window.innerHeight) / 2);
+
+		} else {
+			render.mapGraphics.x = render.mapDx = Math.floor(((window.innerWidth - 20) - render.map.getCols() * 32) / 2);
+			render.mapGraphics.y = render.mapDy = Math.floor(((window.innerHeight) - render.map.getRows() * 16) / 2);
 		}
 	}
-	
-	player.graphics.adjustPosition(tmpX, tmpY);
 
-    renderer.render(stage);
+
+	renderGame(player) {
+				
+		var tmpX = player.x + this.mapDx;
+		var tmpY = player.y + this.mapDy;
+		
+		if (this.floatCamera) {
+			if (player.follow)
+			{
+				// update map position depending on the following player 
+				this.mapDx = this.mapGraphics.x = this.halfWidth - player.x;
+				this.mapDy = this.mapGraphics.y = this.halfHeight - player.y; 
+			}
+		}
+		
+		player.graphics.adjustPosition(tmpX, tmpY);
+
+		this.renderer.render(this.stage);
+	}
+
 }
+
+
+

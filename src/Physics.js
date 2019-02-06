@@ -9,7 +9,6 @@ const PLAYER_MAX_VELOCITY_X = Constants.PLAYER_MAX_VELOCITY_X;
 
 		
 //Вынесем указатель на функцию в отедельную переменную, чтобы не писать везде Map.isBrick(...)
-var isBrick = Map.isBrick;
 var trunc = Utils.trunc;
 
 var logLine = 0;
@@ -18,8 +17,9 @@ var newText = '';
 		
 export default
 class PlayerPhysics {
-	constructor(player) {
+	constructor(player, map) {
 		this.player = player;
+		this.map = map;
 
 		this.defx = 0;
 		this.defy = 0;
@@ -98,9 +98,9 @@ class PlayerPhysics {
 			this.tmpCol = trunc(Math.round(this.defx + (this.player.velocityX < 0 ? -11 : 11)) / 32);
 			this.tmpY = this.player.crouch ? this.player.y : this.defy;
 			if (
-				isBrick(this.tmpCol, trunc(Math.round(this.tmpY - (this.player.crouch ? 8 : 16)) / 16))
-				|| isBrick(this.tmpCol, trunc(Math.round(this.tmpY) / 16))
-				|| isBrick(this.tmpCol, trunc(Math.round(this.tmpY + 16) / 16))
+				this.map.isBrick(this.tmpCol, trunc(Math.round(this.tmpY - (this.player.crouch ? 8 : 16)) / 16))
+				|| this.map.isBrick(this.tmpCol, trunc(Math.round(this.tmpY) / 16))
+				|| this.map.isBrick(this.tmpCol, trunc(Math.round(this.tmpY + 16) / 16))
 			) {
 				this.player.setX(trunc(this.defx / 32) * 32 + (this.player.velocityX < 0 ? 9 : 22));
 				this.player.velocityX = 0;

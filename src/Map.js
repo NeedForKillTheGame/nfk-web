@@ -3,10 +3,6 @@ import Constants from "./Constants.js";
 import Console from "./Console.js";
 import Utils from "./Utils.js";
 
-var rows = 0;
-var cols = 0;
-var bricks = [];
-var respawns = [];
 
 /*
 function parseMapText(mapText) {
@@ -38,27 +34,61 @@ function parseMapText(mapText) {
 }
 */
 
-export default {
+
+export default
+class Map {
+	constructor(g) {
+		this.g = g;
+		this.rows = 0;
+		this.cols = 0;
+		this.bricks = [];
+		this.respawns = [];
+		this.bg = 1; // background id
+		
+		this.paletteImage = "images/palette.png";
+		this.paletteIndex = 6;
+		
+		this.paletteCustomImage = null;
+		this.paletteCustomIndex = 54;
+	}
+	
+	
+	async loadFromDemo(demoMap) {
+		this.bg = demoMap.Header.BG;
+		if (this.bg == 0) 
+			this.bg = this.g.config.default_bg; // set default bg if not set
+		
+		this.loadNFKMap(demoMap.Bricks);
+		
+		// set palette 
+		if (demoMap.PaletteBytes) {
+			this.paletteCustomImage = "data:image/png;base64," + demoMap.PaletteBytes;
+			await this.g.render.updatePaletteTexture(this.paletteCustomImage);
+		}
+	}
 	
 	// bricksData = array of base64 encoded lines with bytes
 	loadNFKMap(bricksData) {
 		var lines = bricksData; 
-		rows = lines.length;
+		this.rows = lines.length;
 		for (var y = 0; y < lines.length; y++)
 		{
-			bricks[y] = [];	
+			this.bricks[y] = [];	
 			var line = window.atob(lines[y]);
-			cols = line.length;
+			this.cols = line.length;
 			for (var x = 0; x < line.length; x++)
 			{
 				var b = Utils.ord(line[x]);
-				bricks[y][x] = b >= 48;
+				this.bricks[y][x] = b > 53 ? b : false;
+				
+				// TODO: add game objects which <= 53
 				
 				if (b == 34 || b == 35 || b == 36)
-					respawns.push({row: x, col: y});
+					this.respawns.push({row: x, col: y});
 			}
 		}
-	},
+	}
+	
 	/*
 	// FIXME: (HarpyWar) change it to load vertically like NFK map
     loadFromQuery() {
@@ -90,18 +120,23 @@ export default {
     },
 */
     isBrick(row, col) {
-        return row >= rows || col >= cols || row < 0 || col < 0 || bricks[row][col];
-    },
+        return row >= this.rows || col >= this.cols || row < 0 || col < 0 || this.bricks[row][col];
+    }
+	
+	getBrick(row, col) {
+		return this.bricks[row][col];
+	}
+	
 
     getRows() {
-        return cols;
-    },
+        return this.cols;
+    }
 
     getCols() {
-        return rows;
-    },
+        return this.rows;
+    }
 
     getRandomRespawn() {
-        return respawns[Utils.random(respawns.length)];
+        return this.respawns[Utils.random(respawns.length)];
     }
 }

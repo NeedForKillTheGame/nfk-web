@@ -38,7 +38,7 @@ var sound_defs = {
 	flight:	new Howl({ urls: ['sounds/flight.wav'] }),
 	noammo:	new Howl({ urls: ['sounds/noammo.wav'] }),
 	genericdata:	new Howl({ urls: ['sounds/hit.wav'] }),
-	genericstatdata:	new Howl({ urls: ['sounds/gameend.wav'] }),
+	gameend:	new Howl({ urls: ['sounds/gameend.wav'] }),
 	
 }
 
@@ -52,7 +52,7 @@ export default {
         sound_defs[soundId].play();
     },
 	
-	updateVolume(value) {
+	setVolume(value) {
 		this.volume = value;
 	}
 }

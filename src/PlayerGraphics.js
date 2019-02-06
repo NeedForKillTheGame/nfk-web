@@ -1,43 +1,45 @@
 import PIXI from "PIXI";
 import Constants from "./Constants.js";
 import Console from "./Console.js";
+import Utils from "./Utils.js";
 
 export default
 class PlayerGraphics  {
     constructor(stage, player) {
+		this.stage = stage;
 		this.player = player;
 	
 		this.playerGraphics = new PIXI.Graphics();
 		this.playerGraphics.beginFill(0xAAAAFF);
 		//this.playerGraphics.lineStyle(1, 0xFFFFFF);
-		this.playerGraphics.drawRect(0, 0, 20, Constants.BRICK_HEIGHT * 3);
+		this.playerGraphics.drawRect(0, 0, this.player.width(), this.player.height());
 		this.playerGraphics.endFill();
-		stage.addChild(this.playerGraphics);
+		this.stage.addChild(this.playerGraphics);
 
 		this.playerCenter = new PIXI.Graphics();
 		this.playerCenter.beginFill(0x0000AA);
 		this.playerCenter.drawRect(0, 0, 2, 2);
 		this.playerCenter.endFill();
-		stage.addChild(this.playerCenter);
+		this.stage.addChild(this.playerCenter);
 
 
-		this.playerName = new PIXI.Text(player.name, { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
+		this.playerName = new PIXI.Text(Utils.filterNickName(player.name), { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
 		this.playerName.anchor = new PIXI.Point(0.5, 0.5);
 		this.playerName.height = 80;
 		this.playerName.scale.x = this.playerName.scale.y;
-		stage.addChild(this.playerName);
+		this.stage.addChild(this.playerName);
 		
 		this.playerHA = new PIXI.Text("0 / 0", { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
 		this.playerHA.anchor = new PIXI.Point(0.5, 0.5);
 		this.playerHA.height = 70;
 		this.playerHA.scale.x = this.playerName.scale.y;
-		stage.addChild(this.playerHA);
+		this.stage.addChild(this.playerHA);
 		
-		var dot1 = new PIXI.Graphics();
-		stage.addChild(dot1);
-
-		var dot2 = new PIXI.Graphics();
-		stage.addChild(dot2);
+		//var dot1 = new PIXI.Graphics();
+		//this.stage.addChild(dot1);
+        //
+		//var dot2 = new PIXI.Graphics();
+		//this.stage.addChild(dot2);
 
 		this.initHeight = this.playerGraphics.height;
 	}
@@ -67,6 +69,13 @@ class PlayerGraphics  {
 	// health and armor
 	updatePlayerHA(text, x, y) {
 		
-		
+	}
+	
+	
+	destroy() {
+		this.stage.removeChild(this.playerGraphics);
+		this.stage.removeChild(this.playerCenter);
+		this.stage.removeChild(this.playerName);
+		this.stage.removeChild(this.playerHA);
 	}
 }

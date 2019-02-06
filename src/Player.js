@@ -1,20 +1,24 @@
 import Map from "./Map.js";
 import Utils from "./Utils.js";
 import Constants from "./Constants.js";
+import PlayerGraphics from "./PlayerGraphics.js";
+import PlayerPhysics from "./Physics.js";
 
-var isBrick = Map.isBrick;
-var trunc = Utils.trunc;
 
 export default
 class Player {
-    constructor(DXID, name) {
+    constructor(DXID, name, g) {
+		this.stage = g.render.stage;
+		this.map = g.map;
+
+
 		this.DXID = DXID;
         this.x = 0.0;
         this.y = 0.0;
-
+		
         this.name = name;
         this.health = 0;
-        this.aror = 0;
+        this.armor = 0;
 		
 		this.follow = false;
 		
@@ -38,9 +42,32 @@ class Player {
         this.speedJump = 0;
 		
 		this.graphics = null;		
-		this.physics = null;		
-    }
+		this.physics = null;	
 
+		this._init();
+    }
+	
+	
+	// init player graphics and physics
+	_init()
+	{
+			this.graphics = new PlayerGraphics(this.stage, this);
+			this.physics = new PlayerPhysics(this, this.map);
+	}
+	
+	isDead() {
+		return this.health <= 0;
+	}
+	
+	height() {
+		return Constants.BRICK_HEIGHT * (this.crouch ? 2 : 3);
+	}
+	width() {
+		return Constants.PLAYER_WIDTH;
+	}
+
+	
+	
     setX(newX) {
         if (newX != this.x) {
             this.x = newX;
@@ -71,49 +98,49 @@ class Player {
 
     updateCacheOnGround() {
         this.cacheOnGround =
-            isBrick(trunc((this.x - 9) / 32), trunc((this.y + 25) / 16))
-            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y + 23) / 16))
+            this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y + 25) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y + 23) / 16))
 
-            || isBrick(trunc(trunc(this.x + 9) / 32), trunc(trunc(this.y + 25) / 16))
-            && !isBrick(trunc(trunc(this.x + 9) / 32), trunc(trunc(this.y + 23) / 16))
+            || this.map.isBrick(Utils.trunc(Utils.trunc(this.x + 9) / 32), Utils.trunc(Utils.trunc(this.y + 25) / 16))
+            && !this.map.isBrick(Utils.trunc(Utils.trunc(this.x + 9) / 32), Utils.trunc(Utils.trunc(this.y + 23) / 16))
 
-            || isBrick(trunc((this.x - 9) / 32), trunc((this.y + 24) / 16))
-            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y + 8) / 16))
+            || this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y + 24) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y + 8) / 16))
 
-            || isBrick(trunc((this.x + 9) / 32), trunc((this.y + 24) / 16))
-            && !isBrick(trunc((this.x + 9) / 32), trunc((this.y + 8) / 16));
+            || this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y + 24) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y + 8) / 16));
     }
 
     updateCacheBrickCrouchOnHead() {
         this.cacheBrickCrouchOnHead =
-            isBrick(trunc((this.x - 8) / 32), trunc((this.y - 9) / 16))
-            && !isBrick(trunc((this.x - 8) / 32), trunc((this.y - 7) / 16))
+            this.map.isBrick(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 9) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 7) / 16))
 
-            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 9) / 16))
-            && !isBrick(trunc((this.x + 8) / 32), trunc((this.y - 7) / 16))
+            || this.map.isBrick(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 9) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 7) / 16))
 
-            || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 23) / 16))
+            || this.map.isBrick(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 23) / 16))
 
-            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 23) / 16))
+            || this.map.isBrick(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 23) / 16))
 
-            || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 16) / 16))
+            || this.map.isBrick(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 16) / 16))
 
-            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 16) / 16));
+            || this.map.isBrick(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 16) / 16));
     }
 
     updateCacheBrickOnHead() {
         this.cacheBrickOnHead =
-            isBrick(trunc((this.x - 9) / 32), trunc((this.y - 25) / 16))
-            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y - 23) / 16))
+            this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 25) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 23) / 16))
 
-            || isBrick(trunc((this.x + 9) / 32), trunc((this.y - 25) / 16))
-            && !isBrick(trunc((this.x + 9) / 32), trunc((this.y - 23) / 16))
+            || this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 25) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 23) / 16))
 
-            || isBrick(trunc((this.x - 9) / 32), trunc((this.y - 24) / 16))
-            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y - 8) / 16))
+            || this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 24) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 8) / 16))
 
-            || isBrick(trunc((this.x + 9) / 32), trunc((this.y - 24) / 16))
-            && !isBrick(trunc((this.x + 9) / 32), trunc((this.y - 8) / 16));
+            || this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 24) / 16))
+            && !this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 8) / 16));
     }
 
     isOnGround() {
@@ -127,4 +154,8 @@ class Player {
     isBrickCrouchOnHead() {
         return this.cacheBrickCrouchOnHead;
     }
+	
+	destroy() {
+		this.graphics.destroy();
+	}
 }

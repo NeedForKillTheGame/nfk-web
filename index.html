@@ -8,6 +8,7 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+			background-color: black;
         }
 
         #fps {
@@ -59,10 +60,22 @@
         #console.open #console-input {
             display: block;
         }
+		
+		#loading {
+			background-color: black;
+			background: url(images/nfklogo.png) no-repeat;
+			width: 640px;
+			height: 480px;
+			margin: auto;
+			margin-top: 50px;
+		}
     </style>
 </head>
 <body>
-<div id="game"></div>
+
+<div id="game">
+	<div id="loading"></div>
+</div>
 <div id="fps" style=""></div>
 <div id="console">
     <div id="console-content">NFK-WEB<br>type <strong>help</strong> for help</div>

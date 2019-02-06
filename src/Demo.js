@@ -3,13 +3,14 @@ import Sound from "./Sound.js";
 import Constants from "./Constants.js";
 import Utils from "./Utils.js";
 import Console from "./Console.js";
+import Global from "./G.js";
 
 
 export default
 class Demo {
-	constructor() {
-
-		this.players = [];
+	constructor(g) {
+		this.g = g;
+		this.players = g.players;
 		this.data = {};
 		
 		this.frameId = 0;
@@ -21,7 +22,7 @@ class Demo {
         if (queryString.indexOf('demourl=') === 0) {
             var demoUrl = decodeURIComponent(queryString.substring(8)).replace(/\+/g, ' ');
 			demoUrl = 'http://nfk.harpywar.com:8080/demo?url=' + demoUrl + '&full=true';
-            Console.writeText('demo loaded from url');
+            Console.writeText('loading demo from url');
 			this.load(demoUrl, callback);
         }
 	}
@@ -31,34 +32,38 @@ class Demo {
 		var that = this;
 		this._loadJSON(demoUrl,
 			function(data) {
+				Utils.removeHtmlElement("loading");
 				//console.log(data);
 				that.data = data;
-				that._loadPlayers();
 				callback(that);
 			},
-			function(xhr) { console.error(xhr); }
+			function(xhr) { 
+				Utils.removeHtmlElement("loading");
+				Console.writeText('error loading demo');
+				console.error(xhr);
+			}
 		);
 	}
 	
-	_loadPlayers()
+	_spawnPlayer(dxid, name)
 	{
-		for (var i = 0; i < this.data.Players.length; i++)
-		{
-			var p = new Player(
-						this.data.Players[i].PlayerInfo.DXID,
-						this.data.Players[i].RealName);
-			if (i == 0) {
-				p.follow = true; // FIXME: follow only one player (the first)
-			}
-			this.players.push(p);
-			
+		var p = new Player(dxid, name, this.g);
+		if (this.players.length == 0) {
+			p.follow = true; // FIXME: follow only one player (the first)
 		}
-		console.log("loaded " + this.players.length + " players from demo");
+		this.players.push(p);
 	}
 	
 	nextFrame(gametic)
 	{
-		var unit = this.data.DemoUnits[this.frameId++];
+		if (++this.frameId > this.data.DemoUnits.length - 1) {
+			// end of the demo
+			// TODO: display players summary statistics
+			Sound.play('gameend');
+			return false;
+		}
+		
+		var unit = this.data.DemoUnits[this.frameId];
 		var demounit = unit.DemoUnit;
 
 		//console.log(this.frameId + " / " + unit.DData.gametic  + " / " + gametic );
@@ -90,14 +95,32 @@ class Demo {
 						this.players[k].health = demounit.health;
 						this.players[k].armor = demounit.armor;
 						// death
-						if (demounit.health <= 0)
+						if ( this.players[k].isDead() )
 						{
 							Sound.play('death' + (Utils.random(3)+1) );
 						}
 					}
 				}
 				break;
+			
+			// player joined
+			case Constants.DDEMO_CREATEPLAYERV2:
+				var name = Utils.getDelphiString(demounit.netname);
+				this._spawnPlayer(demounit.DXID, name);
+				console.log("player joined " + name);
+				break;
 				
+			// player left
+			case Constants.DDEMO_DROPPLAYER:
+				for (var i = 0; i < this.players.length; i++) {
+					if (this.players[i].DXID == demounit.DXID) {
+						console.log("player left " + this.players[i].name);
+						this.players[i].destroy();
+						this.players.splice(i, 1);
+					}
+				}
+				
+				break;				
 				
 			case Constants.DDEMO_CTF_EVENT_FLAGPICKUP:
 			case Constants.DDEMO_CTF_EVENT_FLAGTAKEN:
@@ -182,12 +205,12 @@ class Demo {
 				//Sound.play('genericdata'); // FIXEME: hit player?
 				break;
 			case Constants.DDEMO_GENERICSOUNDSTATDATA:
-				Sound.play('genericstatdata'); // FIXME: end of the game?
+				
 				break;
 				
 				
 		}
-		
+		return true;
 	}
 	
 	
