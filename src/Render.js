@@ -9,13 +9,34 @@ class Render {
 	constructor(g) {
 		this.g = g;
 		this.map = g.map;
+		
 		var that = this;
 
 		this.app = new PIXI.Application(window.innerWidth, window.innerHeight, { antialias: false, resolution: 1, transparent: true});
 		this.app.view.style.display = "block";
 		var gameEl = document.getElementById('game');
 		gameEl.appendChild(this.app.view);
+		
+		this.stage = this.app.stage;
 
+		this.mapGraphics = new PIXI.Graphics();
+		this.mapGraphics.beginFill(0x999999);
+		this.mapGraphics.lineStyle(1, 0xAAAAAA);
+		this.stage.addChild(this.mapGraphics);
+
+		this.floatCamera = false;
+		this.halfWidth = 0;
+		this.halfHeight = 0;
+		this.mapDx = 0;
+		this.mapDy = 0;
+		
+		this.bricksPerLine = 8; // 
+
+		this.paletteCustomTexture = null;
+		this.bricksPerLineCustom = 0;
+
+		window.addEventListener('resize', function() { that.recalcFloatCamera(that) }, false);
+		
 		// follow next player
 		gameEl.onclick = function (e) {
 			var followId = -1;
@@ -33,34 +54,13 @@ class Render {
 			console.log('Follow player ' + that.g.players[followId].displayName);
 		};
 
-		
-		this.stage = this.app.stage;
-		this.mapGraphics = new PIXI.Graphics();
-		this.mapGraphics.beginFill(0x999999);
-		this.mapGraphics.lineStyle(1, 0xAAAAAA);
-		this.stage.addChild(this.mapGraphics);
-
-		this.floatCamera = false;
-		this.halfWidth = 0;
-		this.halfHeight = 0;
-		this.mapDx = 0;
-		this.mapDy = 0;
-		
-		this.paletteTexture = PIXI.BaseTexture.fromImage(this.map.paletteImage);
-		this.bricksPerLine = 8; // 
-
-		this.paletteCustomTexture = null;
-		this.bricksPerLineCustom = 0;
-
-		
-		window.addEventListener('resize', function() { that.recalcFloatCamera(that) }, false);
 	}
 	
 	
 	async updatePaletteTexture(image) {
 		//var texture = PIXI.Texture.from('images/palette.jpg');
 		//let sprite = new PIXI.Sprite.from('assets/image.png');
-		this.paletteCustomTexture = PIXI.BaseTexture.fromImage(image);
+		this.paletteCustomTexture = PIXI.BaseTexture.from(image);
 		// FIXME: get size of image directly, otherwise this.paletteCustomTexture
 		var size = await Utils.getImageDimensions(image);
 
@@ -81,7 +81,7 @@ class Render {
 				if (this.map.isBrick(tmpCol, tmpRow)) {
 					var brickIdx = this.map.getBrick(tmpCol, tmpRow);
 					
-					var pal = this.paletteTexture;
+					var pal = this.g.resources.palette.texture;
 					var bpr = this.bricksPerLine;
 					// custom palette from map
 					if (this.map.paletteCustomImage != null && brickIdx <= 181) {
@@ -92,6 +92,7 @@ class Render {
 						brickIdx -= this.map.paletteIndex;
 					}
 
+					// cut texture rectangle for brick from the palette
 					var brickTexture = new PIXI.Texture(
 						pal, 
 						new PIXI.Rectangle(
@@ -100,7 +101,7 @@ class Render {
 							Constants.BRICK_WIDTH, 
 							Constants.BRICK_HEIGHT));
 
-					
+					// create brick sprite
 					var brickSprite = new PIXI.Sprite(brickTexture);
 					brickSprite.position.x = tmpCol * Constants.BRICK_WIDTH;
 					brickSprite.position.y = tmpRow * Constants.BRICK_HEIGHT;
@@ -109,7 +110,6 @@ class Render {
 					//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 
 					//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
 				
-					//this.mapGraphics.drawRect(tmpCol * 32, tmpRow * 16, 31, 15); // (old) rectangle without a texture
 					this.mapGraphics.addChild(brickSprite);
 				}
 			}

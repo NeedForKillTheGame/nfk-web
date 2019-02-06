@@ -7,16 +7,18 @@ import Sound from "./Sound.js";
 // global class with all data
 export default
 class Global {
-	constructor() {
+	constructor() {		
+		this.resources = {};
 		this.map = new Map(this);
+		// pixi
+		this.render = new Render(this); 
+
 		this.players = [];
 		// demo data
 		this.demo = new Demo(this);
 		// all objects on the map
 		this.gameObjects = [];
 		
-		// pixi stage
-		this.render = new Render(this); // PIXI.Stage
 		
 		
 		this.config = {

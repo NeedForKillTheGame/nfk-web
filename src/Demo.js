@@ -62,7 +62,7 @@ class Demo {
 
 		//console.log(this.frameId + " / " + unit.DData.gametime + " / " + unit.DData.gametic  + " / " + gametic );
 		if (gametic != unit.DData.gametic)
-			return;
+			return true;
 
 		//console.log("next");
 		
@@ -91,6 +91,49 @@ class Demo {
 						this.players[k].y = demounit.y;
 						this.players[k].velocityX = demounit.inertiax;
 						this.players[k].velocityY = demounit.inertiay;
+						
+						if ((demounit.PUV3 & Constants.PUV3_DIR0)==Constants.PUV3_DIR0) this.players[k].dir = 0;
+						if ((demounit.PUV3 & Constants.PUV3_DIR1)==Constants.PUV3_DIR1) this.players[k].dir = 1;
+						if ((demounit.PUV3 & Constants.PUV3_DIR2)==Constants.PUV3_DIR2) this.players[k].dir = 2;
+						if ((demounit.PUV3 & Constants.PUV3_DIR3)==Constants.PUV3_DIR3) this.players[k].dir = 3;
+						if ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) this.players[k].dead = 0;
+						if ((demounit.PUV3 & Constants.PUV3_DEAD1)==Constants.PUV3_DEAD1) this.players[k].dead = 1;
+						if ((demounit.PUV3 & Constants.PUV3_DEAD2)==Constants.PUV3_DEAD2) this.players[k].dead = 2;
+						if ((demounit.PUV3 & Constants.PUV3_WPN0)==Constants.PUV3_WPN0) this.players[k].weapon = 0;
+						if ((demounit.PUV3 & Constants.PUV3_WPN1)==Constants.PUV3_WPN1) this.players[k].weapon = 1;
+						if ((demounit.PUV3 & Constants.PUV3_WPN2)==Constants.PUV3_WPN2) this.players[k].weapon = 2;
+						if ((demounit.PUV3 & Constants.PUV3_WPN3)==Constants.PUV3_WPN3) this.players[k].weapon = 3;
+						if ((demounit.PUV3 & Constants.PUV3_WPN4)==Constants.PUV3_WPN4) this.players[k].weapon = 4;
+						if ((demounit.PUV3 & Constants.PUV3_WPN5)==Constants.PUV3_WPN5) this.players[k].weapon = 5;
+						if ((demounit.PUV3 & Constants.PUV3_WPN6)==Constants.PUV3_WPN6) this.players[k].weapon = 6;
+						if ((demounit.PUV3 & Constants.PUV3_WPN7)==Constants.PUV3_WPN7) this.players[k].weapon = 7;
+						if ((demounit.PUV3B & Constants.PUV3B_WPN8)==Constants.PUV3B_WPN8) this.players[k].weapon = 8;
+						this.players[k].crouch = ((demounit.PUV3B & Constants.PUV3B_CROUCH)==Constants.PUV3B_CROUCH) ? true : false;
+						this.players[k].BALLOON = ((demounit.PUV3B & Constants.PUV3B_BALLOON)==Constants.PUV3B_BALLOON) ? true : false;
+						
+						if ((this.players[k].dead == 0) && ((demounit.PUV3 & Constants.PUV3_DEAD1)==Constants.PUV3_DEAD1))
+							this.players[k].graphics.stop();
+						else
+							this.players[k].graphics.play();
+						
+						if ((this.players[k].dead > 0) && ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) && (this.players[k].rewardtime>0)) this.players[k].rewardtime = 0;
+						this.players[k].fangle = demounit.wpnang;
+
+						// fixangle
+						if ((this.players[k].dir==1) || (this.players[k].dir==3))
+							if (this.players[k].fangle > 0x7F) this.players[k].fangle = 0xFF - this.players[k].fangle; 
+						else
+							if (this.players[k].fangle <= 0x7F) this.players[k].fangle = 0xFF - this.players[k].fangle;
+
+						this.players[k].ammo_mg = demounit.currammo;
+						this.players[k].ammo_sg = demounit.currammo;
+						this.players[k].ammo_gl = demounit.currammo;
+						this.players[k].ammo_rl = demounit.currammo;
+						this.players[k].ammo_sh = demounit.currammo;
+						this.players[k].ammo_rg = demounit.currammo;
+						this.players[k].ammo_pl = demounit.currammo;
+						this.players[k].ammo_bfg = demounit.currammo;
+						
 					}
 				}
 				break;
@@ -105,7 +148,7 @@ class Demo {
 						this.players[k].health = demounit.health;
 						this.players[k].armor = demounit.armor;
 						// death
-						if ( this.players[k].isDead() )
+						if ( this.players[k].dead )
 						{
 							Sound.play('death' + (Utils.random(3)+1) );
 						}

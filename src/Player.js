@@ -8,6 +8,7 @@ import PlayerPhysics from "./Physics.js";
 export default
 class Player {
     constructor(DXID, name, g) {
+		this.g = g;
 		this.stage = g.render.stage;
 		this.map = g.map;
 
@@ -25,14 +26,31 @@ class Player {
 		
         this.velocityX = 0.0;
         this.velocityY = 0.0;
-
+		
+        this.crouch = false; //current crouch state
+		this.dir = 0; // direction
+		this.dead = 0; // 0-2
+		this.weapon = 0; // 0-7
+		this.BALLOON = false; // ???
+		
+		this.rewardtime = 0; //?
+		this.fangle = 0; // angle of weapon
+		
+		this.ammo_mg = 100; 
+		this.ammo_sg = 0; 
+		this.ammo_gl = 0; 
+		this.ammo_rl = 0; 
+		this.ammo_sh = 0; 
+		this.ammo_rg = 0; 
+		this.ammo_pl = 0; 
+		this.ammo_bfg = 0;
+		
         //Current state of pressed keys
         this.keyUp = false;
         this.keyDown = false;
         this.keyLeft = false;
         this.keyRight = false;
 
-        this.crouch = false; //current crouch state
 
         this.doublejumpCountdown = 0;
 
@@ -52,14 +70,11 @@ class Player {
 	// init player graphics and physics
 	_init()
 	{
-			this.graphics = new PlayerGraphics(this.stage, this);
+			this.graphics = new PlayerGraphics(this.g, this);
 			this.physics = new PlayerPhysics(this, this.map);
 	}
 	
-	isDead() {
-		return this.health <= 0;
-	}
-	
+
 	height() {
 		return Constants.BRICK_HEIGHT * (this.crouch ? 2 : 3);
 	}

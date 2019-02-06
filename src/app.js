@@ -17,13 +17,25 @@ var G = new Global();
 
 console.log("mode: " + G.config.mode);
 
-// load demo
-if (G.config.mode == 'development') {
-	G.demo.load("demo4.json", init); // for debug load local demo
-} else {
-	G.demo.loadFromQuery(init); // for production
-}
-console.log("demo loaded");
+PIXI.loader
+	.add('sarge_wd', "images/models/sarge/wd.json")
+	.add('palette', "images/palette.png")
+	.add('machine', "images/Mgun_ex.png")
+	.add('gaunlett', "images/Gauntlet.png")
+	.load(run);
+	
+function run(loader, resources) {
+	
+	G.resources = resources;
+	
+	// load demo
+	if (G.config.mode == 'development') {
+		G.demo.load("demo4.json", init); // for debug load local demo
+	} else {
+		G.demo.loadFromQuery(init); // for production
+	}
+	console.log("demo loaded");
+}		
 
 
 async function init()
@@ -59,7 +71,9 @@ async function init()
 			// player graphics
 			G.render.renderGame(G.players[i]);
 		}
-		G.demo.nextFrame(gametic);
+		// if end of demo then stop rendering
+		if ( !G.demo.nextFrame(gametic) )
+			return;
 		
 		if (++gametic > Constants.FPS)
 			gametic = 0;
