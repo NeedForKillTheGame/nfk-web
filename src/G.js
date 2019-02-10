@@ -24,10 +24,12 @@ class Global {
 		
 		
 		this.config = {
+			demoServiceUrl: 'http://nfk.harpywar.com:8080/demo?url=',
 			mode: process.env.NODE_ENV, // 'devemopment' or 'production', depends on running enviroment
 			volume: 0.1,
 			default_bg: 2,
-			mech: true
+			mech: true, // rectangle for objects
+			brickMech: true // rectangle for bricks
 		}
 
 		// init volume

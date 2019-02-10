@@ -20,8 +20,8 @@ class Demo {
 		var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
         if (queryString.indexOf('demourl=') === 0) {
             var demoUrl = decodeURIComponent(queryString.substring(8)).replace(/\+/g, ' ');
-			demoUrl = 'http://nfk.harpywar.com:8080/demo?url=' + demoUrl + '&full=true';
-            Console.writeText('loading demo from url');
+			demoUrl = this.g.config.demoServiceUrl + demoUrl + '&full=true';
+            Console.writeText('loading demo from url ' + demoUrl);
 			this.load(demoUrl, callback);
         }
 	}

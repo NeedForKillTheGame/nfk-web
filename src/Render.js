@@ -73,6 +73,8 @@ class Render {
 
 	renderMap() {
 		document.body.style.background = "url('images/bg_" + this.map.bg + ".jpg')";
+		var that = this;
+		this.g.map.destroyBrickObjects();
 
 		var tmpRows = this.map.getRows();
 		var tmpCols = this.map.getCols();
@@ -81,7 +83,7 @@ class Render {
 			for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
 				if (!this.map.isBrick(tmpCol, tmpRow))
 					continue;
-			
+
 				var brickIdx = this.map.getBrick(tmpCol, tmpRow);
 
 				var pal = this.g.resources.palette.texture;
@@ -113,6 +115,18 @@ class Render {
 				//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 
 				//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
 			
+				this.map.brickObjects.push({
+					row: tmpRow,
+					col: tmpCol,
+					rect: function () {
+						return that.map.brickRect(this.row, this.col);
+					},
+					sprite: brickSprite,
+					mech: this.g.config.brickMech 
+						? this.g.render.createMech(0, 0, Constants.BRICK_WIDTH, Constants.BRICK_HEIGHT)
+						: null
+				});
+
 				this.mapGraphics.addChild(brickSprite);
 			}
 		}
@@ -163,6 +177,7 @@ class Render {
 	}
 	
 	renderMech() {
+		// mech of players
 		for (var i = 0; i < this.g.players.length; i++) {
 			this.g.players[i].graphics.mech.x = this.g.players[i].rect().x1;
 			this.g.players[i].graphics.mech.y = this.g.players[i].rect().y1;
@@ -170,12 +185,24 @@ class Render {
 			this.g.players[i].graphics.mech.height = this.g.players[i].rect().y2 - this.g.players[i].rect().y1;
 			
 		}
-		
+		// mech of objects
 		for (var i = 0; i < this.g.objects.length; i++) {
 			this.g.objects[i].mech.x = this.g.objects[i].rect().x1;
 			this.g.objects[i].mech.y = this.g.objects[i].rect().y1;
 			this.g.objects[i].mech.width = this.g.objects[i].rect().x2 - this.g.objects[i].rect().x1;
 			this.g.objects[i].mech.height = this.g.objects[i].rect().y2 - this.g.objects[i].rect().y1;
+		}
+
+		// mech of bricks
+		if (this.g.config.brickMech)
+		{
+			for (var i = 0; i < this.g.map.brickObjects.length; i++) {
+				var rect = this.g.map.brickObjects[i].rect();
+				this.g.map.brickObjects[i].mech.x = rect.x1;
+				this.g.map.brickObjects[i].mech.y = rect.y1;
+				this.g.map.brickObjects[i].mech.width = rect.x2 - rect.x1;
+				this.g.map.brickObjects[i].mech.height = rect.y2 - rect.y1;
+			}
 		}
 	}
 	
@@ -189,6 +216,9 @@ class Render {
 		mech.drawRect(x, y, w, h);
 		this.stage.addChild(mech);
 		return mech;
+	}
+	removeMech(mech) {
+		this.stage.removeChild(mech);
 	}
 }
 

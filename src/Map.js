@@ -35,16 +35,19 @@ class Map {
 		this.g = g;
 		this.rows = 0;
 		this.cols = 0;
-		this.bricks = [];
+		this.bricks = []; // two dimensional array of bricks, contains only brick index (legacy)
+		this.brickObjects = []; // array of brick objects (for easier iteration)
+
 		this.specialObjects = [];
 		this.respawns = [];
 		this.bg = 1; // background id
 		
 		this.paletteImage = "images/palette.png";
-		this.paletteIndex = 6;
+		this.paletteIndex = 6; // offset for normal palette
 		
 		this.paletteCustomImage = null;
-		this.paletteCustomIndex = 54;
+		this.paletteCustomIndex = 54; // offset for custom palette
+
 	}
 	
 	
@@ -87,17 +90,19 @@ class Map {
 	
 	spawnObjects() {
 		// destroy old objects if exist
-		this.g.map._destroyObjects();
+		this._destroyObjects();
 
 		// add all map simpleobjects (medkits, armors, weapons)
 		for (var y = 0; y < this.g.map.bricks.length; y++) {
 			for (var x = 0; x < this.g.map.bricks[y].length; x++) {
 				var brick = this.g.map.bricks[y][x];
-				var x_coord = y * Constants.BRICK_WIDTH; // yes coords messed up :/
+				var x_coord = y * Constants.BRICK_WIDTH; // yes coords are messed up :/
 				var y_coord = x * Constants.BRICK_HEIGHT;
 				// do not handle real bricks (map buildings)
 				if (this.g.map.bricks[y][x] > 53)
+				{
 					continue;
+				}
 				
 				if (brick >=1 && brick <= 7)
 					this.g.objects.push(new ItemWeapon(this.g, x_coord, y_coord, brick));
@@ -180,13 +185,33 @@ class Map {
 		this.g.objects = [];
 		console.log("destroy objects");
 	}
-	
+		
+	destroyBrickObjects() {
+		for (var i = 0; i < this.brickObjects.length; i++) {
+			this.g.render.mapGraphics(this.sprite);
+			this.g.render.removeMech(this.mech);
+			this.brickObjects[i].sprite.destroy();
+			this.brickObjects[i].mech.destroy();
+		}
+		this.brickObjects = [];
+	}
+
     isBrick(row, col) {
         return row >= this.rows || col >= this.cols || row < 0 || col < 0 || this.bricks[row][col] > 53;
     }
 	
 	getBrick(row, col) {
 		return this.bricks[row][col];
+	}
+
+	// rectangle of a brick
+	brickRect(col, row) { 
+		return {
+			x1: row * Constants.BRICK_WIDTH + this.g.render.mapDx,
+			y1: col * Constants.BRICK_HEIGHT + this.g.render.mapDy,
+			x2: row * Constants.BRICK_WIDTH + Constants.BRICK_WIDTH + this.g.render.mapDx,
+			y2: col * Constants.BRICK_HEIGHT + Constants.BRICK_HEIGHT + this.g.render.mapDy,
+		};
 	}
 	
 
@@ -200,5 +225,6 @@ class Map {
 
     getRandomRespawn() {
         return this.respawns[Utils.random(respawns.length)];
-    }
+	}
+
 }
