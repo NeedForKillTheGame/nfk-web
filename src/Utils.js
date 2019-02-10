@@ -58,10 +58,11 @@ export default {
 	},
 	
 	// check intersection of two rectangles
+	// >= means exclude touch of rect borders, only real intersaction
 	rectOverlap(a, b) {
-		return !(a.x1 > b.x2 || 
-				b.x1 > a.x2 || 
-		        a.y1 > b.y2 || 
-				b.y1 > a.y2);
+		return !(a.x1 >= b.x2 || 
+				b.x1 >= a.x2 || 
+		        a.y1 >= b.y2 || 
+				b.y1 >= a.y2);
 	}
 };
