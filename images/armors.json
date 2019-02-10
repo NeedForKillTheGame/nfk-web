@@ -1,0 +1,335 @@
+{"frames": {
+
+"armors-0.png":
+{
+	"frame": {"x":1,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-1.png":
+{
+	"frame": {"x":27,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-2.png":
+{
+	"frame": {"x":363,"y":1,"w":23,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":23,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-3.png":
+{
+	"frame": {"x":601,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-4.png":
+{
+	"frame": {"x":708,"y":1,"w":17,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":0,"w":17,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-5.png":
+{
+	"frame": {"x":883,"y":1,"w":14,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":14,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-6.png":
+{
+	"frame": {"x":817,"y":1,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-7.png":
+{
+	"frame": {"x":667,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-8.png":
+{
+	"frame": {"x":488,"y":1,"w":23,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":23,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-9.png":
+{
+	"frame": {"x":287,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-10.png":
+{
+	"frame": {"x":53,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-11.png":
+{
+	"frame": {"x":79,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-12.png":
+{
+	"frame": {"x":313,"y":1,"w":23,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":23,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-13.png":
+{
+	"frame": {"x":513,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-14.png":
+{
+	"frame": {"x":727,"y":1,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-15.png":
+{
+	"frame": {"x":835,"y":1,"w":14,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":14,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-16.png":
+{
+	"frame": {"x":745,"y":1,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-17.png":
+{
+	"frame": {"x":535,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-18.png":
+{
+	"frame": {"x":338,"y":1,"w":23,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":23,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-19.png":
+{
+	"frame": {"x":105,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-20.png":
+{
+	"frame": {"x":131,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-21.png":
+{
+	"frame": {"x":157,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-22.png":
+{
+	"frame": {"x":388,"y":1,"w":23,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":23,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-23.png":
+{
+	"frame": {"x":557,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-24.png":
+{
+	"frame": {"x":689,"y":1,"w":17,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":0,"w":17,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-25.png":
+{
+	"frame": {"x":851,"y":1,"w":14,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":14,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-26.png":
+{
+	"frame": {"x":763,"y":1,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-27.png":
+{
+	"frame": {"x":579,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-28.png":
+{
+	"frame": {"x":413,"y":1,"w":23,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":23,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-29.png":
+{
+	"frame": {"x":183,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-30.png":
+{
+	"frame": {"x":209,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-31.png":
+{
+	"frame": {"x":235,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-32.png":
+{
+	"frame": {"x":438,"y":1,"w":23,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":23,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-33.png":
+{
+	"frame": {"x":623,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-34.png":
+{
+	"frame": {"x":781,"y":1,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-35.png":
+{
+	"frame": {"x":867,"y":1,"w":14,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":14,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-36.png":
+{
+	"frame": {"x":799,"y":1,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-37.png":
+{
+	"frame": {"x":645,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-38.png":
+{
+	"frame": {"x":463,"y":1,"w":23,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":23,"h":16},
+	"sourceSize": {"w":32,"h":16}
+},
+"armors-39.png":
+{
+	"frame": {"x":261,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":24,"h":16},
+	"sourceSize": {"w":32,"h":16}
+}},
+"animations": {
+	"armors": ["armors-0.png","armors-1.png","armors-2.png","armors-3.png","armors-4.png","armors-5.png","armors-6.png","armors-7.png","armors-8.png","armors-9.png","armors-10.png","armors-11.png","armors-12.png","armors-13.png","armors-14.png","armors-15.png","armors-16.png","armors-17.png","armors-18.png","armors-19.png","armors-20.png","armors-21.png","armors-22.png","armors-23.png","armors-24.png","armors-25.png","armors-26.png","armors-27.png","armors-28.png","armors-29.png","armors-30.png","armors-31.png","armors-32.png","armors-33.png","armors-34.png","armors-35.png","armors-36.png","armors-37.png","armors-38.png","armors-39.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "armors.png",
+	"format": "RGBA8888",
+	"size": {"w":898,"h":18},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:186c4358eaf0476932f0e1f7e411e905:e301fce0901946dddcb6242daf0892cf:490ee6c3ed8677cc81456d5b376cd2c7$"
+}
+}

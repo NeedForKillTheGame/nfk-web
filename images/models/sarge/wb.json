@@ -1,0 +1,167 @@
+{"frames": {
+
+"wb-0.png":
+{
+	"frame": {"x":31,"y":301,"w":22,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":0,"w":22,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-1.png":
+{
+	"frame": {"x":1,"y":101,"w":33,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":33,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-2.png":
+{
+	"frame": {"x":1,"y":401,"w":26,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":0,"w":26,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-3.png":
+{
+	"frame": {"x":33,"y":251,"w":21,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":21,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-4.png":
+{
+	"frame": {"x":38,"y":1,"w":17,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":0,"w":17,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-5.png":
+{
+	"frame": {"x":38,"y":51,"w":17,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":0,"w":17,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-6.png":
+{
+	"frame": {"x":1,"y":451,"w":20,"h":48},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":0,"w":20,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-7.png":
+{
+	"frame": {"x":29,"y":351,"w":26,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":0,"w":26,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-8.png":
+{
+	"frame": {"x":1,"y":151,"w":33,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":0,"w":33,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-9.png":
+{
+	"frame": {"x":1,"y":51,"w":35,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":35,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-10.png":
+{
+	"frame": {"x":1,"y":1,"w":35,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":35,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-11.png":
+{
+	"frame": {"x":1,"y":201,"w":30,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":0,"w":30,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-12.png":
+{
+	"frame": {"x":29,"y":401,"w":25,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":25,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-13.png":
+{
+	"frame": {"x":36,"y":101,"w":19,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":0,"w":19,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-14.png":
+{
+	"frame": {"x":36,"y":151,"w":19,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":0,"w":19,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-15.png":
+{
+	"frame": {"x":33,"y":201,"w":22,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":0,"w":22,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-16.png":
+{
+	"frame": {"x":1,"y":351,"w":26,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":0,"w":26,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-17.png":
+{
+	"frame": {"x":1,"y":301,"w":28,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":0,"w":28,"h":48},
+	"sourceSize": {"w":45,"h":48}
+},
+"wb-18.png":
+{
+	"frame": {"x":1,"y":251,"w":30,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":0,"w":30,"h":48},
+	"sourceSize": {"w":45,"h":48}
+}},
+"animations": {
+	"wb": ["wb-0.png","wb-1.png","wb-2.png","wb-3.png","wb-4.png","wb-5.png","wb-6.png","wb-7.png","wb-8.png","wb-9.png","wb-10.png","wb-11.png","wb-12.png","wb-13.png","wb-14.png","wb-15.png","wb-16.png","wb-17.png","wb-18.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "wb.png",
+	"format": "RGBA8888",
+	"size": {"w":56,"h":472},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:4987b605b8d43dfa81cc291cb22d2a02:d8e5c5f889018369b1d6aec92250cd91:0f0186cfc35c7eb9599c27a953e89265$"
+}
+}
