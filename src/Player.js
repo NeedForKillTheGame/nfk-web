@@ -7,7 +7,7 @@ import PlayerPhysics from "./Physics.js";
 
 export default
 class Player {
-    constructor(DXID, name, g) {
+    constructor(g, DXID, name) {
 		this.g = g;
 		this.stage = g.render.stage;
 		this.map = g.map;
@@ -32,9 +32,12 @@ class Player {
 		this.dead = 0; // 0-2
 		this.weapon = 0; // 0-7
 		this.BALLOON = false; // ???
+		this.team = 0;
+		this.model = 'sarge'; // TODO: make allow model change and if not found then use sarge
 		
 		this.rewardtime = 0; //?
 		this.fangle = 0; // angle of weapon
+		
 		
 		this.ammo_mg = 100; 
 		this.ammo_sg = 0; 
@@ -63,26 +66,66 @@ class Player {
 		this.graphics = null;		
 		this.physics = null;	
 
+
 		this._init();
     }
-	
-	
+
 	// init player graphics and physics
 	_init()
 	{
 			this.graphics = new PlayerGraphics(this.g, this);
-			this.physics = new PlayerPhysics(this, this.map);
+			this.physics = new PlayerPhysics(this.g, this);
 	}
 	
 
 	height() {
-		return Constants.BRICK_HEIGHT * (this.crouch ? 2 : 3);
+		return this.crouch ? Constants.PLAYER_HEIGHT_CROUCH: Constants.PLAYER_HEIGHT;
 	}
 	width() {
 		return Constants.PLAYER_WIDTH;
 	}
-
 	
+	// player rectangle
+	rect() {
+		return {
+			x1: this.x - (this.width() / 2)  + this.g.render.mapDx,
+			y1: this.y - (this.height() / 2) + this.g.render.mapDy,
+			x2: this.x + (this.width() / 2)  + this.g.render.mapDx,
+			y2: this.y + (this.height() / 2) + this.g.render.mapDy,
+		};
+	}
+
+		
+	addHealth(val, max) {
+		this.health += val;
+		if (this.health > max)
+			this.health = max;
+		if (this.health <= 0)
+			this.dead = 1;
+	}		
+	addArmor(val) {
+		this.admor += val;
+		if (this.admor > 200)
+			this.admor = 200;
+	}
+	
+	addWeapon(weaponId) {
+		
+	}
+	
+	addWeaponAmmo(ammoId, amount) {
+		
+	}
+	
+	
+	
+	changeTeam(team){
+		console.log("player " + this.name + " selected team " + team);
+		this.team = team;
+		
+		var color = team == 0 ? 'r' : 'b';
+		this.graphics.setModel(this.model, color, 'w');
+	}
 	
     setX(newX) {
         if (newX != this.x) {

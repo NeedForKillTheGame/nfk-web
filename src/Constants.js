@@ -1,9 +1,13 @@
+
 export default {
     FPS: 50,
 
     BRICK_WIDTH: 32,
     BRICK_HEIGHT: 16,
+	
 	PLAYER_WIDTH: 20,
+	PLAYER_HEIGHT: 16 * 3,
+	PLAYER_HEIGHT_CROUCH: 16 * 2,
 	
     PLAYER_MAX_VELOCITY_X: 3,
 	

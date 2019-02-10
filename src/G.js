@@ -17,21 +17,19 @@ class Global {
 		// demo data
 		this.demo = new Demo(this);
 		// all objects on the map
-		this.gameObjects = [];
+		this.objects = [];
 		
+		// game paused or not
+		this.paused = false;
 		
 		
 		this.config = {
 			mode: process.env.NODE_ENV, // 'devemopment' or 'production', depends on running enviroment
-			volume: 0.3,
-			default_bg: 2
+			volume: 0.1,
+			default_bg: 2,
+			mech: true
 		}
-		this.const = {
-			mode: process.env.NODE_ENV, // 'devemopment' or 'production', depends on running enviroment
-			fps: 50, // do not change, 50 fps is in nfk
-			volume: 0.3,
-			default_bg: 2
-		}
+
 		// init volume
 		Sound.setVolume(this.config.volume);
 		

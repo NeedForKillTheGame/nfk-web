@@ -17,9 +17,10 @@ var newText = '';
 		
 export default
 class PlayerPhysics {
-	constructor(player, map) {
+	constructor(g, player) {
+		this.g = g;
 		this.player = player;
-		this.map = map;
+		this.map = g.map;
 
 		this.defx = 0;
 		this.defy = 0;
@@ -307,6 +308,12 @@ class PlayerPhysics {
 				this.tmpDeltaPhysicFrames--;
 			}
 		}
+		
+		
+		// handle objects collisions with a player
+		for (var i = 0; i < this.g.objects.length; i++) {
+			this.g.objects[i].handleCollisions(this.player);
+		}
 	}
 
 	
@@ -329,7 +336,7 @@ class PlayerPhysics {
 			+ ', sj: ' + this.player.speedJump
 			+ ')';
 		textarea.value = newText + "\n" + textarea.value.substring(0, 1000);
-		Console.writeText(newText);
+		//Console.writeText(newText); // debug
 	}
 
 	round(val) {

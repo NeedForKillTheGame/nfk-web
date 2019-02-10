@@ -31,17 +31,21 @@ export default {
 		return newName;
 	},
 	
+	
+	// first char is string length
+	// then read until the length exceed
 	getDelphiString(str)
 	{
 		if (str.length == 0)
 			return str;
 
-		// first char is string length
 		var len = str[0].charCodeAt(0); 
 		if (len <= str.length - 1)
 			str = str.substring(1, len + 1);
+
 		return str;
 	},
+
 	
 	getImageDimensions(file) {
 	  return new Promise (function (resolved, rejected) {
@@ -51,5 +55,13 @@ export default {
 		};
 		i.src = file
 	  })
+	},
+	
+	// check intersection of two rectangles
+	rectOverlap(a, b) {
+		return !(a.x1 > b.x2 || 
+				b.x1 > a.x2 || 
+		        a.y1 > b.y2 || 
+				b.y1 > a.y2);
 	}
 };

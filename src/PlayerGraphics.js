@@ -18,6 +18,8 @@ class PlayerGraphics  {
 		//this.stage.addChild(this.playerGraphics);
 
 		this.obj = null;
+		this.animations = null;
+		this.setModel(this.player.model, 'd', 'w');
 		this.initAnimation();
 
 		this.playerName = new PIXI.Text(player.displayName, { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
@@ -49,6 +51,9 @@ class PlayerGraphics  {
 		
         this.obj.addChild(this.weaponSprite);
 
+		
+		// player mech object (debug)
+		this.mech = this.g.render.createMech(0, 0, this.player.width(), this.player.height());
 	}
 	
 	getWeaponTexture(weaponId) {
@@ -57,51 +62,41 @@ class PlayerGraphics  {
 		
 		// gaunlett
 		if (weaponId == 0) {
-			weaponTexture = new PIXI.Texture(
-				this.g.resources.gaunlett.texture, 
-				new PIXI.Rectangle(
-					0, 
-					0,
-					Constants.BRICK_WIDTH, 
-					28));	
+			weaponTexture = this.g.resources.gaunlet.textures[0];
 		}
 		// machine
 		else if (weaponId == 1) {
-			weaponTexture = new PIXI.Texture(
-				this.g.resources.machine.texture, 
-				new PIXI.Rectangle(
-					40, 
-					0,
-					40, 
-					13));
+			weaponTexture = this.g.resources.mgun.textures[0];
 		} 
 		// others
 		else {
-			weaponTexture = new PIXI.Texture(
-				this.g.resources.palette.texture, 
-				new PIXI.Rectangle(
-					(weaponId - 1) * Constants.BRICK_WIDTH, 
-					0,
-					Constants.BRICK_WIDTH, 
-					Constants.BRICK_HEIGHT));
+			weaponTexture = this.g.resources.weapons.textures[weaponId];
 		}
 				
 		return weaponTexture;
 	}
 	
+	// model = sarge
+	// color = d|b|r
+	// walktype = w
+	setModel(model, color, walktype) {
+		var type = walktype + color;
+		var name = model + "_" + type;
+		this.animations = this.g.resources[name].spritesheet.animations[type];
+		console.log(this.g.resources[name]);
+		//if (this.obj)
+		//	this.obj.textures = this.g.resources[name].textures;
+	}
+	
 	initAnimation() {
-		var frames = [];
-
-		for (var i = 0; i < 19; i++) {
-			frames.push(PIXI.Texture.fromFrame('wd_' + i + '.png'));
-		}
-
+		console.log(this.g.resources.sarge_wd);
+		console.log(this.frames);
 		// animated player
-		this.obj = new PIXI.extras.AnimatedSprite(frames);
+		this.obj = new PIXI.AnimatedSprite(this.animations);
 		this.obj.anchor.set(0.5);
 		this.obj.animationSpeed = 0.3; 
 		this.obj.play();
-		
+		console.log(this.obj);
 		// ignore first frame when animate
 		var that = this;
 		this.obj.onFrameChange = (f) => {
@@ -109,9 +104,8 @@ class PlayerGraphics  {
 				that.obj.gotoAndPlay(1);
 			}
 		};
-		//var anim = new PIXI.extras.AnimatedSprite(sheet.animations["wd"]);
+		//var anim = new PIXI.AnimatedSprite(sheet.animations["wd"]);
 		this.stage.addChild(this.obj);
-		
 	}
 	
 	play() {
@@ -154,6 +148,7 @@ class PlayerGraphics  {
 		
 		this.weaponSprite.texture = this.getWeaponTexture(this.player.weapon);
 		this.weaponSprite.angle = this.player.fangle;
+		
 	}
 	
 	// health and armor
@@ -167,5 +162,6 @@ class PlayerGraphics  {
 		this.stage.removeChild(this.playerCenter);
 		this.stage.removeChild(this.playerName);
 		this.stage.removeChild(this.playerHA);
+		this.stage.removeChild(this.mech);
 	}
 }

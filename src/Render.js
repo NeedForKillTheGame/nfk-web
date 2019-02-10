@@ -39,6 +39,8 @@ class Render {
 		
 		// follow next player
 		gameEl.onclick = function (e) {
+			that.g.paused = that.g.paused ? false : true;
+			
 			var followId = -1;
 			for (var i = 0; i < that.g.players.length; i++) {
 				if (that.g.players[i].follow) {
@@ -53,7 +55,6 @@ class Render {
 			that.g.players[followId].follow = true;
 			console.log('Follow player ' + that.g.players[followId].displayName);
 		};
-
 	}
 	
 	
@@ -78,42 +79,46 @@ class Render {
 		var tmpRow, tmpCol;
 		for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
 			for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
-				if (this.map.isBrick(tmpCol, tmpRow)) {
-					var brickIdx = this.map.getBrick(tmpCol, tmpRow);
-					
-					var pal = this.g.resources.palette.texture;
-					var bpr = this.bricksPerLine;
-					// custom palette from map
-					if (this.map.paletteCustomImage != null && brickIdx <= 181) {
-						pal = this.paletteCustomTexture;
-						bpr = this.bricksPerLineCustom;
-						brickIdx -= this.map.paletteCustomIndex;
-					} else {
-						brickIdx -= this.map.paletteIndex;
-					}
+				if (!this.map.isBrick(tmpCol, tmpRow))
+					continue;
+			
+				var brickIdx = this.map.getBrick(tmpCol, tmpRow);
 
-					// cut texture rectangle for brick from the palette
-					var brickTexture = new PIXI.Texture(
-						pal, 
-						new PIXI.Rectangle(
-							brickIdx % bpr * Constants.BRICK_WIDTH, 
-							Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT, 
-							Constants.BRICK_WIDTH, 
-							Constants.BRICK_HEIGHT));
-
-					// create brick sprite
-					var brickSprite = new PIXI.Sprite(brickTexture);
-					brickSprite.position.x = tmpCol * Constants.BRICK_WIDTH;
-					brickSprite.position.y = tmpRow * Constants.BRICK_HEIGHT;
-				
-					//console.log(brickIdx + " / " 
-					//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 
-					//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
-				
-					this.mapGraphics.addChild(brickSprite);
+				var pal = this.g.resources.palette.texture;
+				var bpr = this.bricksPerLine;
+				// custom palette from map
+				if (this.map.paletteCustomImage != null && brickIdx > 53 && brickIdx <= 181) {
+					pal = this.paletteCustomTexture;
+					bpr = this.bricksPerLineCustom;
+					brickIdx -= this.map.paletteCustomIndex;
+				} else {
+					brickIdx -= this.map.paletteIndex;
 				}
+
+				// cut texture rectangle for brick from the palette
+				var brickTexture = new PIXI.Texture(
+					pal, 
+					new PIXI.Rectangle(
+						brickIdx % bpr * Constants.BRICK_WIDTH, 
+						Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT, 
+						Constants.BRICK_WIDTH, 
+						Constants.BRICK_HEIGHT));
+
+				// create brick sprite
+				var brickSprite = new PIXI.Sprite(brickTexture);
+				brickSprite.position.x = tmpCol * Constants.BRICK_WIDTH;
+				brickSprite.position.y = tmpRow * Constants.BRICK_HEIGHT;
+			
+				//console.log(brickIdx + " / " 
+				//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 
+				//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
+			
+				this.mapGraphics.addChild(brickSprite);
 			}
 		}
+
+		this.map.spawnObjects();
+		
 		this.recalcFloatCamera(this);
 		this.app.render(this.stage);
 	}
@@ -139,6 +144,7 @@ class Render {
 
 	renderGame(player) {
 				
+		// position of a player on the map
 		var tmpX = player.x + this.mapDx;
 		var tmpY = player.y + this.mapDy;
 		
@@ -152,10 +158,38 @@ class Render {
 		}
 		
 		player.graphics.adjustPosition(tmpX, tmpY);
-
+		
 		this.app.render(this.stage);
 	}
-
+	
+	renderMech() {
+		for (var i = 0; i < this.g.players.length; i++) {
+			this.g.players[i].graphics.mech.x = this.g.players[i].rect().x1;
+			this.g.players[i].graphics.mech.y = this.g.players[i].rect().y1;
+			this.g.players[i].graphics.mech.width = this.g.players[i].rect().x2 - this.g.players[i].rect().x1;
+			this.g.players[i].graphics.mech.height = this.g.players[i].rect().y2 - this.g.players[i].rect().y1;
+			
+		}
+		
+		for (var i = 0; i < this.g.objects.length; i++) {
+			this.g.objects[i].mech.x = this.g.objects[i].rect().x1;
+			this.g.objects[i].mech.y = this.g.objects[i].rect().y1;
+			this.g.objects[i].mech.width = this.g.objects[i].rect().x2 - this.g.objects[i].rect().x1;
+			this.g.objects[i].mech.height = this.g.objects[i].rect().y2 - this.g.objects[i].rect().y1;
+		}
+	}
+	
+	
+	
+	// create and add mech object (for debug)
+	createMech(x, y, w, h) {
+		var mech = new PIXI.Graphics();
+		//mech.beginFill(0xFF00FF, 1);
+		mech.lineStyle(2, 0xFF00FF); 
+		mech.drawRect(x, y, w, h);
+		this.stage.addChild(mech);
+		return mech;
+	}
 }
 
 

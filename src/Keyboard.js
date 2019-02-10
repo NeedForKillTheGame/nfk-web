@@ -2,7 +2,8 @@ var keysState = {
     keyUp: false,
     keyDown: false,
     keyLeft: false,
-    keyRight: false
+    keyRight: false,
+    keyP: false
 };
 
 document.addEventListener('keydown', e => {
@@ -28,7 +29,13 @@ document.addEventListener('keydown', e => {
             case 40:
                 keysState.keyDown = true;
                 break;
+				
+            case 112:
+                keysState.keyP = true;
+				console.log("p unpressed");
+                break;
         }
+		console.log("unpressed");
     }
 });
 
@@ -55,7 +62,13 @@ document.addEventListener('keyup', e => {
             case 40:
                 keysState.keyDown = false;
                 break;
+				
+            case 112: // p
+                keysState.keyP = false;
+				console.log("p pressed");
+                break;
         }
+		console.log("pressed");
     }
 });
 

@@ -5,7 +5,6 @@ import Utils from "./Utils.js";
 import Console from "./Console.js";
 import Global from "./G.js";
 
-
 export default
 class Demo {
 	constructor(g) {
@@ -45,17 +44,27 @@ class Demo {
 		);
 	}
 	
-	_spawnPlayer(dxid, name)
+	spawnPlayer(dxid, name)
 	{
-		var p = new Player(dxid, name, this.g);
+		var p = new Player(this.g, dxid, name);
 		if (this.players.length == 0) {
 			p.follow = true; // FIXME: follow only one player (the first)
 		}
 		this.players.push(p);
+		return p;
 	}
 	
 	nextFrame(gametic)
 	{
+		// end of the demo
+		if (this.frameId > this.data.DemoUnits.length - 1) {
+			// TODO: display players summary statistics
+			Sound.play('gameend');
+			console.log("end of demo");
+			return false;
+		}
+		
+		
 		var unit = this.data.DemoUnits[this.frameId];
 		var demounit = unit.DemoUnit;
 
@@ -68,19 +77,19 @@ class Demo {
 		
 		this.frameId++;
 		
-		
-		if (this.frameId > this.data.DemoUnits.length - 1) {
-			// end of the demo
-			// TODO: display players summary statistics
-			Sound.play('gameend');
-			console.log("end of demo");
-			return false;
-		}
-
 
 
 		switch (unit.DData.type0)
 		{
+			// match start
+			case Constants.DDEMO_TIMESET:
+				// if warmup then do nothing
+				if (demounit.warmup == 0) {
+					Sound.play('matchstart');
+					this.g.map.spawnObjects();
+				}
+				
+				break;
 			// update position for a player
 			case Constants.DDEMO_PLAYERPOSV3:
 				for (var k = 0; k < this.players.length; k++)
@@ -158,10 +167,23 @@ class Demo {
 			
 			// player joined
 			case Constants.DDEMO_CREATEPLAYERV2:
-				var name = Utils.getDelphiString(demounit.netname);
-				this._spawnPlayer(demounit.DXID, name);
+				var name = demounit.netname;
+				var p = this.spawnPlayer(demounit.DXID, name);
+				p.changeTeam(demounit.team);
 				console.log("player joined " + name);
 				break;
+				
+				
+			case Constants.DDEMO_TEAMSELECT:
+				for (var k = 0; k < this.players.length; k++)
+				{
+					if (demounit.DXID == this.players[k].DXID)
+					{
+						this.players[k].changeTeam(demounit.team);
+					}
+				}
+				break;
+
 				
 			// player left
 			case Constants.DDEMO_DROPPLAYER:
@@ -195,6 +217,21 @@ class Demo {
 				if (demounit.type1 == 3) Sound.play('powerup_quad');
 				if (demounit.type1 == 4) Sound.play('powerup_invis');
 				break;
+				
+			case Constants.DDEMO_CHATMESSAGE:
+				var text = "";
+				for (var i = 0; i < this.players.length; i++) {
+					if (this.players[i].DXID == demounit.TDNETCHATMessage.DXID) {
+						text += this.players[i].displayName + ": ";
+						break;
+					}
+				}
+				text += Utils.filterNickName(demounit.MessageText);
+				
+				Console.writeText(text);
+				Sound.play('talk');
+				break;
+				
 			
 			// FIXME: hit player, it is not a death
 			case Constants.DDEMO_KILLOBJECT:
@@ -237,7 +274,7 @@ class Demo {
 				Sound.play('jump');
 				break;
 			case Constants.DDEMO_JUMPPADSOUND:
-				Sound.play('jumppad');
+				//Sound.play('jumppad'); // played in item
 				break;
 			case Constants.DDEMO_RESPAWNSOUND:
 				Sound.play('respawn');

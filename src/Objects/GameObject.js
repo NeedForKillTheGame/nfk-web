@@ -1,38 +1,137 @@
+import Utils from "./../Utils.js";
 
 
 export default
-class SimpleObject extends GameObject {
-	constructor(g) {
-		this.g = g.
+class GameObject {
+	constructor(g, x, y) {
+		this.g = g;
 
-		this.x = 0.0;
-		this.y = 0.0;
-		this.width = 0;
-		this.height = 0;
+		this.x = x;
+		this.y = y;
+		this.width = 0; // sprite width
+		this.height = 0; // sprite height
+		//this.spritePos = 1; // sprite position inside image
+		this.animated = false; // sprite position inside image
+		this.frameStart = 0; // first frame
+		this.frameEnd = 0; // last frame
+		
+		this.spawnDelay = 0; // spawn object with a delay (seconds)
 		
 		this.texture = null; // PIXI.Texture
 		this.sprite = null; // PIXI.Sprite
+		this.timers = []; // array of setInterval or setTimeout
+		
+		this.overlaps = []; // DXID of players who intersect the object now
+	}
+		
+	spawn() {
+		console.log("spawn " + this.constructor.name + " at " + this.x + "/" + this.y);
+
+		if (this.animated)
+		{
+			this.sprite = new PIXI.AnimatedSprite(this.texture);
+			this.sprite.animationSpeed = 0.3; 
+			this.sprite.play();
+			
+			// ignore first frame when animate
+			var that = this;
+			this.sprite.onFrameChange = (f) => {
+				if (f == that.frameEnd) {
+					that.sprite.gotoAndPlay(that.frameStart);
+				}
+			};
+		}
+		else
+		{
+			/*
+			var texture = new PIXI.Texture(
+				this.texture, 
+				new PIXI.Rectangle(
+					this.spritePos * this.width, 
+					0,
+					this.width, 
+					this.height));
+			*/
+			this.sprite = new PIXI.Sprite(this.texture);
+		}
+		
+		
+		
+		this.sprite.x = this.x
+		this.sprite.y = this.y;
+		
+		// add object on the map graphics
+		this.g.render.mapGraphics.addChild(this.sprite);
+		
+		// mech object (debug)
+		this.mech = this.g.render.createMech(0, 0, this.width, this.height);
+		
+		// spawn with a delay
+		if (this.spawnDelay) {
+			console.log("set invisible ");
+			this.sprite.visible = false;
+			var that = this;
+			this.timers.push(setTimeout(function(){
+				that.sprite.visible = true;
+			}, this.spawnDelay * 1000));
+		}
+	}	
+	
+	visible() {
+		return !this.sprite || this.sprite.visible;
 	}
 	
-	// TODO:
-	// 1) add auto-respawn for armor, health, weapon, powerup
-	// 2) add animation for portal, armor
-	// 3) add plasma object, rocket object
+	// rectangle
+	rect() {
+		return {
+			x1: this.x + this.g.render.mapDx,
+			y1: this.y + this.g.render.mapDy,
+			x2: this.x + this.width + this.g.render.mapDx,
+			y2: this.y + this.height + this.g.render.mapDy			
+		};
+	}
 	
-	
-	collisionWithPlayer(callback) {
-		// check collision witn all players
-		for (var i = 0; i < this.g.players.length; i++) {
-			// do not check collision for dead players
-			if ( this.players[k].isDead() )
-				continue;
-			
-			callback();
+	handleCollisions(player, callback) {
+		// do not check collision for dead players
+		if (player.dead)
+			return false;
+		
+		// if object is invisible then it does not exist
+		if ( !this.visible() )
+			return false;
+
+		
+		var idx = this.overlaps.indexOf(player.DXID);
+
+		var overlap = Utils.rectOverlap(this.rect(), player.rect());
+		// if player eat object then call the callback function
+		if ( overlap ) {
+			// if player already entered the object then do not fire overlap event twice
+			if (idx != -1) {
+				return false;
+			}
+			this.overlaps.push(player.DXID);
+			console.log("iteract with object");
+			return callback(player);
+		} else {
+			// if player does not more intersect the object then remove it from overlaps
+			if (idx != -1) {
+				this.overlaps.splice(idx, 1);
+			}
 		}
-		return;
 	}
 
-	destroy {
-		this.g.stage.removeChild(this.texture);
+	destroy() {
+		for (var i = 0; i < this.timers.length; i++) {
+			clearInterval(this.timers[i]);
+		}
+		
+		this.sprite.destroy();
+		this.g.render.mapGraphics.removeChild(this.sprite);
+		this.mech.destroy();
+		if (this.g.config.mech) {
+			console.log("remove mech");
+			this.g.render.stage.removeChild(this.mech);
+		}
 	}
 }

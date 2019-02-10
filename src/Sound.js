@@ -2,12 +2,24 @@ import Howl from "Howl";
 
 var sound_defs = {
 
+	wpkup:	new Howl({ urls: ['sounds/wpkup.wav'] }),
+	ammopkup:	new Howl({ urls: ['sounds/ammopkup.wav'] }),
+	armor:	new Howl({ urls: ['sounds/armor.wav'] }),
+	shard:	new Howl({ urls: ['sounds/shard.wav'] }),
+	health5:	new Howl({ urls: ['sounds/health5.wav'] }),
+	health25:	new Howl({ urls: ['sounds/health25.wav'] }),
+	health50:	new Howl({ urls: ['sounds/health50.wav'] }),
+	health100:	new Howl({ urls: ['sounds/health100.wav'] }),
+
+	talk:	new Howl({ urls: ['sounds/talk.wav'] }),
+
+
+	expl:	new Howl({ urls: ['sounds/expl.wav'] }),
 	fire_bfg:	new Howl({ urls: ['sounds/bfg_fire.wav'] }),
 	fire_plasma:	new Howl({ urls: ['sounds/plasma.wav'] }),
 	fire_gren:	new Howl({ urls: ['sounds/grenade.wav'] }),
 	fire_rail:	new Howl({ urls: ['sounds/rail.wav'] }),
-	
-	fire_shaft:	new Howl({ urls: ['sounds/flight.wav'] }),
+	fire_shaft:	new Howl({ urls: ['sounds/lg_hum.wav'] }), // FIXME
 	fire_shaft_begin:	new Howl({ urls: ['sounds/lg_start.wav'] }),
 	fire_shaft_end:	new Howl({ urls: ['sounds/lg_hum.wav'] }),
 	fire_shotgun:	new Howl({ urls: ['sounds/shotgun.wav'] }),
@@ -18,8 +30,8 @@ var sound_defs = {
 	powerup_invis:	new Howl({ urls: ['sounds/invisibility.wav'] }),
 	powerup_haste:	new Howl({ urls: ['sounds/haste.wav'] }),
 	powerup_quad:	new Howl({ urls: ['sounds/quaddamage.wav'] }),
-	powerup_hold:	new Howl({ urls: ['sounds/holdable.wav'] }),
 	powerup_regen:	new Howl({ urls: ['sounds/regeneration.wav'] }),
+	powerup_battle:	new Howl({ urls: ['sounds/holdable.wav'] }),
 
 	// flag events
 	flagtk:	new Howl({ urls: ['sounds/flagtk.wav'] }),
@@ -39,6 +51,7 @@ var sound_defs = {
 	noammo:	new Howl({ urls: ['sounds/noammo.wav'] }),
 	genericdata:	new Howl({ urls: ['sounds/hit.wav'] }),
 	gameend:	new Howl({ urls: ['sounds/gameend.wav'] }),
+	matchstart:	new Howl({ urls: ['sounds/fight.wav'] }),
 	
 }
 
