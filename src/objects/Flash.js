@@ -5,12 +5,15 @@ export default
 class Flash extends GameObject {
 	constructor(g, x, y) {
 		super(g, x, y);
-		this.strong = strong;
 		
+		// sprite
 		this.texture = g.resources.jumppad.spritesheet.animations.jumppad;
 		this.animated = true;
 		this.width = 32;
 		this.height = 16;
+		
+		// properties
+		this.strong = strong;
 	}
 
 	handleCollisions(player) {

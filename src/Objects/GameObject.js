@@ -1,4 +1,5 @@
 import Utils from "./../Utils.js";
+import Constants from "./../Constants.js";
 
 
 export default
@@ -8,9 +9,10 @@ class GameObject {
 
 		this.x = x;
 		this.y = y;
-		this.width = 0; // sprite width
-		this.height = 0; // sprite height
-		//this.spritePos = 1; // sprite position inside image
+		this.offsetX = 0; // sprite offset by x on the map
+		this.offsetY = 0; // sprite offset by y on the map
+		this.width = Constants.BRICK_WIDTH; // sprite width
+		this.height = Constants.BRICK_HEIGHT; // sprite height
 		this.animated = false; // sprite position inside image
 		this.frameStart = 0; // first frame
 		this.frameEnd = 0; // last frame
@@ -57,8 +59,8 @@ class GameObject {
 		
 		
 		
-		this.sprite.x = this.x
-		this.sprite.y = this.y;
+		this.sprite.x = this.x + this.offsetX;
+		this.sprite.y = this.y + this.offsetY;
 		
 		// add object on the map graphics
 		this.g.render.mapGraphics.addChild(this.sprite);
@@ -131,7 +133,7 @@ class GameObject {
 		this.mech.destroy();
 		if (this.g.config.mech) {
 			console.log("remove mech");
-			this.g.render.stage.removeChild(this.mech);
+			this.g.render.removeMech(this.mech);
 		}
 	}
 }

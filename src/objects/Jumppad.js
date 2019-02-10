@@ -5,13 +5,14 @@ export default
 class Jumppad extends GameObject {
 	constructor(g, x, y, strong) {
 		super(g, x, y);
-		this.itemId = strong ? 39 : 38;
-		this.strong = strong;
 		
+		// sprite
 		this.texture = g.resources.jumppad.spritesheet.animations.jumppad;
 		this.animated = true;
-		this.width = 32;
-		this.height = 16;
+		
+		// properties
+		this.itemId = strong ? 39 : 38;
+		this.strong = strong;
 	}
 
 	handleCollisions(player) {

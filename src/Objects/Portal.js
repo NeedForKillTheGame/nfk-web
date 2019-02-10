@@ -3,16 +3,12 @@ import SpecialObject from "./SpecialObject.js";
 export default
 class Portal extends SpecialObject {
 	constructor(g, x, y) {
-		// adjust init sprite position on the map
-		y -= 32;
-		x -= 16;
-		
 		super(g, x, y);
-
+		
+		// sprite
 		this.texture = g.resources.portal.texture;
-		this.spritePos = 0;
-		this.width = 64;
-		this.height = 48;
+		this.offsetX = -16;
+		this.offsetY = -32;
 	}
 
 	handleCollisions(player) {
