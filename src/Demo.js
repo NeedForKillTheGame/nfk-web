@@ -101,10 +101,10 @@ class Demo {
 						this.players[k].velocityX = demounit.inertiax;
 						this.players[k].velocityY = demounit.inertiay;
 						
-						if ((demounit.PUV3 & Constants.PUV3_DIR0)==Constants.PUV3_DIR0) this.players[k].dir = 0;
-						if ((demounit.PUV3 & Constants.PUV3_DIR1)==Constants.PUV3_DIR1) this.players[k].dir = 1;
-						if ((demounit.PUV3 & Constants.PUV3_DIR2)==Constants.PUV3_DIR2) this.players[k].dir = 2;
-						if ((demounit.PUV3 & Constants.PUV3_DIR3)==Constants.PUV3_DIR3) this.players[k].dir = 3;
+						if ((demounit.PUV3 & Constants.PUV3_DIR0)==Constants.PUV3_DIR0) this.players[k].dir = Constants.DIR_LW;
+						if ((demounit.PUV3 & Constants.PUV3_DIR1)==Constants.PUV3_DIR1) this.players[k].dir = Constants.DIR_RW;
+						if ((demounit.PUV3 & Constants.PUV3_DIR2)==Constants.PUV3_DIR2) this.players[k].dir = Constants.DIR_LS;
+						if ((demounit.PUV3 & Constants.PUV3_DIR3)==Constants.PUV3_DIR3) this.players[k].dir = Constants.DIR_RS;
 						if ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) this.players[k].dead = 0;
 						if ((demounit.PUV3 & Constants.PUV3_DEAD1)==Constants.PUV3_DEAD1) this.players[k].dead = 1;
 						if ((demounit.PUV3 & Constants.PUV3_DEAD2)==Constants.PUV3_DEAD2) this.players[k].dead = 2;

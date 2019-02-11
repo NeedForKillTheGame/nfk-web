@@ -29,7 +29,7 @@ class Global {
 			volume: 0.1,
 			default_bg: 2,
 			mech: true, // rectangle for objects
-			brickMech: true // rectangle for bricks
+			brickMech: false // rectangle for bricks
 		}
 
 		// init volume

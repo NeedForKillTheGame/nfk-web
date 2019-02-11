@@ -120,15 +120,17 @@ class PlayerGraphics  {
 	
 	adjustPosition(tmpX, tmpY)
 	{
-		if (this.player.velocityX == 0) {
+		
+		if (this.player.dir == Constants.DIR_LS || this.player.dir == Constants.DIR_RS) {
+			// stand
 			this.stop();
 		} else {
+			// walk
 			this.play();
 		}
 		
-		// FIXME: possible wrong directions? 0,3 for left side, and 1,2 for the right
-		//        somthing wrong here, flip sometimes incorrect
-		this.obj.scale.x = this.player.dir == 0 || this.player.dir == 3 ? -1 : 1;
+		// player direction
+		this.obj.scale.x = this.player.dir == Constants.DIR_LS || this.player.dir == Constants.DIR_LW ? -1 : 1;
 
 		this.obj.x = tmpX; //player.x - 10;
 		if (this.player.crouch) {

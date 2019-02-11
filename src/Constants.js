@@ -11,7 +11,12 @@ export default {
 	
     PLAYER_MAX_VELOCITY_X: 3,
 	
-	
+	// model direction & current animation status.
+	DIR_LW: 0, // walkin left
+	DIR_RW: 1, // walkin right
+	DIR_LS: 2, // standin left
+	DIR_RS: 3, // standin right
+
 	// DDEMO
 	DDEMO_VERSION: 0,     // here is a version of the demo engine... reading from demofile
 	DDEMO_FIREROCKET: 1,
