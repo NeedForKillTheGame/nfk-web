@@ -5,9 +5,12 @@ export default {
 	ord(str) {
 		return str.charCodeAt(0);
 	},
-	// return random from 0 to max-1
-	random(max) {
-		return Math.floor(Math.random() * max);
+
+	/**
+	 * Returns a random number between min (inclusive) and max (exclusive)
+	 */
+	random(min, max) {
+		return Math.floor(Math.random() * (max - min)) + min;
 	},
 	
 	// remove element from document

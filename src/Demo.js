@@ -76,19 +76,22 @@ class Demo {
 		//console.log("next");
 		
 		this.frameId++;
-		
+		this.g.gamestate.gametime = unit.DData.gametime;
+		this.g.gamestate.gametick = unit.DData.gametick;
 
 
 		switch (unit.DData.type0)
 		{
 			// match start
 			case Constants.DDEMO_TIMESET:
-				// if warmup then do nothing
+
+				this.g.timerManager.clearTimers();
+
+				// spawn objects only it match started (otherwise warmup will be > 0)
 				if (demounit.warmup == 0) {
 					Sound.play('matchstart');
 					this.g.map.spawnObjects();
 				}
-				
 				break;
 			// update position for a player
 			case Constants.DDEMO_PLAYERPOSV3:
@@ -105,9 +108,9 @@ class Demo {
 						if ((demounit.PUV3 & Constants.PUV3_DIR1)==Constants.PUV3_DIR1) this.players[k].dir = Constants.DIR_RW;
 						if ((demounit.PUV3 & Constants.PUV3_DIR2)==Constants.PUV3_DIR2) this.players[k].dir = Constants.DIR_LS;
 						if ((demounit.PUV3 & Constants.PUV3_DIR3)==Constants.PUV3_DIR3) this.players[k].dir = Constants.DIR_RS;
-						if ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) this.players[k].dead = 0;
-						if ((demounit.PUV3 & Constants.PUV3_DEAD1)==Constants.PUV3_DEAD1) this.players[k].dead = 1;
-						if ((demounit.PUV3 & Constants.PUV3_DEAD2)==Constants.PUV3_DEAD2) this.players[k].dead = 2;
+						if ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) this.players[k].setDead(0);
+						if ((demounit.PUV3 & Constants.PUV3_DEAD1)==Constants.PUV3_DEAD1) this.players[k].setDead(1);
+						if ((demounit.PUV3 & Constants.PUV3_DEAD2)==Constants.PUV3_DEAD2) this.players[k].setDead(2);
 						if ((demounit.PUV3 & Constants.PUV3_WPN0)==Constants.PUV3_WPN0) this.players[k].weapon = 0;
 						if ((demounit.PUV3 & Constants.PUV3_WPN1)==Constants.PUV3_WPN1) this.players[k].weapon = 1;
 						if ((demounit.PUV3 & Constants.PUV3_WPN2)==Constants.PUV3_WPN2) this.players[k].weapon = 2;
@@ -117,7 +120,8 @@ class Demo {
 						if ((demounit.PUV3 & Constants.PUV3_WPN6)==Constants.PUV3_WPN6) this.players[k].weapon = 6;
 						if ((demounit.PUV3 & Constants.PUV3_WPN7)==Constants.PUV3_WPN7) this.players[k].weapon = 7;
 						if ((demounit.PUV3B & Constants.PUV3B_WPN8)==Constants.PUV3B_WPN8) this.players[k].weapon = 8;
-						this.players[k].crouch = ((demounit.PUV3B & Constants.PUV3B_CROUCH)==Constants.PUV3B_CROUCH) ? true : false;
+						var crouch = ((demounit.PUV3B & Constants.PUV3B_CROUCH)==Constants.PUV3B_CROUCH) ? true : false;
+						this.players[k].setCrouch(crouch);
 						this.players[k].BALLOON = ((demounit.PUV3B & Constants.PUV3B_BALLOON)==Constants.PUV3B_BALLOON) ? true : false;
 						
 						if ((this.players[k].dead == 0) && ((demounit.PUV3 & Constants.PUV3_DEAD1)==Constants.PUV3_DEAD1))
@@ -156,11 +160,6 @@ class Demo {
 					{
 						this.players[k].health = demounit.health;
 						this.players[k].armor = demounit.armor;
-						// death
-						if ( this.players[k].dead )
-						{
-							Sound.play('death' + (Utils.random(3)+1) );
-						}
 					}
 				}
 				break;
@@ -169,6 +168,8 @@ class Demo {
 			case Constants.DDEMO_CREATEPLAYERV2:
 				var name = demounit.netname;
 				var p = this.spawnPlayer(demounit.DXID, name);
+				var model = demounit.modelname.split('+');
+				p.setModel(model[0], model[1]);
 				p.changeTeam(demounit.team);
 				console.log("player joined " + name);
 				break;
@@ -195,7 +196,19 @@ class Demo {
 					}
 				}
 				
-				break;				
+				break;		
+				
+			// player attacked
+			case Constants.DDEMO_DAMAGEPLAYER:
+				for (var k = 0; k < this.players.length; k++)
+				{
+					if (demounit.DXID == this.players[k].DXID)
+					{
+						this.players[k].health = demounit.health;
+						Sound.playPain(this.players[k]);
+					}
+				}
+				break;
 				
 			case Constants.DDEMO_CTF_EVENT_FLAGPICKUP:
 			case Constants.DDEMO_CTF_EVENT_FLAGTAKEN:
@@ -210,12 +223,21 @@ class Demo {
 				
 				
 			case Constants.DDEMO_EARNPOWERUP:
+				var itemId = 0;
 				// FIXME: need to test taken powerup type
-				if (demounit.type1 == 0) Sound.play('powerup_regen');
-				if (demounit.type1 == 1) Sound.play('powerup_hold');
-				if (demounit.type1 == 2) Sound.play('powerup_haste');
-				if (demounit.type1 == 3) Sound.play('powerup_quad');
-				if (demounit.type1 == 4) Sound.play('powerup_invis');
+				if (demounit.type1 == 0) { itemId = Constants.IT_POWERUP_REGENERATION; }
+				if (demounit.type1 == 1) { itemId = Constants.IT_POWERUP_BATTLESUIT; }
+				if (demounit.type1 == 2) { itemId = Constants.IT_POWERUP_HASTE; }
+				if (demounit.type1 == 3) { itemId = Constants.IT_POWERUP_QUAD; }
+				if (demounit.type1 == 4) { itemId = Constants.IT_POWERUP_INVISIBILITY; }
+				if (itemId > 0) {
+					for (var o in this.g.objects) {
+						// find powerup in spawned objects and set it visible
+						if (o.itemId == itemId) {
+							o.show();
+						}
+					}
+				}
 				break;
 				
 			case Constants.DDEMO_CHATMESSAGE:
@@ -297,7 +319,10 @@ class Demo {
 			case Constants.DDEMO_GENERICSOUNDSTATDATA:
 				
 				break;
-				
+			// FIXME: it does not fire?
+			case Constants.DDEMO_GENERICSOUNDDATA:
+				console.log("sound " + demounit.SoundType);
+			break;
 				
 		}
 		

@@ -224,7 +224,7 @@ class Map {
     }
 
     getRandomRespawn() {
-        return this.respawns[Utils.random(respawns.length)];
+        return this.respawns[Utils.random(0, respawns.length)];
 	}
 
 }

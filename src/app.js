@@ -17,10 +17,16 @@ var G = new Global();
 
 console.log("mode: " + G.config.mode);
 
+// esc
+Keyboard.onKeyUp(27, function(){
+	G.gamestate.paused = G.gamestate.paused ? false : true;
+});
+
+PIXI.loader.onLoad.add(function(loader,data){ // called once per loaded data (callback)
+	console.log('data: ',data,'|Progress:'+loader.progress,'|FileName:'+((data.url).slice(32)),'|Named:'+data.name,'|Ext:'+data.extension);
+});
+
 PIXI.loader
-	.add('sarge_wd', "images/models/sarge/wd.json")
-	.add('sarge_wr', "images/models/sarge/wr.json")
-	.add('sarge_wb', "images/models/sarge/wb.json")
 	.add('palette', "images/palette.png")
 	.add('weapons', "images/weapons.json")
 	.add('explosion', "images/explosion.json") // animation
@@ -36,6 +42,12 @@ PIXI.loader
 	.add('armors', "images/armors.json") // animation
 	.add('items', "images/items.json") // animation
 
+	.add('sarge', "images/models/sarge.json")
+	.add('xaero', "images/models/xaero.json")
+	.add('keel', "images/models/keel.json")
+	.add('doom2', "images/models/doom2.json")
+	.add('crashed', "images/models/crashed.json")
+	
 	
 	.load(run);
 	
@@ -45,7 +57,7 @@ function run(loader, resources) {
 	
 	// load demo
 	if (G.config.mode == 'development') {
-		G.demo.load("demo5.json", init); // for debug load local demo
+		G.demo.load("demo4.json", init); // for debug load local demo
 	} else {
 		G.demo.loadFromQuery(init); // for production
 	}
@@ -80,7 +92,7 @@ async function init()
 		//G.players[0].keyRight = Keyboard.keyRight;
 
 		// if game not paused
-		if (!G.paused)
+		if (!G.gamestate.paused)
 		{
 			for (var i = 0; i < G.players.length; i++)
 			{
@@ -94,14 +106,18 @@ async function init()
 			if (G.config.mech) {
 				G.render.renderMech();			
 			}
-			
-			// if end of demo then stop rendering
+
+			// if end of demo then return from the function (it will stop infinite loop)
 			if ( !G.demo.nextFrame(gametic) )
 				return;
 			
-			if (++gametic > Constants.FPS)
+			// this must be after G.demo.nextFrame(), to handle gametic = 0
+			if (++gametic >= Constants.FPS)
 				gametic = 0;
+
+			G.timerManager.tick();
 		}
+		G.render.renderLabels();
 		
 		requestAnimationFrame(gameLoop); //infinite render loop
 		

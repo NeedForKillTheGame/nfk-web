@@ -35,12 +35,11 @@ class Render {
 		this.paletteCustomTexture = null;
 		this.bricksPerLineCustom = 0;
 
+
 		window.addEventListener('resize', function() { that.recalcFloatCamera(that) }, false);
 		
 		// follow next player
 		gameEl.onclick = function (e) {
-			that.g.paused = that.g.paused ? false : true;
-			
 			var followId = -1;
 			for (var i = 0; i < that.g.players.length; i++) {
 				if (that.g.players[i].follow) {
@@ -172,8 +171,12 @@ class Render {
 		}
 		
 		player.graphics.adjustPosition(tmpX, tmpY);
-		
+
 		this.app.render(this.stage);
+	}
+
+	renderLabels() {
+		this.g.labels.adjustPosition();
 	}
 	
 	renderMech() {
@@ -183,7 +186,7 @@ class Render {
 			this.g.players[i].graphics.mech.y = this.g.players[i].rect().y1;
 			this.g.players[i].graphics.mech.width = this.g.players[i].rect().x2 - this.g.players[i].rect().x1;
 			this.g.players[i].graphics.mech.height = this.g.players[i].rect().y2 - this.g.players[i].rect().y1;
-			
+			this.g.players[i].graphics.mech.visible = true;
 		}
 		// mech of objects
 		for (var i = 0; i < this.g.objects.length; i++) {
@@ -191,6 +194,7 @@ class Render {
 			this.g.objects[i].mech.y = this.g.objects[i].rect().y1;
 			this.g.objects[i].mech.width = this.g.objects[i].rect().x2 - this.g.objects[i].rect().x1;
 			this.g.objects[i].mech.height = this.g.objects[i].rect().y2 - this.g.objects[i].rect().y1;
+			this.g.objects[i].mech.visible = true;
 		}
 
 		// mech of bricks
@@ -202,6 +206,7 @@ class Render {
 				this.g.map.brickObjects[i].mech.y = rect.y1;
 				this.g.map.brickObjects[i].mech.width = rect.x2 - rect.x1;
 				this.g.map.brickObjects[i].mech.height = rect.y2 - rect.y1;
+				this.g.map.brickObjects[i].mech.visible = true;
 			}
 		}
 	}

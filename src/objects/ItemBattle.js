@@ -1,1 +1,34 @@
-import SimpleObject from "./SimpleObject.js";import Sound from "./../Sound.js";export defaultclass ItemBattle extends SimpleObject {	constructor(g, x, y) {		super(g, x, y);				// sprite		this.texture = g.resources.powerup.spritesheet.animations.battle;		this.animated = true;		this.offsetY = -16;				// properties		this.itemId = 24;		this.spawnDelay = 60; // first spawn after a minute		this.respawnTime = 120;	}	handleCollisions(player) {		var that = this;		super.handleCollisions(player, function(player){			// TODO: set battlesuite for a player			Sound.play("powerup_battle");			return true;		});	}}
+import SimpleObject from "./SimpleObject.js";
+import Sound from "./../Sound.js";
+import Constants from "./../Constants.js";
+
+export default
+class ItemBattle extends SimpleObject {
+	constructor(g, x, y) {
+		super(g, x, y);
+		
+		// sprite
+		this.texture = g.resources.powerup.spritesheet.animations.battle;
+		this.animated = true;
+		this.offsetY = -16;
+		
+		// properties
+		this.itemId = Constants.IT_POWERUP_BATTLESUIT;
+		this.spawnDelay = Utils.random(30, 60); // first spawn random time
+		this.respawnTime = 120;
+	}
+
+	show() {
+		super.show();
+		Sound.play('powerup_hold');
+	}
+
+	handleCollisions(player) {
+		var that = this;
+		super.handleCollisions(player, function(player){
+			// TODO: set battlesuite for a player
+			Sound.play("powerup_battle");
+			return true;
+		});
+	}
+}
