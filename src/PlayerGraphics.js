@@ -2,6 +2,7 @@ import PIXI from "PIXI";
 import Constants from "./Constants.js";
 import Console from "./Console.js";
 import Utils from "./Utils.js";
+import PlayerModel from "./objects/PlayerModel.js";
 
 export default
 class PlayerGraphics  {
@@ -17,25 +18,27 @@ class PlayerGraphics  {
 		//this.playerGraphics.endFill();
 		//this.stage.addChild(this.playerGraphics);
 
+		this.container = new PIXI.Container();
+		console.log("c1", this.container);
+		this.stage.addChild(this.container);
 		this.obj = null;
-		this.animations = null;
-		this.setModel(this.player.model, 'd', 'w');
-		this.initAnimation();
+		this.animations = this.g.initPlayerModels(this.container);
+		this.updateModel();
 
 		this.playerName = new PIXI.Text(player.displayName, { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
 		this.playerName.anchor = new PIXI.Point(0.5, 0.5);
 		//this.playerName.scale.x = this.playerName.scale.y;
-		this.playerName.y -= 48;
-		this.stage.addChild(this.playerName);
+		this.playerName.y -= 50;
+		this.container.addChild(this.playerName);
 		
 		this.playerHA = new PIXI.Text("0 / 0", { fontFamily : 'Arial', fontSize: 12, fill : 'white', align : 'center' });
 		this.playerHA.anchor = new PIXI.Point(0.5, 0.5);
 		//this.playerHA.scale.x = this.playerName.scale.y;
-		this.playerHA.y -= 34;
-		this.stage.addChild(this.playerHA);
+		this.playerHA.y -= 36;
+		this.container.addChild(this.playerHA);
 		
 		
-		
+
 		// draw weapon
 		
 
@@ -54,6 +57,7 @@ class PlayerGraphics  {
 		
 		// player mech object (debug)
 		this.mech = this.g.render.createMech(0, 0, this.player.width(), this.player.height());
+		this.mech.visible = false;
 	}
 	
 	getWeaponTexture(weaponId) {
@@ -79,38 +83,26 @@ class PlayerGraphics  {
 	// model = sarge
 	// color = d|b|r
 	// walktype = w
-	setModel(model, color, walktype) {
-		var type = walktype + color;
-		var name = model + "_" + type;
-		this.animations = this.g.resources[name].spritesheet.animations[type];
-		console.log(this.g.resources[name]);
-		//if (this.obj)
-		//	this.obj.textures = this.g.resources[name].textures;
-	}
-	
-	initAnimation() {
-		console.log(this.g.resources.sarge_wd);
-		console.log(this.frames);
-		// animated player
-		this.obj = new PIXI.AnimatedSprite(this.animations);
-		this.obj.anchor.set(0.5);
-		this.obj.animationSpeed = 0.3; 
-		this.obj.play();
-		console.log(this.obj);
-		// ignore first frame when animate
-		var that = this;
-		this.obj.onFrameChange = (f) => {
-			if (f == that.obj.totalFrames - 1) {
-				that.obj.gotoAndPlay(1);
+	updateModel() {
+		for (var m in this.animations) {
+			for (var c in this.animations[m]) {
+				for (var i = 0; i < this.animations[m][c].length; i++)
+					this.animations[m][c][i].sprite.visible = false;
 			}
-		};
-		//var anim = new PIXI.AnimatedSprite(sheet.animations["wd"]);
-		this.stage.addChild(this.obj);
+		}
+		var type = this.player.crouch ? 1 : 0;
+		if (this.player.dead > 0) {
+			type = 2;
+			console.log("dead " + type);
+		}
+		this.obj = this.animations[this.player.model][this.player.modelColor][type].sprite;
+		this.obj.visible = true;
+		this.play();
 	}
-	
+
 	play() {
 		if (!this.obj.playing)
-			this.obj.gotoAndPlay(1);
+			this.obj.gotoAndPlay(0);
 	}
 	stop() {
 		if (this.obj.playing)
@@ -130,24 +122,25 @@ class PlayerGraphics  {
 		}
 		
 		// player direction
-		this.obj.scale.x = this.player.dir == Constants.DIR_LS || this.player.dir == Constants.DIR_LW ? -1 : 1;
+		this.container.scale.x = this.player.dir == Constants.DIR_LS || this.player.dir == Constants.DIR_LW ? -1 : 1;
+		// morror display name and hud
+		this.playerName.scale.x = this.playerHA.scale.x = this.container.scale.x;
 
-		this.obj.x = tmpX; //player.x - 10;
+		this.container.x = tmpX; //player.x - 10;
 		if (this.player.crouch) {
-			this.obj.y = tmpY; //player.y - 8;
-			//this.obj.height = this.initHeight / 3 * 2;
-		} else {
-			this.obj.y = tmpY; //player.y - 24;
-			//this.obj.height = this.initHeight;
+			tmpY += 5;
 		}
+		this.container.y = tmpY; //player.y - 24;
 
+		this.playerHA.text = this.player.health + ' / ' + this.player.armor;
+		/*
 		this.playerName.x = tmpX;
 		this.playerName.y = this.obj.y - 48;
         
 		this.playerHA.x = tmpX;
 		this.playerHA.y = this.obj.y - 34;
-		this.playerHA.text = this.player.health + ' / ' + this.player.armor;
 		
+		*/
 		this.weaponSprite.texture = this.getWeaponTexture(this.player.weapon);
 		this.weaponSprite.angle = this.player.fangle;
 		

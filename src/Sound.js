@@ -1,4 +1,5 @@
 import Howl from "Howl";
+import Utils from "./Utils.js";
 
 var sound_defs = {
 
@@ -38,11 +39,6 @@ var sound_defs = {
 	flagret:	new Howl({ urls: ['sounds/flagret.wav'] }),
 	flagcap:	new Howl({ urls: ['sounds/flagcap.wav'] }),
 
-	jump:		new Howl({ urls: ['sounds/sarge/jump1.wav'] }),
-	death1:		new Howl({ urls: ['sounds/sarge/death1.wav'] }),
-	death2:		new Howl({ urls: ['sounds/sarge/death2.wav'] }),
-	death3:		new Howl({ urls: ['sounds/sarge/death3.wav'] }),
-	
 	jumppad:	new Howl({ urls: ['sounds/jumppad.wav'] }),
 	respawn:	new Howl({ urls: ['sounds/respawn.wav'] }),
 	lava:	new Howl({ urls: ['sounds/lava.wav'] }),
@@ -53,19 +49,78 @@ var sound_defs = {
 	gameend:	new Howl({ urls: ['sounds/gameend.wav'] }),
 	matchstart:	new Howl({ urls: ['sounds/fight.wav'] }),
 	
+	model_sound_path: 'sound/models/', // with slash at the end
+
+	models: {
+		sarge: getModelSounds('sarge'),
+		xaero: getModelSounds('xaero'),
+		keel: getModelSounds('keel'),
+		doom2: getModelSounds('doom2'),
+		crashed: getModelSounds('crashed'),
+	}
+}
+function getModelSounds(model) {
+	return {
+		jump:    new Howl({ urls: ['sounds/models/' + model + '/jump1.wav'] }),
+		death1:  new Howl({ urls: ['sounds/models/' + model + '/death1.wav'] }),
+		death2:  new Howl({ urls: ['sounds/models/' + model + '/death2.wav'] }),
+		death3:  new Howl({ urls: ['sounds/models/' + model + '/death3.wav'] }),
+		pain25:  new Howl({ urls: ['sounds/models/' + model + '/pain25_1.wav'] }),
+		pain50:  new Howl({ urls: ['sounds/models/' + model + '/pain50_1.wav'] }),
+		pain75:  new Howl({ urls: ['sounds/models/' + model + '/pain75_1.wav'] }),
+		pain100: new Howl({ urls: ['sounds/models/' + model + '/pain100_1.wav'] })
+	};
 }
 
 export default {
 	constructor() {
 		this.volume = 1;
+
 	},
 	
-    play(soundId) {
+    play(soundId, model) {
 		sound_defs[soundId].volume(this.volume);
-        sound_defs[soundId].play();
-    },
+		sound_defs[soundId].play();
+	},
+		
+    playModel(model, soundId) {
+		if (!sound_defs.models[model]) {
+			model = 'sarge';
+		}
+		sound_defs.models[model][soundId].volume(this.volume);
+		// play only if not playing now
+		if (sound_defs.models[model][soundId].pos() == 0)
+			sound_defs.models[model][soundId].play();
+	},
+	
 	
 	setVolume(value) {
 		this.volume = value;
-	}
+	},
+
+
+	playJump(player) {
+		var soundId = 'jump';
+		this.playModel(player.model, soundId);
+	},
+
+	playPain(player) {
+		var hp = 100;
+		if (player.health <= 25) {
+			hp = 25;
+		} else if (player.health <= 50) {
+			hp = 50;
+		} else if (player.health <= 75) {
+			hp = 75;
+		}
+		var soundId = 'pain' + hp;
+		this.playModel(player.model, soundId);
+	},
+
+	playDeath(player) {
+		var rnd = (Utils.random(1, 3) + 1);
+		var soundId = 'death' + rnd;
+		this.playModel(player.model, soundId);
+	},
+
 }

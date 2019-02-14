@@ -3,7 +3,7 @@ import Utils from "./Utils.js";
 import Constants from "./Constants.js";
 import PlayerGraphics from "./PlayerGraphics.js";
 import PlayerPhysics from "./Physics.js";
-
+import Sound from "./Sound.js";
 
 export default
 class Player {
@@ -31,10 +31,11 @@ class Player {
 		this.dir = 0; // direction
 		this.dead = 0; // 0-2
 		this.weapon = 0; // 0-7
-		this.BALLOON = false; // ???
+		this.BALLOON = false; // FIXME: what's this ???
 		this.team = 0;
-		this.model = 'sarge'; // TODO: make allow model change and if not found then use sarge
-		
+		this.model = 'sarge'; // // use setModel() for change
+        this.modelColor = 'default';
+        
 		this.rewardtime = 0; //?
 		this.fangle = 0; // angle of weapon
 		
@@ -76,7 +77,7 @@ class Player {
 			this.graphics = new PlayerGraphics(this.g, this);
 			this.physics = new PlayerPhysics(this.g, this);
 	}
-	
+    
 
 	height() {
 		return this.crouch ? Constants.PLAYER_HEIGHT_CROUCH: Constants.PLAYER_HEIGHT;
@@ -89,19 +90,33 @@ class Player {
 	rect() {
 		return {
 			x1: this.x - (this.width() / 2)  + this.g.render.mapDx,
-			y1: this.y - (this.height() / 2) + this.g.render.mapDy,
+			y1: this.y - (this.height() / 2) + this.g.render.mapDy + 1 + (this.crouch ? Constants.BRICK_HEIGHT / 2 : 0),
 			x2: this.x + (this.width() / 2)  + this.g.render.mapDx,
-			y2: this.y + (this.height() / 2) + this.g.render.mapDy,
+			y2: this.y + (this.height() / 2) + this.g.render.mapDy + 1 + (this.crouch ? Constants.BRICK_HEIGHT / 2 : 0),
 		};
 	}
 
+    setModel(model, color) {
+        this.model = model;
+        this.modelColor = color;
+
+        // set defaults if not found
+        if (!this.graphics.animations[this.model]) {
+            this.model = 'sarge';
+            console.log("reset model (model not found " + model + "+" + color + ")");
+        }
+        if (!this.graphics.animations[this.model][this.modelColor]) {
+            this.modelColor = 'default';
+            console.log("reset color (model not found " + model + "+" + color + ")");
+        }
+    }
 		
 	addHealth(val, max) {
 		this.health += val;
 		if (this.health > max)
 			this.health = max;
 		if (this.health <= 0)
-			this.dead = 1;
+			this.setDead(1);
 	}		
 	addArmor(val) {
 		this.admor += val;
@@ -118,13 +133,31 @@ class Player {
 	}
 	
 	
-	
+    setCrouch(val) {
+        if (this.crouch == val)
+            return;
+
+        this.crouch = val;
+        this.graphics.updateModel();
+    }
+    setDead(val) {
+        if (this.dead == val)
+            return;
+
+        this.dead = val;
+        this.graphics.updateModel();
+        
+        if (this.dead > 0) {
+            Sound.playDeath(this);
+        }
+    }
+
 	changeTeam(team){
 		console.log("player " + this.name + " selected team " + team);
 		this.team = team;
-		
-		var color = team == 0 ? 'r' : 'b';
-		this.graphics.setModel(this.model, color, 'w');
+        
+        this.setModel(this.model, team == 0 ? 'red' : 'blue');
+		this.graphics.updateModel();
 	}
 	
     setX(newX) {

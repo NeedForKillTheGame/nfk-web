@@ -149,6 +149,10 @@ class PlayerPhysics {
 			this.player.velocityY = 0;  // really nice thing :)
 		}
 
+		// do not handle keys for demo
+		if (this.g.demo)
+			return;
+
 		this.tmpCurJump = false;
 
 		if (this.player.speedJump > 0
@@ -184,7 +188,7 @@ class PlayerPhysics {
 					} else {
 						this.log('dj standart', this.player);
 					}
-					this.player.crouch = false;
+					this.player.setCrouch(false);
 					Sound.jump();
 
 					//this.player.velocityY += this.velocityYSpeedJump[this.player.speedJump];
@@ -214,16 +218,16 @@ class PlayerPhysics {
 			}
 		}
 
-		// CROUCH
+	// CROUCH
 		if (!this.player.keyUp && this.player.keyDown) {
 			if (this.player.isOnGround()) {
-				this.player.crouch = true;
+				this.player.setCrouch(true);
 			}
 			else if (!this.player.isBrickCrouchOnHead()) {
-				this.player.crouch = false;
+				this.player.setCrouch(false);
 			}
 		} else {
-			this.player.crouch = this.player.isOnGround() && this.player.isBrickCrouchOnHead();
+			this.player.setCrouch(this.player.isOnGround() && this.player.isBrickCrouchOnHead());
 		}
 
 		this.tmpLastWasJump = this.tmpCurJump;

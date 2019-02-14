@@ -3,14 +3,15 @@ var keysState = {
     keyDown: false,
     keyLeft: false,
     keyRight: false,
-    keyP: false
+
+    onKeyUp: function(keyCode, callback) {
+        callbacks.push({ event: 'keyup', keyCode: keyCode, f: callback });
+    }
 };
 
-document.addEventListener('keydown', e => {
-    if (e.keyCode < 37 || e.keyCode > 40) {
-        return;
-    }
+var callbacks = [];
 
+document.addEventListener('keydown', e => {
     if (e.target.nodeName.toLowerCase() !== 'textarea') {
         e.preventDefault();
         switch (e.keyCode) {
@@ -29,21 +30,17 @@ document.addEventListener('keydown', e => {
             case 40:
                 keysState.keyDown = true;
                 break;
-				
-            case 112:
-                keysState.keyP = true;
-				console.log("p unpressed");
-                break;
         }
-		console.log("unpressed");
+
+        for (var i = 0; i < callbacks.length; i++) {
+            if (callbacks[i].event == 'keydown' && e.keyCode == callbacks[i].keyCode) {
+                callbacks[i].f();
+            }
+        }
     }
 });
 
 document.addEventListener('keyup', e => {
-    if (e.keyCode < 37 || e.keyCode > 40) {
-        return;
-    }
-
     if (e.target.nodeName.toLowerCase() !== 'textarea') {
         e.preventDefault();
         switch (e.keyCode) {
@@ -62,13 +59,13 @@ document.addEventListener('keyup', e => {
             case 40:
                 keysState.keyDown = false;
                 break;
-				
-            case 112: // p
-                keysState.keyP = false;
-				console.log("p pressed");
-                break;
         }
-		console.log("pressed");
+
+        for (var i = 0; i < callbacks.length; i++) {
+            if (callbacks[i].event == 'keyup' && e.keyCode == callbacks[i].keyCode) {
+                callbacks[i].f();
+            }
+        }
     }
 });
 
