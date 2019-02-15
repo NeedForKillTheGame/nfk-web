@@ -1,4 +1,5 @@
 import SpecialObject from "./SpecialObject.js";
+import Constants from "./../Constants.js";
 
 export default
 class Portal extends SpecialObject {
@@ -9,6 +10,9 @@ class Portal extends SpecialObject {
 		this.texture = g.resources.portal.texture;
 		this.offsetX = -16;
 		this.offsetY = -32;
+
+		// properties
+		//this.itemId = Constants.IT_
 	}
 
 	handleCollisions(player) {

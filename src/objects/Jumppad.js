@@ -1,5 +1,6 @@
 import GameObject from "./GameObject.js";
 import Sound from "./../Sound.js";
+import Constants from "./../Constants.js";
 
 export default
 class Jumppad extends GameObject {
@@ -11,7 +12,7 @@ class Jumppad extends GameObject {
 		this.animated = true;
 		
 		// properties
-		this.itemId = strong ? 39 : 38;
+		this.itemId = strong ? Constants.IT_JUMPPAD2 : Constants.IT_JUMPPAD;
 		this.strong = strong;
 	}
 

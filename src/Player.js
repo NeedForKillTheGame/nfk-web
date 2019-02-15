@@ -10,7 +10,7 @@ class Player {
     constructor(g, DXID, name) {
 		this.g = g;
 		this.stage = g.render.stage;
-		this.map = g.map;
+		this.map = g.map; // Map obj
 
 
 		this.DXID = DXID;
@@ -18,21 +18,21 @@ class Player {
         this.y = 0.0;
 		
         this.name = name;
-        this.displayName = Utils.filterNickName(name); // filtered name
+        this.displayName = Utils.filterNickName(name); // filtered name (without color codes)
         this.health = 0;
         this.armor = 0;
 		
-		this.follow = false;
+		this.follow = false; // follow camera
 		
         this.velocityX = 0.0;
         this.velocityY = 0.0;
 		
         this.crouch = false; //current crouch state
-		this.dir = 0; // direction
-		this.dead = 0; // 0-2
-		this.weapon = 0; // 0-7
+		this.dir = Constants.DIR_RS; // direction
+		this.dead = 0; // 0 = alive, 1 or 2 = dead
+		this.weapon = Constants.C_WPN_MACHINE; 
 		this.BALLOON = false; // FIXME: what's this ???
-		this.team = 0;
+		this.team = Constants.C_TEAMNON;
 		this.model = 'sarge'; // // use setModel() for change
         this.modelColor = 'default';
         
@@ -64,8 +64,8 @@ class Player {
 
         this.speedJump = 0;
 		
-		this.graphics = null;		
-		this.physics = null;	
+		this.graphics = null; // PlayerGraphics	obj	
+		this.physics = null; // PlayerPhysics obj	
 
 
 		this._init();
@@ -156,7 +156,11 @@ class Player {
 		console.log("player " + this.name + " selected team " + team);
 		this.team = team;
         
-        this.setModel(this.model, team == 0 ? 'red' : 'blue');
+        this.setModel(this.model, team == Constants.C_TEAMRED 
+            ? 'red'
+            : team == Constants.C_TEAMBLUE
+                ? 'blue'
+                : Constants.C_TEAMNON);
 		this.graphics.updateModel();
 	}
 	

@@ -1,5 +1,6 @@
 import GameObject from "./GameObject.js";
 import Sound from "./../Sound.js";
+import Constants from "./../Constants.js";
 
 export default
 class BlueFlag extends GameObject {
@@ -12,6 +13,9 @@ class BlueFlag extends GameObject {
 		this.frameStart = 0;
 		this.frameEnd = 13;
 		this.offsetY -= 26;
+
+		// properties
+		this.itemId = Constants.IT_BLUE_FLAG;
 	}
 
 	handleCollisions(player) {

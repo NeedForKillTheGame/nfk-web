@@ -1,5 +1,6 @@
 import SimpleObject from "./SimpleObject.js";
 import Sound from "./../Sound.js";
+import Constants from "./../Constants.js";
 
 export default
 class ItemMedkit100 extends SimpleObject {
@@ -11,7 +12,7 @@ class ItemMedkit100 extends SimpleObject {
 		this.animated = true;
 		
 		// properties
-		this.itemId = 22;
+		this.itemId = Constants.IT_HEALTH_100;
 		this.respawnTime = 60;
 		this.health = 100;
 	}

@@ -1,6 +1,6 @@
 
 export default {
-    FPS: 50,
+    FPS: 50, // used in demo and timers (do not change, this is initial NFK fps)
 
     BRICK_WIDTH: 32,
     BRICK_HEIGHT: 16,
@@ -11,11 +11,75 @@ export default {
 	
     PLAYER_MAX_VELOCITY_X: 3,
 	
+
+	// team
+	C_TEAMBLUE : 0,  
+	C_TEAMRED : 1,
+	C_TEAMNON : 2,
+
+	 // weapon ID
+	C_WPN_GAUNTLET:0,
+	C_WPN_MACHINE:1,
+	C_WPN_SHOTGUN:2,
+	C_WPN_GRENADE:3,
+	C_WPN_ROCKET:4,
+	C_WPN_SHAFT:5,
+	C_WPN_RAIL:6,
+	C_WPN_PLASMA:7,
+	C_WPN_BFG:8,
+
+
 	// model direction & current animation status.
 	DIR_LW: 0, // walkin left
 	DIR_RW: 1, // walkin right
 	DIR_LS: 2, // standin left
 	DIR_RS: 3, // standin right
+
+	// values returned by GetBrickStruct() ... (TBrick.image)
+	IT_NONE    : 0,
+	IT_SHOTGUN : 1,
+	IT_GRENADE : 2,
+	IT_ROCKET  : 3,
+	IT_SHAFT   : 4,
+	IT_RAIL    : 5,
+	IT_PLASMA  : 6,
+	IT_BFG     : 7,
+	IT_AMMO_MACHINEGUN : 8,
+	IT_AMMO_SHOTGUN    : 9,
+	IT_AMMO_GRENADE    : 10,
+	IT_AMMO_ROCKET     : 11,
+	IT_AMMO_SHAFT      : 12,
+	IT_AMMO_RAIL       : 13,
+	IT_AMMO_PLASMA     : 14,
+	IT_AMMO_BFG        : 15,
+	IT_SHARD           : 16,
+	IT_YELLOW_ARMOR    : 17,
+	IT_RED_ARMOR       : 18,
+	IT_HEALTH_5        : 19,
+	IT_HEALTH_25       : 20,
+	IT_HEALTH_50       : 21,
+	IT_HEALTH_100      : 22, // megahealth
+	IT_POWERUP_REGENERATION : 23,
+	IT_POWERUP_BATTLESUIT   : 24,
+	IT_POWERUP_HASTE        : 25,
+	IT_POWERUP_QUAD         : 26,
+	IT_POWERUP_FLIGHT       : 27,
+	IT_POWERUP_INVISIBILITY : 28,
+	IT_TRIX_GRENADE : 29, // will never used by bot.dll
+	IT_TRIX_ROCKET  : 30, // will never used by bot.dll
+	IT_LAVA         : 31,
+	IT_WATER        : 32,
+	IT_DEATH        : 33,
+	IT_RESPAWN      : 34, // not used. use GetBrickStruct() to handle this
+	IT_RED_RESPAWN  : 35, // not used. use GetBrickStruct() to handle this
+	IT_BLUE_RESPAWN : 36, // not used. use GetBrickStruct() to handle this
+	IT_EMPTY        : 37,
+	IT_JUMPPAD      : 38,
+	IT_JUMPPAD2     : 39, // strong
+	IT_BLUE_FLAG    : 40,
+	IT_RED_FLAG     : 41,
+	IT_DOMINATION_FLAG : 42, // use GetBrickStruct() to get color.
+
 
 	// DDEMO
 	DDEMO_VERSION: 0,     // here is a version of the demo engine... reading from demofile

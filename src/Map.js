@@ -104,58 +104,58 @@ class Map {
 					continue;
 				}
 				
-				if (brick >=1 && brick <= 7)
+				if (brick >= Constants.IT_SHOTGUN && brick <= Constants.IT_BFG)
 					this.g.objects.push(new ItemWeapon(this.g, x_coord, y_coord, brick));
-				if (brick >=8 && brick <= 15) {
+				if (brick >= Constants.IT_AMMO_MACHINEGUN && brick <= Constants.IT_AMMO_BFG) {
 					var ammo = 10; // all weapons
-					if (brick == 8) ammo = 100;  // machine
-					//if (brick == 9) ammo = 10;  // shotgun
-					//if (brick == 10) ammo = 10; // grenade
-					//if (brick == 11) ammo = 10; // rocket
-					//if (brick == 12) ammo = 10; // shaft
-					//if (brick == 13) ammo = 10; // rail
-					if (brick == 14) ammo = 50; // plasma
-					//if (brick == 15) ammo = 10; // bfg
+					if (brick == Constants.IT_AMMO_MACHINEGUN) ammo = 100;
+					//if (brick == Constants.IT_AMMO_SHOTGUN) ammo = 10;
+					//if (brick == Constants.IT_AMMO_GRENADE) ammo = 10;
+					//if (brick == Constants.IT_AMMO_ROCKET) ammo = 10;
+					//if (brick == Constants.IT_AMMO_SHAFT) ammo = 10;
+					//if (brick == Constants.IT_AMMO_RAIL) ammo = 10;
+					if (brick == Constants.IT_AMMO_PLASMA) ammo = 50;
+					//if (brick == Constants.IT_AMMO_BFG) ammo = 10;
 					this.g.objects.push(new ItemWeapon(this.g, x_coord, y_coord, brick, 10)); // FIXME: add ammo for each weapon
 				}
 				
-				if (brick == 16)
+				if (brick == Constants.IT_SHARD)
 					this.g.objects.push(new ItemArmor5(this.g, x_coord, y_coord));
-				if (brick == 17)
+				if (brick == Constants.IT_YELLOW_ARMOR)
 					this.g.objects.push(new ItemArmor50(this.g, x_coord, y_coord));
-				if (brick == 18)
+				if (brick == Constants.IT_RED_ARMOR)
 					this.g.objects.push(new ItemArmor100(this.g, x_coord, y_coord));
-				if (brick == 19)
+				if (brick == Constants.IT_HEALTH_5)
 					this.g.objects.push(new ItemMedkit5(this.g, x_coord, y_coord));
-				if (brick == 20)
+				if (brick == Constants.IT_HEALTH_25)
 					this.g.objects.push(new ItemMedkit25(this.g, x_coord, y_coord));
-				if (brick == 21)
+				if (brick == Constants.IT_HEALTH_50)
 					this.g.objects.push(new ItemMedkit50(this.g, x_coord, y_coord));
-				if (brick == 22)
+				if (brick == Constants.IT_HEALTH_100)
 					this.g.objects.push(new ItemMedkit100(this.g, x_coord, y_coord));
 				
-				if (brick == 23)
+				if (brick == Constants.IT_POWERUP_REGENERATION)
 					this.g.objects.push(new ItemRegen(this.g, x_coord, y_coord));
-				if (brick == 24)
+				if (brick == Constants.IT_POWERUP_BATTLESUIT)
 					this.g.objects.push(new ItemBattle(this.g, x_coord, y_coord));
-				if (brick == 25)
+				if (brick == Constants.IT_POWERUP_HASTE)
 					this.g.objects.push(new ItemHaste(this.g, x_coord, y_coord));
-				if (brick == 26)
+				if (brick == Constants.IT_POWERUP_QUAD)
 					this.g.objects.push(new ItemQuad(this.g, x_coord, y_coord));
-				if (brick == 27)
+				if (brick == Constants.IT_POWERUP_FLIGHT)
 					this.g.objects.push(new ItemFly(this.g, x_coord, y_coord));
-				if (brick == 28)
+				if (brick == Constants.IT_POWERUP_INVISIBILITY)
 					this.g.objects.push(new ItemInvis(this.g, x_coord, y_coord));
 				
 
-				if (brick == 38)
+				if (brick == Constants.IT_JUMPPAD)
 					this.g.objects.push(new Jumppad(this.g, x_coord, y_coord, false));
-				if (brick == 39)
+				if (brick == Constants.IT_JUMPPAD2)
 					this.g.objects.push(new Jumppad(this.g, x_coord, y_coord, true));
 				
-				if (brick == 40)
+				if (brick == Constants.IT_BLUE_FLAG)
 					this.g.objects.push(new BlueFlag(this.g, x_coord, y_coord));
-				if (brick == 41)
+				if (brick == Constants.IT_RED_FLAG)
 					this.g.objects.push(new RedFlag(this.g, x_coord, y_coord));
 			}
 		}
