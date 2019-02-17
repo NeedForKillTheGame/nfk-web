@@ -1,6 +1,6 @@
 {"frames": {
 
-"Gauntlet-0.png":
+"gauntlet-0.png":
 {
 	"frame": {"x":110,"y":1,"w":23,"h":20},
 	"rotated": true,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":14,"y":4,"w":23,"h":20},
 	"sourceSize": {"w":39,"h":28}
 },
-"Gauntlet-1.png":
+"gauntlet-1.png":
 {
 	"frame": {"x":83,"y":1,"w":25,"h":28},
 	"rotated": false,
@@ -16,7 +16,7 @@
 	"spriteSourceSize": {"x":14,"y":0,"w":25,"h":28},
 	"sourceSize": {"w":39,"h":28}
 },
-"Gauntlet-2.png":
+"gauntlet-2.png":
 {
 	"frame": {"x":1,"y":1,"w":39,"h":28},
 	"rotated": false,
@@ -24,7 +24,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":39,"h":28},
 	"sourceSize": {"w":39,"h":28}
 },
-"Gauntlet-3.png":
+"gauntlet-3.png":
 {
 	"frame": {"x":42,"y":1,"w":39,"h":28},
 	"rotated": false,
@@ -33,12 +33,12 @@
 	"sourceSize": {"w":39,"h":28}
 }},
 "animations": {
-	"Gauntlet": ["Gauntlet-0.png","Gauntlet-1.png","Gauntlet-2.png","Gauntlet-3.png"]
+	"gauntlet": ["gauntlet-0.png","gauntlet-1.png","gauntlet-2.png","gauntlet-3.png"]
 },
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "gaunlet.png",
+	"image": "gauntlet.png",
 	"format": "RGBA8888",
 	"size": {"w":131,"h":30},
 	"scale": "1",
