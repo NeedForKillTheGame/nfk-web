@@ -32,7 +32,7 @@ class GameObject {
 	}
 		
 	spawn() {
-		console.log("spawn " + this.constructor.name + " at " + this.x + "/" + this.y);
+		//console.log("spawn " + this.constructor.name + " at " + this.x + "/" + this.y);
 
 		if (this.animated)
 		{

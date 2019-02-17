@@ -67,6 +67,7 @@ class PlayerGraphics  {
 	// color = d|b|r
 	// walktype = w
 	updateModel() {
+		// hide all player animations
 		for (var m in this.animations) {
 			for (var c in this.animations[m]) {
 				for (var i = 0; i < this.animations[m][c].length; i++)
@@ -78,6 +79,7 @@ class PlayerGraphics  {
 			type = 2;
 			console.log("dead " + type);
 		}
+		// show current animation
 		this.obj = this.animations[this.player.model][this.player.modelColor][type].sprite;
 		this.obj.visible = true;
 		this.play();
@@ -127,6 +129,19 @@ class PlayerGraphics  {
 
 		this.player.weapon.sprite.angle = this.player.fangle;
 
+		// player with a flag
+		if (this.player.flag) {
+			this.player.flag.setY(this.player.y);
+			if (this.player.dir == Constants.DIR_RW || this.player.dir == Constants.DIR_RS) {
+				this.player.flag.setX(this.player.x - 20);
+				this.player.flag.sprite.scale.x = -1;
+				this.player.flag.sprite.angle = -45;
+			} else {
+				this.player.flag.setX(this.player.x + 20);
+				this.player.flag.sprite.scale.x = 1;
+				this.player.flag.sprite.angle = 45;
+			}
+		}
 	}
 	
 	// health and armor

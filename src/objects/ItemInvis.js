@@ -17,6 +17,10 @@ class ItemInvis extends SimpleObject {
 		this.spawnDelay = 120; // FIXME: actually should be random between 30 and 60, but in demo event we set visible by force
 		this.respawnTime = 120;
 	}
+	spawn() {
+		super.spawn();
+		this.hide(); // FIXME: it will be shown by demo event
+	}
 
 	show() {
 		super.show();

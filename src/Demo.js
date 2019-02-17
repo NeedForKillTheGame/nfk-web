@@ -171,6 +171,7 @@ class Demo {
 			case Constants.DDEMO_CREATEPLAYERV2:
 				var name = demounit.netname;
 				var p = this.spawnPlayer(demounit.DXID, name);
+				console.log(demounit);
 				var model = demounit.modelname.split('+');
 				p.setModel(model[0], model[1]);
 				p.changeTeam(demounit.team);
@@ -184,6 +185,17 @@ class Demo {
 					if (demounit.DXID == this.players[k].DXID)
 					{
 						this.players[k].changeTeam(demounit.team);
+					}
+				}
+				break;
+			case Constants.DDEMO_PLAYERMODELCHANGE:
+				for (var k = 0; k < this.players.length; k++)
+				{
+					if (demounit.DXID == this.players[k].DXID)
+					{
+						console.log("changemodel ", demounit);
+						var model = demounit.newstr.split('+');
+						this.players[k].setModel(model[0], model[1]);
 					}
 				}
 				break;
@@ -214,14 +226,69 @@ class Demo {
 				break;
 				
 			case Constants.DDEMO_CTF_EVENT_FLAGPICKUP:
+				console.log("flag pickup");
+				demounit.DXID = demounit.PlayerDXID;
 			case Constants.DDEMO_CTF_EVENT_FLAGTAKEN:
 				Sound.play('flagtk');
+				
+				for (var k = 0; k < this.players.length; k++)
+				{
+					// find player
+					if (demounit.DXID == this.players[k].DXID)
+					{
+						// enemy flag itemid
+						var itemId = this.players[k].team == Constants.C_TEAMBLUE
+							? Constants.IT_RED_FLAG
+							: Constants.IT_BLUE_FLAG;
+						// find flag in objects
+						for (var o in this.g.objects) {
+							if (this.g.objects[o].itemId == itemId) {
+								this.players[k].flag = this.g.objects[o]; // set to player
+								console.log("flag " + itemId + " taken by " + this.players[k].displayName);
+								break;
+							}
+						}
+					}
+				}
 				break;
 			case Constants.DDEMO_CTF_EVENT_FLAGRETURN:
 				Sound.play('flagret');
+				// flag itemid
+				var itemId = demounit.team == Constants.C_TEAMBLUE
+					? Constants.IT_BLUE_FLAG
+					: Constants.IT_RED_FLAG;
+				// find flag in objects
+				for (var o in this.g.objects) {
+					if (this.g.objects[o].itemId == itemId) {
+						this.g.objects[o].returnToBase();
+						console.log("flag " + itemId + " returned");
+						break;
+					}
+				}
 				break;
 			case Constants.DDEMO_CTF_EVENT_FLAGCAPTURE:
 				Sound.play('flagcap');
+
+				for (var k = 0; k < this.players.length; k++)
+				{
+					// find player
+					if (demounit.DXID == this.players[k].DXID)
+					{
+						// flag itemid
+						var itemId = this.players[k].team == Constants.C_TEAMBLUE
+							? Constants.IT_RED_FLAG
+							: Constants.IT_BLUE_FLAG;
+						// find flag in objects
+						for (var o in this.g.objects) {
+							if (this.g.objects[o].itemId == itemId) {
+								this.players[k].flag = null; // remove from player
+								this.g.objects[o].returnToBase();
+								console.log("flag " + itemId + " captured");
+								break;
+							}
+						}
+					}
+				}
 				break;
 				
 				
@@ -261,9 +328,6 @@ class Demo {
 			// FIXME: hit player, it is not a death
 			case Constants.DDEMO_KILLOBJECT:
 				//
-				break;
-			case Constants.DDEMO_FIREBFG:
-				Sound.play('fire_bfg');
 				break;
 
 			case Constants.DDEMO_FIREBFG:

@@ -65,20 +65,19 @@ class Player {
 
 
         this.doublejumpCountdown = 0;
-
         this.cacheOnGround = false;
         this.cacheBrickOnHead = false;
         this.cacheBrickCrouchOnHead = false;
-
         this.speedJump = 0;
 		
 		this.graphics = null; // PlayerGraphics	obj	
 		this.physics = null; // PlayerPhysics obj	
 
+        this.flag = null; // if true then player takes enemy flag
 
+        // init graphics, physics
         this._init();
 
-                
         this.weapons = [
             new WeaponGauntlet(this.g, this),
             new WeaponMachine(this.g, this),
@@ -124,16 +123,16 @@ class Player {
     setModel(model, color) {
         this.model = model;
         this.modelColor = color;
-
         // set defaults if not found
         if (!this.graphics.animations[this.model]) {
             this.model = 'sarge';
-            console.log("reset model (model not found " + model + "+" + color + ")");
+            console.log("reset model (model not found " + model + ")");
         }
         if (!this.graphics.animations[this.model][this.modelColor]) {
             this.modelColor = 'default';
             console.log("reset color (model not found " + model + "+" + color + ")");
         }
+        this.graphics.updateModel();
     }
 		
 	addHealth(val, max) {
@@ -186,6 +185,8 @@ class Player {
                 this.weapons[w].hide();
             }
         }
+        // drop flag
+        this.flag = null;
     }
 
 	changeTeam(team){
