@@ -191,7 +191,7 @@ class Player {
         }
         // drop flag
         if (this.flag) {
-            this.flag.setY(this.flag.rect().y + 16); // TODO: make flag physics instead of this, so it can move onto the floor itself
+            // TODO: make flag physics so it can move onto the floor itself
             this.flag = null;
         }
         // clear powerups
@@ -229,6 +229,26 @@ class Player {
             this.x = newX;
             this.y = newY;
             this.updateCaches();
+        }
+    }
+
+    addPowerup(itemId) {
+        // add only if does not exists
+        if (this.powerups.indexOf(itemId) == -1) {
+            this.powerups.push(itemId);
+            var idx = this.powerups.length - 1;
+
+            // remove after 30 seconds
+            // FIXME: actually powerup has own time, but here each time it will last again 30 sec...
+            var that = this;
+            var timerId = this.g.timerManager.addTimeout(30, function(){
+                for (var i = 0; i < that.powerups.length; i++) {
+                    if (that.powerups[i] == itemId) {
+                        that.powerups.splice(i, 1);
+                        break;
+                    }
+                }
+            });
         }
     }
 

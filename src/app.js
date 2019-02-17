@@ -62,7 +62,7 @@ function run(loader, resources) {
 	
 	// load demo
 	if (G.config.mode == 'development') {
-		G.demo.load("demo6.json", init); // for debug load local demo
+		G.demo.load("demo.json", init); // for debug load local demo
 	} else {
 		G.demo.loadFromQuery(init); // for production
 	}

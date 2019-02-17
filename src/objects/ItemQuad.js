@@ -31,8 +31,7 @@ class ItemQuad extends SimpleObject {
 		var that = this;
 		super.handleCollisions(player, function(player){
 			// TODO: increase damage for a player
-			player.powerups.push(that.itemId);
-			console.log("player takes quad");
+			player.addPowerup(that.itemId);
 			Sound.play("powerup_quad");
 			return true;
 		});

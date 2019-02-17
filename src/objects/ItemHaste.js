@@ -32,7 +32,7 @@ class ItemHaste extends SimpleObject {
 		var that = this;
 		super.handleCollisions(player, function(player){
 			// TODO: set haste for a player
-			player.powerups.push(that.itemId);
+			player.addPowerup(that.itemId);
 			Sound.play("powerup_haste");
 			return true;
 		});

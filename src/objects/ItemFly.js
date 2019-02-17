@@ -32,7 +32,7 @@ class ItemFly extends SimpleObject {
 		var that = this;
 		super.handleCollisions(player, function(player){
 			// TODO: set fly for a player
-			player.powerups.push(that.itemId);
+			player.addPowerup(that.itemId);
 			return true;
 		});
 	}
