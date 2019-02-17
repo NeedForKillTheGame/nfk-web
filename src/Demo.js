@@ -274,40 +274,14 @@ class Demo {
 					// find player
 					if (demounit.DXID == this.players[k].DXID)
 					{
-						// flag itemid
-						var itemId = this.players[k].team == Constants.C_TEAMBLUE
-							? Constants.IT_RED_FLAG
-							: Constants.IT_BLUE_FLAG;
-						// find flag in objects
-						for (var o in this.g.objects) {
-							if (this.g.objects[o].itemId == itemId) {
-								this.players[k].flag = null; // remove from player
-								this.g.objects[o].returnToBase();
-								console.log("flag " + itemId + " captured");
-								break;
-							}
-						}
+						this.players[k].flag.returnToBase();
 					}
 				}
 				break;
 				
 				
 			case Constants.DDEMO_EARNPOWERUP:
-				var itemId = 0;
-				// FIXME: need to test taken powerup type
-				if (demounit.type1 == 0) { itemId = Constants.IT_POWERUP_REGENERATION; }
-				if (demounit.type1 == 1) { itemId = Constants.IT_POWERUP_BATTLESUIT; }
-				if (demounit.type1 == 2) { itemId = Constants.IT_POWERUP_HASTE; }
-				if (demounit.type1 == 3) { itemId = Constants.IT_POWERUP_QUAD; }
-				if (demounit.type1 == 4) { itemId = Constants.IT_POWERUP_INVISIBILITY; }
-				if (itemId > 0) {
-					for (var o in this.g.objects) {
-						// find powerup in spawned objects and set it visible
-						if (o.itemId == itemId) {
-							o.show();
-						}
-					}
-				}
+
 				break;
 				
 			case Constants.DDEMO_CHATMESSAGE:
@@ -396,8 +370,15 @@ class Demo {
 			case Constants.DDEMO_LAVASOUND:
 				Sound.play('lava');
 				break;
+
+			// spawn powerup
 			case Constants.DDEMO_POWERUPSOUND:
-				Sound.play('powerup');
+				for (var o in this.g.objects) {
+					// find powerup in spawned objects and set it visible
+					if (this.g.objects[o].x == demounit.x && this.g.objects[o].y == demounit.y) {
+						this.g.objects[o].show();
+					}
+				}
 				break;
 			case Constants.DDEMO_FLIGHTSOUND:
 				Sound.play('flight');

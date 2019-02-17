@@ -78,6 +78,8 @@ class Player {
         // init graphics, physics
         this._init();
 
+        this.powerups = []; // taken powerups
+        
         this.weapons = [
             new WeaponGauntlet(this.g, this),
             new WeaponMachine(this.g, this),
@@ -187,6 +189,8 @@ class Player {
         }
         // drop flag
         this.flag = null;
+        // clear powerups
+        this.powerups = [];
     }
 
 	changeTeam(team){

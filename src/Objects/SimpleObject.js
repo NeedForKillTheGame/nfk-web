@@ -34,6 +34,7 @@ class SimpleObject extends GameObject {
 				var that = this;
 				var timerId = this.g.timerManager.addTimeout(this.respawnTime, function(id, tick){
 					that.sprite.visible = true;
+					//console.log("respawn object " + that.itemId);
 				});
 				this.timerIds.push(timerId);
 			}

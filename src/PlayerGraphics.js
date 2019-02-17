@@ -25,6 +25,11 @@ class PlayerGraphics  {
 		this.animations = this.g.initPlayerModels(this.container);
 		this.updateModel();
 
+		this.playerPowerup = new PIXI.Text(player.displayName, { fontFamily : 'Arial', fontSize: 14, fontWeight: "bold", fill : 'red', align : 'center' });
+		this.playerPowerup.anchor = new PIXI.Point(0.5, 0.5);
+		this.playerPowerup.y -= 64;
+		this.container.addChild(this.playerPowerup);
+		
 		this.playerName = new PIXI.Text(player.displayName, { fontFamily : 'Arial', fontSize: 14, fill : 'white', align : 'center' });
 		this.playerName.anchor = new PIXI.Point(0.5, 0.5);
 		//this.playerName.scale.x = this.playerName.scale.y;
@@ -109,7 +114,7 @@ class PlayerGraphics  {
 		// player direction
 		this.container.scale.x = this.player.dir == Constants.DIR_LS || this.player.dir == Constants.DIR_LW ? -1 : 1;
 		// morror display name and hud
-		this.playerName.scale.x = this.playerHA.scale.x = this.container.scale.x;
+		this.playerName.scale.x = this.playerHA.scale.x = this.playerPowerup.scale.x  = this.container.scale.x;
 
 		this.container.x = tmpX; //player.x - 10;
 		if (this.player.crouch) {
@@ -118,15 +123,8 @@ class PlayerGraphics  {
 		this.container.y = tmpY; //player.y - 24;
 
 		this.playerHA.text = this.player.health + ' / ' + this.player.armor;
-		/*
-		this.playerName.x = tmpX;
-		this.playerName.y = this.obj.y - 48;
-        
-		this.playerHA.x = tmpX;
-		this.playerHA.y = this.obj.y - 34;
+		this.setPowerupString();
 		
-		*/
-
 		this.player.weapon.sprite.angle = this.player.fangle;
 
 		// player with a flag
@@ -147,6 +145,40 @@ class PlayerGraphics  {
 	// health and armor
 	updatePlayerHA(text, x, y) {
 		
+	}
+
+	setPowerupString() {
+		if (this.player.powerups.length == 0) {
+			this.playerPowerup.text = "";
+			return;
+		}
+		var text = "[";
+		for (var p in this.player.powerups) {
+			switch (this.player.powerups[p]) {
+				case Constants.IT_POWERUP_REGENERATION:
+					text += "REGENERATION"; 
+					break;
+				case Constants.IT_POWERUP_BATTLESUIT:
+					text += "BATTLESUIT"; 
+					break;
+				case Constants.IT_POWERUP_HASTE:
+					text += "HASTE"; 
+					break;
+				case Constants.IT_POWERUP_QUAD:
+					text += "QUAD"; 
+					break;
+				case Constants.IT_POWERUP_FLIGHT:
+					text += "FLIGHT"; 
+					break;
+				case Constants.IT_POWERUP_INVISIBILITY:
+					text += "INVISIBILITY"; 
+					break;
+			}
+			text += " |";
+		}
+		text = text.trim(' |');
+		text += "]";
+		this.playerPowerup.text = text;
 	}
 	
 	

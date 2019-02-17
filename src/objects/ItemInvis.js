@@ -24,13 +24,14 @@ class ItemInvis extends SimpleObject {
 
 	show() {
 		super.show();
-		Sound.play('powerup_invis');
+		Sound.play('powerup');
 	}
 
 	handleCollisions(player) {
 		var that = this;
 		super.handleCollisions(player, function(player){
 			// TODO: set invisible for a player
+			player.powerups.push(that.itemId);
 			Sound.play("powerup_invis");
 			return true;
 		});

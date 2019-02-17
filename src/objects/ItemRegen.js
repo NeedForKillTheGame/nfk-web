@@ -25,13 +25,14 @@ class ItemRegen extends SimpleObject {
 
 	show() {
 		super.show();
-		Sound.play('powerup_regen');
+		Sound.play('powerup');
 	}
 
 	handleCollisions(player) {
 		var that = this;
 		super.handleCollisions(player, function(player){
 			// TODO: set regeneration for a player
+			player.powerups.push(that.itemId);
 			Sound.play("powerup_regen"); // todo: play every second until health < 200
 			return true;
 		});
