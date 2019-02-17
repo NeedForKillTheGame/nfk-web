@@ -3,6 +3,7 @@ var keysState = {
     keyDown: false,
     keyLeft: false,
     keyRight: false,
+    keyTab: false,
 
     onKeyUp: function(keyCode, callback) {
         callbacks.push({ event: 'keyup', keyCode: keyCode, f: callback });
@@ -29,6 +30,10 @@ document.addEventListener('keydown', e => {
 
             case 40:
                 keysState.keyDown = true;
+                break;
+                
+            case 9:
+                keysState.keyTab = true;
                 break;
         }
 
@@ -58,6 +63,10 @@ document.addEventListener('keyup', e => {
 
             case 40:
                 keysState.keyDown = false;
+                break;
+                
+            case 9:
+                keysState.keyTab = false;
                 break;
         }
 

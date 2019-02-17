@@ -61,6 +61,7 @@ class Demo {
 			// TODO: display players summary statistics
 			Sound.play('gameend');
 			console.log("end of demo");
+			this.g.gamestate.gameend = true;
 			return false;
 		}
 		
@@ -163,6 +164,7 @@ class Demo {
 					{
 						this.players[k].health = demounit.health;
 						this.players[k].armor = demounit.armor;
+						this.players[k].frags = demounit.frags;
 					}
 				}
 				break;
@@ -298,6 +300,14 @@ class Demo {
 				Sound.play('talk');
 				break;
 				
+
+			case Constants.DDEMO_CTF_GAMESTATE:
+			case Constants.DDEMO_CTF_GAMESTATESCORE:
+			case Constants.DDEMO_DOM_SCORECHANGED:
+				this.g.gamestate.redscore = demounit.RedScore;
+				this.g.gamestate.bluescore = demounit.BlueScore;
+				break;
+
 			
 			// FIXME: hit player, it is not a death
 			case Constants.DDEMO_KILLOBJECT:
@@ -332,8 +342,11 @@ class Demo {
 						console.log(demounit.State);
 						if (demounit.State == 0)
 							this.players[i].weapon.stop();
-						else
-							this.players[i].weapon.fire(demounit.State);
+						else {
+							if (this.players[i].weapon.use) {
+								this.players[i].weapon.use(demounit.State);
+							}
+						}
 					}
 				}
 				break;
@@ -386,6 +399,7 @@ class Demo {
 			case Constants.DDEMO_NOAMMOSOUND:
 				Sound.play('noammo');
 				break;
+			
 			case Constants.DDEMO_GENERICSOUNDDATA:
 				//Sound.play('genericdata'); // FIXEME: hit player?
 				break;
@@ -395,6 +409,11 @@ class Demo {
 			// FIXME: it does not fire?
 			case Constants.DDEMO_GENERICSOUNDDATA:
 				console.log("sound " + demounit.SoundType);
+
+
+
+
+
 			break;
 				
 		}

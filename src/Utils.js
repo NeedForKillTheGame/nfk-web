@@ -67,5 +67,22 @@ export default {
 				b.x1 >= a.x2 || 
 		        a.y1 >= b.y2 || 
 				b.y1 >= a.y2);
+	},
+
+	// trim string s from given characters c
+	trimChars (s, c) {
+		var re = new RegExp("^[" + c + "]+|[" + c + "]+$", "g");
+		return s.replace(re,"");
+	},
+
+	// move to front PIXI graphics
+	bringToFront (graphics) {	
+		if (graphics.parent) {		
+			var parent = graphics.parent;		
+			parent.removeChild(graphics);
+			parent.addChild(graphics);	
+		}
 	}
 };
+
+

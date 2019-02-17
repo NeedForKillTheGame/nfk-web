@@ -176,7 +176,7 @@ class PlayerGraphics  {
 			}
 			text += " |";
 		}
-		text = text.trim(' |');
+		text = Utils.trimChars(text, ' |');
 		text += "]";
 		this.playerPowerup.text = text;
 	}

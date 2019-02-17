@@ -25,8 +25,9 @@ class WeaponGauntlet extends Weapon  {
 	}
 
 	// state = 0 | 1 | 2 (2 = attack?)
-	fire(state) {
+	use(state) {
 		this.play();
+		console.log(state);
 		Sound.play('fire_gauntl' + state);
 	}
 }

@@ -22,7 +22,6 @@ class WeaponPlasma extends Weapon  {
 	}
 
 	newBullet(x, y, inertialX, inertialY) {
-		console.log(this.player);
 		return new BulletPlasma(this.g, this.player, x, y, inertialX, inertialY);
 	}
 

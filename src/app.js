@@ -23,7 +23,8 @@ Keyboard.onKeyUp(27, function(){
 });
 
 PIXI.loader.onLoad.add(function(loader,data){ // called once per loaded data (callback)
-	console.log('data: ',data,'|Progress:'+loader.progress,'|FileName:'+((data.url).slice(32)),'|Named:'+data.name,'|Ext:'+data.extension);
+	// TODO: add loader progress bar
+	//console.log('data: ',data,'|Progress:'+loader.progress,'|FileName:'+((data.url).slice(32)),'|Named:'+data.name,'|Ext:'+data.extension);
 });
 
 PIXI.loader
@@ -61,7 +62,7 @@ function run(loader, resources) {
 	
 	// load demo
 	if (G.config.mode == 'development') {
-		G.demo.load("demo5.json", init); // for debug load local demo
+		G.demo.load("demo6.json", init); // for debug load local demo
 	} else {
 		G.demo.loadFromQuery(init); // for production
 	}

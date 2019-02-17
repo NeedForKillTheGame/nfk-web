@@ -30,6 +30,8 @@ class Player {
         this.displayName = Utils.filterNickName(name); // filtered name (without color codes)
         this.health = 0;
         this.armor = 0;
+        this.frags = 0;
+        this.ping = '0';
 		
 		this.follow = false; // follow camera
 		
@@ -163,7 +165,9 @@ class Player {
             this.weapons[w].hide();
         }
         this.weapon = this.weapons[weaponId];
-        this.weapon.show();
+        if (this.dead == 0) {
+            this.weapon.show();
+        }
     }
 	
     setCrouch(val) {
@@ -182,13 +186,14 @@ class Player {
         
         if (this.dead > 0) {
             Sound.playDeath(this);
-            // hide a;; weapons
-            for (var w in this.weapons) {
-                this.weapons[w].hide();
-            }
+            // hide weapon
+            this.weapon.hide();
         }
         // drop flag
-        this.flag = null;
+        if (this.flag) {
+            this.flag.setY(this.flag.rect().y + 16); // TODO: make flag physics instead of this, so it can move onto the floor itself
+            this.flag = null;
+        }
         // clear powerups
         this.powerups = [];
     }

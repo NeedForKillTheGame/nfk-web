@@ -7,7 +7,7 @@ class PlayerModel extends GameObject {
 		super(g, 0, 0);
 		
 		// sprite
-		console.log(g.resources[model]);
+		//console.log(g.resources[model]);
 		this.texture = g.resources[model].spritesheet.animations[model + '/' + type + color];
 		this.animated = true;
 		this.frameStart = 1;
