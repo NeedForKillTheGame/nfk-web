@@ -111,15 +111,15 @@ class Demo {
 						if ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) this.players[k].setDead(0);
 						if ((demounit.PUV3 & Constants.PUV3_DEAD1)==Constants.PUV3_DEAD1) this.players[k].setDead(1);
 						if ((demounit.PUV3 & Constants.PUV3_DEAD2)==Constants.PUV3_DEAD2) this.players[k].setDead(2);
-						if ((demounit.PUV3 & Constants.PUV3_WPN0)==Constants.PUV3_WPN0) this.players[k].weapon = Constants.C_WPN_GAUNTLET;
-						if ((demounit.PUV3 & Constants.PUV3_WPN1)==Constants.PUV3_WPN1) this.players[k].weapon = Constants.C_WPN_MACHINE;
-						if ((demounit.PUV3 & Constants.PUV3_WPN2)==Constants.PUV3_WPN2) this.players[k].weapon = Constants.C_WPN_SHOTGUN;
-						if ((demounit.PUV3 & Constants.PUV3_WPN3)==Constants.PUV3_WPN3) this.players[k].weapon = Constants.C_WPN_GRENADE;
-						if ((demounit.PUV3 & Constants.PUV3_WPN4)==Constants.PUV3_WPN4) this.players[k].weapon = Constants.C_WPN_ROCKET;
-						if ((demounit.PUV3 & Constants.PUV3_WPN5)==Constants.PUV3_WPN5) this.players[k].weapon = Constants.C_WPN_SHAFT;
-						if ((demounit.PUV3 & Constants.PUV3_WPN6)==Constants.PUV3_WPN6) this.players[k].weapon = Constants.C_WPN_RAIL;
-						if ((demounit.PUV3 & Constants.PUV3_WPN7)==Constants.PUV3_WPN7) this.players[k].weapon = Constants.C_WPN_PLASMA;
-						if ((demounit.PUV3B & Constants.PUV3B_WPN8)==Constants.PUV3B_WPN8) this.players[k].weapon = Constants.C_WPN_BFG;
+						if ((demounit.PUV3 & Constants.PUV3_WPN0)==Constants.PUV3_WPN0) this.players[k].setWeapon(Constants.C_WPN_GAUNTLET);
+						if ((demounit.PUV3 & Constants.PUV3_WPN1)==Constants.PUV3_WPN1) this.players[k].setWeapon(Constants.C_WPN_MACHINE);
+						if ((demounit.PUV3 & Constants.PUV3_WPN2)==Constants.PUV3_WPN2) this.players[k].setWeapon(Constants.C_WPN_SHOTGUN);
+						if ((demounit.PUV3 & Constants.PUV3_WPN3)==Constants.PUV3_WPN3) this.players[k].setWeapon(Constants.C_WPN_GRENADE);
+						if ((demounit.PUV3 & Constants.PUV3_WPN4)==Constants.PUV3_WPN4) this.players[k].setWeapon(Constants.C_WPN_ROCKET);
+						if ((demounit.PUV3 & Constants.PUV3_WPN5)==Constants.PUV3_WPN5) this.players[k].setWeapon(Constants.C_WPN_SHAFT);
+						if ((demounit.PUV3 & Constants.PUV3_WPN6)==Constants.PUV3_WPN6) this.players[k].setWeapon(Constants.C_WPN_RAIL);
+						if ((demounit.PUV3 & Constants.PUV3_WPN7)==Constants.PUV3_WPN7) this.players[k].setWeapon(Constants.C_WPN_PLASMA);
+						if ((demounit.PUV3B & Constants.PUV3B_WPN8)==Constants.PUV3B_WPN8) this.players[k].setWeapon(Constants.C_WPN_BFG);
 						var crouch = ((demounit.PUV3B & Constants.PUV3B_CROUCH)==Constants.PUV3B_CROUCH) ? true : false;
 						this.players[k].setCrouch(crouch);
 						this.players[k].BALLOON = ((demounit.PUV3B & Constants.PUV3B_BALLOON)==Constants.PUV3B_BALLOON) ? true : false;
@@ -130,13 +130,16 @@ class Demo {
 							this.players[k].graphics.play();
 						
 						if ((this.players[k].dead > 0) && ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) && (this.players[k].rewardtime>0)) this.players[k].rewardtime = 0;
-						this.players[k].fangle = demounit.wpnang;
+						this.players[k].fangle = demounit.wpnang * (180/128); // given angle is from 0 to 255, we convert it to 360 degrees notation
 
-						// fixangle
-						if ((this.players[k].dir==1) || (this.players[k].dir==3))
-							if (this.players[k].fangle > 0x7F) this.players[k].fangle = 0xFF - this.players[k].fangle; 
-						else
-							if (this.players[k].fangle <= 0x7F) this.players[k].fangle = 0xFF - this.players[k].fangle;
+						// fix angle for the right and left sides
+						if ((this.players[k].dir == Constants.DIR_RW) || (this.players[k].dir == Constants.DIR_RS)) {
+							if (this.players[k].fangle > 180) this.players[k].fangle =  this.players[k].fangle; 
+							this.players[k].fangle -= 90;
+						} else {
+							if (this.players[k].fangle <= 180) this.players[k].fangle = this.players[k].fangle;
+							this.players[k].fangle = 270 - this.players[k].fangle;
+						}
 
 						this.players[k].ammo_mg = demounit.currammo;
 						this.players[k].ammo_sg = demounit.currammo;
@@ -262,38 +265,63 @@ class Demo {
 			case Constants.DDEMO_FIREBFG:
 				Sound.play('fire_bfg');
 				break;
-			case Constants.DDEMO_FIREPLASMAV2:
-			case Constants.DDEMO_FIREPLASMA:
-				Sound.play('fire_plasma');
-				break;
-			case Constants.DDEMO_FIREGRENV2:
-			case Constants.DDEMO_FIREGREN:
-				Sound.play('fire_gren');
-				break;
-			case Constants.DDEMO_FIRERAIL:
-				Sound.play('fire_rail');
-				break;
-			case Constants.DDEMO_FIRESHAFT:
-				Sound.play('fire_shaft');
-				break;
-			case Constants.DDEMO_NEW_SHAFTBEGIN:
-				Sound.play('fire_shaft_begin');
-				break;
-			case Constants.DDEMO_NEW_SHAFTEND:
-				Sound.play('fire_shaft_end');
-				break;
-			case Constants.DDEMO_FIRESHOTGUN:
-				Sound.play('fire_shotgun');
-				break;
-			case Constants.DDEMO_FIREMACH:
-				Sound.play('fire_mach');
-				break;
+
+			case Constants.DDEMO_FIREBFG:
 			case Constants.DDEMO_FIREROCKET:
-				Sound.play('fire_rocket');
+			case Constants.DDEMO_FIREPLASMAV2:
+				for (var i = 0; i < this.players.length; i++) {
+					if (this.players[i].DXID == demounit.spawnerDxid) {
+						this.players[i].weapon.fire(demounit.x, demounit.y, demounit.inertiax, demounit.inertiay);
+					}
+				}
+				break;
+
+			case Constants.DDEMO_FIREGREN:
+			case Constants.DDEMO_FIRERAIL:
+			case Constants.DDEMO_FIRESHOTGUN:
+			case Constants.DDEMO_FIREMACH:
+				for (var i = 0; i < this.players.length; i++) {
+					if (this.players[i].DXID == demounit.spawnerDxid) {
+						this.players[i].weapon.fireVector(demounit.x, demounit.y, demounit.cx, demounit.cy, demounit.inertiax, demounit.inertiay);
+					}
+				}
+				break;
+			
+			// gauntlet attack or not
+			case Constants.DDEMO_GAUNTLETSTATE:
+				for (var i = 0; i < this.players.length; i++) {
+					if (this.players[i].DXID == demounit.DXID) {
+						console.log(demounit.State);
+						if (demounit.State == 0)
+							this.players[i].weapon.stop();
+						else
+							this.players[i].weapon.fire(demounit.State);
+					}
+				}
+				break;
+
+			case Constants.DDEMO_NEW_SHAFTBEGIN:
+				for (var i = 0; i < this.players.length; i++) {
+					if (this.players[i].DXID == demounit.DXID) {
+						this.players[i].weapon.fire(demounit.AMMO);
+					}
+				}
+				break;
+
+			case Constants.DDEMO_NEW_SHAFTEND:
+				for (var i = 0; i < this.players.length; i++) {
+					if (this.players[i].DXID == demounit.DXID) {
+						this.players[i].weapon.stop();
+					}
+				}
 				break;
 				
 			case Constants.DDEMO_JUMPSOUND:
-				Sound.play('jump');
+				for (var i = 0; i < this.players.length; i++) {
+					if (this.players[i].DXID == demounit.dxid) {
+						this.players[i].jump();
+					}
+				}
 				break;
 			case Constants.DDEMO_JUMPPADSOUND:
 				//Sound.play('jumppad'); // played in item

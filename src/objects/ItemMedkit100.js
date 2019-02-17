@@ -10,6 +10,7 @@ class ItemMedkit100 extends SimpleObject {
 		// sprite
 		this.texture = g.resources.mega.spritesheet.animations.mega;
 		this.animated = true;
+		this.offsetX = 7;
 		
 		// properties
 		this.itemId = Constants.IT_HEALTH_100;

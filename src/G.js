@@ -20,7 +20,7 @@ class Global {
 		this.players = [];
 		// demo data
 		this.demo = new Demo(this);
-		// all objects on the map
+		// objects on the map
 		this.objects = [];
 
 		// timers
@@ -40,7 +40,7 @@ class Global {
 		this.config = {
 			demoServiceUrl: 'http://nfk.harpywar.com:8080/demo?url=',
 			mode: process.env.NODE_ENV, // 'devemopment' or 'production', depends on running enviroment
-			volume: 0.1,
+			volume: 0.1, // 0.1
 			default_bg: 2,
 			mech: false, // rectangle for objects
 			brickMech: false // rectangle for bricks

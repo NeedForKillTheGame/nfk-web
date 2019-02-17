@@ -9,6 +9,7 @@ class ItemMedkit25 extends SimpleObject {
 		
 		// sprite
 		this.texture = g.resources.medkits.textures['Medkits-1.png'];
+		this.offsetX = -3;
 
 		// properties
 		this.itemId = Constants.IT_HEALTH_25;

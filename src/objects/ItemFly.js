@@ -14,7 +14,7 @@ class ItemFly extends SimpleObject {
 	
 		// properties
 		this.itemId = Constants.IT_POWERUP_FLIGHT;
-		this.spawnDelay = Utils.random(30, 60); // first spawn random time
+		this.spawnDelay = 120; // FIXME: actually should be random between 30 and 60, but in demo event we set visible by force
 		this.respawnTime = 120;
 	}
 

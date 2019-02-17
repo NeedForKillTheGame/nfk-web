@@ -14,7 +14,7 @@ class ItemQuad extends SimpleObject {
 		
 		// properties
 		this.itemId = Constants.IT_POWERUP_QUAD;
-		this.spawnDelay = 60; // FIXME: actually should be random between 30 and 60, but in demo event we set visible by force
+		this.spawnDelay = 120; // FIXME: actually should be random between 30 and 60, but in demo event we set visible by force
 		this.respawnTime = 120;
 	}
 

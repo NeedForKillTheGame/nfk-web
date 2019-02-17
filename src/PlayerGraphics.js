@@ -38,23 +38,6 @@ class PlayerGraphics  {
 		this.container.addChild(this.playerHA);
 		
 		
-
-		// draw weapon
-		
-
-		
-		
-		// create weapon sprite
-	    this.weaponSprite = new PIXI.Sprite(this.getWeaponTexture(this.player.weapon));
-		this.weaponSprite.anchor.set(0.5); // center of player
-		this.weaponSprite.position.x += 4;
-		this.weaponSprite.position.y -= 6;
-		this.weaponSprite.scale.x = this.weaponSprite.scale.y =  -1;
-
-		
-        this.obj.addChild(this.weaponSprite);
-
-		
 		// player mech object (debug)
 		this.mech = this.g.render.createMech(0, 0, this.player.width(), this.player.height());
 		this.mech.visible = false;
@@ -141,9 +124,9 @@ class PlayerGraphics  {
 		this.playerHA.y = this.obj.y - 34;
 		
 		*/
-		this.weaponSprite.texture = this.getWeaponTexture(this.player.weapon);
-		this.weaponSprite.angle = this.player.fangle;
-		
+
+		this.player.weapon.sprite.angle = this.player.fangle;
+
 	}
 	
 	// health and armor

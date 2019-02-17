@@ -115,6 +115,7 @@ class Render {
 				//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
 			
 				this.map.brickObjects.push({
+					idx: brickIdx,
 					row: tmpRow,
 					col: tmpCol,
 					rect: function () {

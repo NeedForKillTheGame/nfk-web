@@ -8,7 +8,7 @@ class ItemArmor5 extends SimpleObject {
 		super(g, x, y);
 		
 		// sprite
-		this.texture = g.resources.items.textures['item-' + (this.itemId - 1) + '.png'];
+		this.texture = g.resources.items.textures['item-' + (Constants.IT_SHARD - 1) + '.png'];
 
 		// properties
 		this.itemId = Constants.IT_SHARD;

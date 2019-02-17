@@ -26,6 +26,10 @@ var sound_defs = {
 	fire_shotgun:	new Howl({ urls: ['sounds/shotgun.wav'] }),
 	fire_mach:	new Howl({ urls: ['sounds/machine.wav'] }),
 	fire_rocket:	new Howl({ urls: ['sounds/rocket.wav'] }),
+	fire_gauntl0:	new Howl({ urls: ['sounds/gauntl_r1.wavv'] }),
+	fire_gauntl1:	new Howl({ urls: ['sounds/gauntl_r2.wav'] }),
+	fire_gauntl2:	new Howl({ urls: ['sounds/gauntl_a.wav'] }),
+	
 	
 	// take powerup
 	powerup_invis:	new Howl({ urls: ['sounds/invisibility.wav'] }),

@@ -13,13 +13,19 @@ class GameObject {
 		this.width = Constants.BRICK_WIDTH; // sprite width
 		this.height = Constants.BRICK_HEIGHT; // sprite height
 		this.animated = false; // sprite position inside image
-		this.animateOneTime = false; // for animated sprite animate only once without repeat (ex. open/close door)
+		this.animationSpeed = 0.2;
+		this.animateOneTime = false; // for animated sprite animate only once without repeat (ex. open/close door). This can be a callback
+		this.frameStopped = 0; // stopped frame
 		this.frameStart = 0; // first frame
 		this.frameEnd = 0; // last frame, set 0 will reach end of frames automatically
+		this.rotation = 0;
 
 		this.texture = null; // PIXI.Texture
 		this.sprite = null; // PIXI.Sprite
-		
+		this.anchor = false;
+
+		this.bullet = false;
+
 		this.overlaps = []; // DXID of players who intersect the object now
 		this.container = this.g.render.mapGraphics; // container to add sprite
 		this.timerIds = [];
@@ -31,7 +37,7 @@ class GameObject {
 		if (this.animated)
 		{
 			this.sprite = new PIXI.AnimatedSprite(this.texture);
-			this.sprite.animationSpeed = 0.2; 
+			this.sprite.animationSpeed = this.animationSpeed; 
 			this.sprite.play();
 			
 			if (this.frameEnd == 0) {
@@ -42,15 +48,16 @@ class GameObject {
 			var that = this;
 			this.sprite.onFrameChange = (f) => {
 				// if animate one time and reach end of frames
-				if (that.animateOneTime && f == that.frameEnd + 1) {
-					that.sprite.gotoAndStop(that.frameStart); // stop
+				if (that.animateOneTime && f == that.frameEnd ) {
+					that.sprite.gotoAndStop(that.frameStopped); // stop
+					that.animateOneTime(); // callback
 				} 
 				// do not change frame if playing was stopped
 				if (!that.sprite.playing) {
 					return;
 				}
 				// if first frame = 0 or reach the end, then move to the first (which must be > 0)
-				if (f == 0 && that.frameStart > 0 || f == that.frameEnd + 1) {
+				if (f == 0 && that.frameStart > 0 || f == that.frameEnd) {
 					that.sprite.gotoAndPlay(that.frameStart); // loop
 				}
 			};
@@ -66,14 +73,19 @@ class GameObject {
 					this.width, 
 					this.height));
 			*/
-			this.sprite = new PIXI.Sprite(this.texture);
+			if (this.texture !== null) {
+				this.sprite = new PIXI.Sprite(this.texture);
+			}
 		}
+		this.sprite.rotation = this.rotation;
+		if (this.anchor) {
+			this.sprite.anchor.set(this.anchor);
+		}
+
+		this.setX(this.x);
+		this.setY(this.y);
 		
-		
-		this.sprite.x = this.x + this.offsetX;
-		this.sprite.y = this.y + this.offsetY;
-		
-		// add object on the map graphics
+		// add object in container (by default map graphics)
 		this.container.addChild(this.sprite);
 		
 		// mech object (debug)
@@ -81,6 +93,12 @@ class GameObject {
 		this.mech.visible = false;
 	}	
 	
+	play() {
+		this.sprite.play();
+	}
+	stop() {
+		this.sprite.gotoAndStop(this.frameStopped); // stop
+	}
 
 	show() {
 		this.sprite.visible = true;
@@ -93,14 +111,37 @@ class GameObject {
 	visible() {
 		return !this.sprite || this.sprite.visible;
 	}
+
+	setX(x) {
+		this.x = x;
+		this.sprite.x = this.x + this.offsetX;
+	}
+	setY(y) {
+		this.y = y;
+		this.sprite.y = this.y + this.offsetY;
+	}
+
+	// speed = animations speed, 0.01 is slowest
+	// callback = execute after full invisible
+	fadeOut(speed, callback) {
+		var that = this;
+		var timerId =  this.g.timerManager.addTickTimer(1, 0, function(id, tick){
+			that.sprite.alpha -= speed; 
+			if (that.sprite.alpha <= 0) {
+				that.hide();
+				callback();
+			}
+		});
+		this.timerIds.push(timerId);
+	}
 	
 	// rectangle
 	rect() {
 		return {
-			x1: this.x + this.g.render.mapDx,
-			y1: this.y + this.g.render.mapDy,
-			x2: this.x + this.width + this.g.render.mapDx,
-			y2: this.y + this.height + this.g.render.mapDy			
+			x1: this.x - (this.width * this.sprite.anchor.x) + this.g.render.mapDx,
+			y1: this.y - (this.height * this.sprite.anchor.y) + this.g.render.mapDy,
+			x2: this.x - (this.width * this.sprite.anchor.x) + this.width + this.g.render.mapDx,
+			y2: this.y - (this.height * this.sprite.anchor.y) + this.height + this.g.render.mapDy			
 		};
 	}
 	
@@ -134,14 +175,45 @@ class GameObject {
 		}
 	}
 
+	handleBrickCollisions(brick, callback) {
+		// handle collision with bricks only with type of bullets
+		if (!this.bullet) {
+			return false;
+		}
+
+		// if object is invisible then it does not exist
+		if ( !this.visible() )
+			return false;
+
+		var brickUid = brick.col + '_' + brick.row + '_' + brick.idx;
+		var idx = this.overlaps.indexOf(brickUid);
+
+		var overlap = Utils.rectOverlap(this.rect(), brick.rect());
+		// if brick eat object then call the callback function
+		if ( overlap ) {
+			// if brick already entered the object then do not fire overlap event twice
+			if (idx != -1) {
+				return false;
+			}
+			this.overlaps.push(brickUid);
+			//console.log("iteract with object");
+			return callback(brick);
+		} else {
+			// if brick does not more intersect the object then remove it from overlaps
+			if (idx != -1) {
+				this.overlaps.splice(idx, 1);
+			}
+		}
+	}
+
 	destroy() {
 		for (var id in this.timerIds) {
 			this.g.timerManager.removeTimer(id);
 		}
 		
-		this.sprite.destroy();
+		//this.sprite.destroy(); // FIXME: destroy cause an error sometimes for bullets. Actually we can not destroy it, JS vm will destroy it automatically cause of no references
 		this.container.removeChild(this.sprite);
-		this.mech.destroy();
+		//this.mech.destroy();
 		if (this.g.config.mech) {
 			this.g.render.removeMech(this.mech);
 		}

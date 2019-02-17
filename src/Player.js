@@ -4,6 +4,15 @@ import Constants from "./Constants.js";
 import PlayerGraphics from "./PlayerGraphics.js";
 import PlayerPhysics from "./Physics.js";
 import Sound from "./Sound.js";
+import WeaponGauntlet from "./objects/WeaponGauntlet.js";
+import WeaponMachine from "./objects/WeaponMachine.js";
+import WeaponShotgun from "./objects/WeaponShotgun.js";
+import WeaponGrenade from "./objects/WeaponGrenade.js";
+import WeaponRocket from "./objects/WeaponRocket.js";
+import WeaponShaft from "./objects/WeaponShaft.js";
+import WeaponRail from "./objects/WeaponRail.js";
+import WeaponPlasma from "./objects/WeaponPlasma.js";
+import WeaponBfg from "./objects/WeaponBfg.js";
 
 export default
 class Player {
@@ -26,11 +35,10 @@ class Player {
 		
         this.velocityX = 0.0;
         this.velocityY = 0.0;
-		
+        
         this.crouch = false; //current crouch state
 		this.dir = Constants.DIR_RS; // direction
 		this.dead = 0; // 0 = alive, 1 or 2 = dead
-		this.weapon = Constants.C_WPN_MACHINE; 
 		this.BALLOON = false; // FIXME: what's this ???
 		this.team = Constants.C_TEAMNON;
 		this.model = 'sarge'; // // use setModel() for change
@@ -68,14 +76,31 @@ class Player {
 		this.physics = null; // PlayerPhysics obj	
 
 
-		this._init();
+        this._init();
+
+                
+        this.weapons = [
+            new WeaponGauntlet(this.g, this),
+            new WeaponMachine(this.g, this),
+            new WeaponShotgun(this.g, this),
+            new WeaponGrenade(this.g, this),
+            new WeaponRocket(this.g, this),
+            new WeaponShaft(this.g, this),
+            new WeaponRail(this.g, this),
+            new WeaponPlasma(this.g, this),
+            new WeaponBfg(this.g, this)
+        ];
+		this.weapon = this.weapons[0]; // set machine default
+        for (var w in this.weapons) {
+            this.weapons[w].spawn();
+        }
     }
 
 	// init player graphics and physics
 	_init()
 	{
-			this.graphics = new PlayerGraphics(this.g, this);
-			this.physics = new PlayerPhysics(this.g, this);
+        this.graphics = new PlayerGraphics(this.g, this);
+        this.physics = new PlayerPhysics(this.g, this);
 	}
     
 
@@ -131,7 +156,14 @@ class Player {
 	addWeaponAmmo(ammoId, amount) {
 		
 	}
-	
+	setWeapon(weaponId) {
+        // TODO: switch weapon only if exists
+        for (var w in this.weapons) {
+            this.weapons[w].hide();
+        }
+        this.weapon = this.weapons[weaponId];
+        this.weapon.show();
+    }
 	
     setCrouch(val) {
         if (this.crouch == val)
@@ -149,6 +181,10 @@ class Player {
         
         if (this.dead > 0) {
             Sound.playDeath(this);
+            // hide a;; weapons
+            for (var w in this.weapons) {
+                this.weapons[w].hide();
+            }
         }
     }
 
@@ -184,6 +220,11 @@ class Player {
             this.y = newY;
             this.updateCaches();
         }
+    }
+
+    jump() {
+        // TODO: move code to jump here
+        Sound.playModel(this.model, 'jump');
     }
 
     updateCaches() {

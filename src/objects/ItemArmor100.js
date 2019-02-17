@@ -12,6 +12,7 @@ class ItemArmor100 extends SimpleObject {
 		this.animated = true;
 		this.frameStart = 20;
 		this.frameEnd = 39;
+		this.offsetY = -5;
 
 		// properties
 		this.itemId = Constants.IT_RED_ARMOR;

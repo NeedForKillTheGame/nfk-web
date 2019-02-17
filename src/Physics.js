@@ -312,12 +312,6 @@ class PlayerPhysics {
 				this.tmpDeltaPhysicFrames--;
 			}
 		}
-		
-		
-		// handle objects collisions with a player
-		for (var i = 0; i < this.g.objects.length; i++) {
-			this.g.objects[i].handleCollisions(this.player);
-		}
 	}
 
 	

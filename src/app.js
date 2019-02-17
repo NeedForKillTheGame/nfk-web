@@ -28,11 +28,15 @@ PIXI.loader.onLoad.add(function(loader,data){ // called once per loaded data (ca
 
 PIXI.loader
 	.add('palette', "images/palette.png")
+	.add('railhit', "images/railhit.png")
+	.add('glow', "images/glow.png") 
 	.add('weapons', "images/weapons.json")
 	.add('explosion', "images/explosion.json") // animation
 	.add('mgun', "images/mgun.json") // animation
 	.add('jumppad', "images/jumppad.json") // animation
-	.add('gaunlet', "images/gaunlet.json") // animation
+	.add('gauntlet', "images/gauntlet.json") // animation
+	.add('bullets', "images/bullets.json") // animation
+
 	.add('medkits', "images/medkits.json")
 	.add('portal', "images/portal.png")
 	.add('flash', "images/flash.png") // animation
@@ -57,7 +61,7 @@ function run(loader, resources) {
 	
 	// load demo
 	if (G.config.mode == 'development') {
-		G.demo.load("demo4.json", init); // for debug load local demo
+		G.demo.load("demo5.json", init); // for debug load local demo
 	} else {
 		G.demo.loadFromQuery(init); // for production
 	}
@@ -100,6 +104,19 @@ async function init()
 				G.players[i].physics.updateGame(timestamp);
 				// player graphics
 				G.render.renderGame(G.players[i]);
+
+				// handle objects collisions with a player
+				for (var k = 0; k < G.objects.length; k++) {
+					G.objects[k].handleCollisions(G.players[i]);
+				}
+			}
+
+			for (var i = 0; i < G.map.brickObjects.length; i++)
+			{
+				// handle objects collisions with a brick
+				for (var k = 0; k < G.objects.length; k++) {
+					G.objects[k].handleBrickCollisions(G.map.brickObjects[i]);
+				}
 			}
 
 			// for debug
