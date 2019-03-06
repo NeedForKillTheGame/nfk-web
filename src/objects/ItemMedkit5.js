@@ -19,11 +19,8 @@ class ItemMedkit5 extends SimpleObject {
 	handleCollisions(player) {
 		var that = this;
 		super.handleCollisions(player, function(player){
-			if (player.health >= 100)
-				return false;
-			player.addHealth(that.health, 100);
+			player.addHealth(that.health, 200);
 			Sound.play("health5");
-			that.sprite.visible = false;
 			return true;
 		});
 	}

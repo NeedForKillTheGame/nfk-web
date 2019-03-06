@@ -24,7 +24,6 @@ class ItemMedkit25 extends SimpleObject {
 				return false;
 			player.addHealth(that.health, 100);
 			Sound.play("health25");
-			that.sprite.visible = false;
 			return true;
 		});
 	}

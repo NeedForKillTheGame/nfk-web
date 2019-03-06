@@ -39,7 +39,7 @@ class BulletPlasma extends Bullet  {
 
 		this.inertialX = inertialX;
 		this.inertialY = inertialY;
-		this.width = this.height = 3;
+		this.width = this.height = 1;
 
 		this.rotation = player.weapon.sprite.rotation;
 		if (player.dir == Constants.DIR_LS || player.dir == Constants.DIR_LW) {

@@ -94,10 +94,14 @@ class GameObject {
 	}	
 	
 	play() {
-		this.sprite.play();
+		if (this.sprite.play) {
+			this.sprite.play();
+		}
 	}
 	stop() {
-		this.sprite.gotoAndStop(this.frameStopped); // stop
+		if (this.sprite.gotoAndStop) {
+			this.sprite.gotoAndStop(this.frameStopped); // stop
+		}
 	}
 
 	show() {

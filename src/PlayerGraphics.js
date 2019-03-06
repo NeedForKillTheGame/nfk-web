@@ -48,26 +48,6 @@ class PlayerGraphics  {
 		this.mech.visible = false;
 	}
 	
-	getWeaponTexture(weaponId) {
-		// cut texture rectangle for weapon from the palette
-		var weaponTexture = null;
-		
-		// gaunlett
-		if (weaponId == 0) {
-			weaponTexture = this.g.resources.gaunlet.textures[0];
-		}
-		// machine
-		else if (weaponId == 1) {
-			weaponTexture = this.g.resources.mgun.textures[0];
-		} 
-		// others
-		else {
-			weaponTexture = this.g.resources.weapons.textures[weaponId];
-		}
-				
-		return weaponTexture;
-	}
-	
 	// model = sarge
 	// color = d|b|r
 	// walktype = w
@@ -102,12 +82,12 @@ class PlayerGraphics  {
 	
 	adjustPosition(tmpX, tmpY)
 	{
-		
-		if (this.player.dir == Constants.DIR_LS || this.player.dir == Constants.DIR_RS) {
+		// if not dead and Stand type
+		if (!this.player.dead && (this.player.dir == Constants.DIR_LS || this.player.dir == Constants.DIR_RS)) {
 			// stand
 			this.stop();
 		} else {
-			// walk
+			// walk animation
 			this.play();
 		}
 		

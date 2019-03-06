@@ -40,7 +40,7 @@ class BulletRocket extends Bullet  {
 
 		this.inertialX = inertialX;
 		this.inertialY = inertialY;
-		this.width = 13;
+		this.width = 7;
 		this.height = 7;
 
 		this.rotation = player.weapon.sprite.rotation;
