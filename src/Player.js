@@ -26,8 +26,8 @@ class Player {
         this.x = 0.0;
         this.y = 0.0;
 		
-        this.name = name;
-        this.displayName = Utils.filterNickName(name); // filtered name (without color codes)
+        this.name = windows1251.decode(name); // FIXME: API service return 1251 instead of utf8 on different machines, so this a temporary hack
+        this.displayName = Utils.filterNickName(this.name); // filtered name (without color codes)
         this.health = 0;
         this.armor = 0;
         this.frags = 0;
