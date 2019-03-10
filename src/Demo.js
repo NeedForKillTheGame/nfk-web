@@ -20,7 +20,7 @@ class Demo {
 		var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
         if (queryString.indexOf('demourl=') === 0) {
             var demoUrl = decodeURIComponent(queryString.substring(8)).replace(/\+/g, ' ');
-			demoUrl = this.g.config.demoServiceUrl + demoUrl + '&full=true';
+			demoUrl = this.g.config.demoServiceUrl + demoUrl + '&type=full';
             Console.writeText('loading demo from url ' + demoUrl);
 			this.load(demoUrl, callback);
         }
