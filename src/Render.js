@@ -9,7 +9,6 @@ class Render {
 	constructor(g) {
 		this.g = g;
 		this.map = g.map;
-		
 		var that = this;
 
 		this.app = new PIXI.Application(window.innerWidth, window.innerHeight, { antialias: false, resolution: 1, transparent: true});
@@ -85,6 +84,11 @@ class Render {
 			console.log('Follow player ' + that.g.players[followId].displayName);
 		};
 
+		gameEl.addEventListener("touchstart", gameEl.onmousedown, false);
+		gameEl.addEventListener("touchend", gameEl.onmouseup, false);
+		gameEl.addEventListener("touchcancel", gameEl.onmouseup, false);
+		gameEl.addEventListener("touchmove", gameEl.onmousemove, false);
+
 	}
 	
 	
@@ -109,6 +113,7 @@ class Render {
 		var tmpRows = this.map.getRows();
 		var tmpCols = this.map.getCols();
 		var tmpRow, tmpCol;
+
 		for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
 			for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
 				if (!this.map.isBrick(tmpCol, tmpRow))
@@ -140,7 +145,14 @@ class Render {
 				var brickSprite = new PIXI.Sprite(brickTexture);
 				brickSprite.position.x = tmpCol * Constants.BRICK_WIDTH;
 				brickSprite.position.y = tmpRow * Constants.BRICK_HEIGHT;
-			
+
+				if (this.g.map.pal_transparent) {
+					// TODO: set transparent color (research how to do it in PIXI)
+					//       https://github.com/pixijs/pixi-filters can be helpful with their ColorReplaceFilter
+					//		 (how to connect it?)
+					//brickSprite.filters = [new ColorReplaceFilter(this.g.map.pal_transparent_color, 0x000000, 0.001)];
+				}
+				
 				//console.log(brickIdx + " / " 
 				//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 
 				//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
@@ -223,8 +235,9 @@ class Render {
 			// FIXME: gametime can differ for 1 second in g.gamestate, just check all variants
 			if (gametime == this.g.gamestate.gametime ||
 				 gametime-1 == this.g.gamestate.gametime || 
-				 gametime+1 == this.g.gamestate.gametime)
-				this.slider.setLoaded(true); // set loaded flag
+				 gametime+1 == this.g.gamestate.gametime) {
+					this.slider.setLoaded(true); // set loaded flag
+				 }
 		}
 
 		this.g.labels.adjustPosition();

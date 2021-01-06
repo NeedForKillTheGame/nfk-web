@@ -10,48 +10,58 @@ class Slider extends PIXI.Graphics {
 	constructor(render, callback, callback_tooltip) {
 		super();
 
-		this.color = 0xFF00FF; // pink
-		this.loadColor = 0xFFFFFF; // white
+		this.color = 0xFE0200; // pink
+		this.loadColor = 0xE5E5E6; // white
+
+		this.initWidth = this.width = 451;
+		// for mobile device
+		if (this.initWidth > window.innerWidth)
+			this.initWidth = this.width = window.innerWidth - 50;
 
 		// fill slider border
-		this.lineStyle(1, this.color, 0.5, 0.5, true); 
+		this.lineStyle(1, this.color, 1, 0.5, true); 
 		this.beginFill(this.color, 0.1);
-		this.drawRect(0, 0, 500, 18);
+		this.drawRect(0, 0, this.initWidth, 18);
+		this.drawRect(0, 0, 0, 18);
 
 		this.loaded = true;
 		// add elapsed area
 		this.elapsed = new PIXI.Graphics();
-		this.elapsed.beginFill(this.color, 0.4);
+		this.elapsed.beginFill(this.color, 0.8);
 		this.elapsed.drawRect(0, 5, 1, 8);
 		this.addChild(this.elapsed);
 		// the same loading area
 		this.elapsedLoading = new PIXI.Graphics();
-		this.elapsedLoading.beginFill(this.loadColor, 0.5);
+		this.elapsedLoading.beginFill(this.color, 0.4);
 		this.elapsedLoading.drawRect(0, 5, 1, 8);
 		this.elapsedLoading.visible = false;
 		this.addChild(this.elapsedLoading);
 
 		// add slider button
 		this.button = new PIXI.Graphics();
-		this.button.beginFill(this.color, 0.6);
+		this.button.beginFill(this.color, 1);
 		this.button.drawCircle(9, 9, 6);
 		this.addChild(this.button);
 
 		// add tooltip
-		this.tooltip = new PIXI.Text("00:00", { fontFamily : 'Arial', fontSize: 11, fill : 'white', align : 'center' });
+		this.tooltip = new PIXI.Text("00:00", { fontFamily : 'Arial', fontSize: 12, fill : 'white', align : 'center' });
 		this.tooltip.anchor = new PIXI.Point(0.5, 0.5);
 		this.tooltip.x = 0;
 		this.tooltip.y = -10;
 		this.tooltip.visible = false;
 		this.addChild(this.tooltip);
 
+		// add frame counter
+		this.counter = new PIXI.Text("0", { fontFamily : 'Arial', fontSize: 12, fill : 'white', align : 'center' });
+		this.counter.x = this.width + 6;
+		this.counter.y = 2;
+		this.addChild(this.counter);
 
 		// init
 		this.resize(render);
 
 
 		// properties
-		this.initWidth = this.width = 500;
 		this.initHeight = this.height;
 		this.value = 0;
 		this.minValue = 0;
@@ -94,9 +104,18 @@ class Slider extends PIXI.Graphics {
 		return false;
 	}
 	onmousemove(e) {
+		// support touch from mobile devices
+		if (e.changedTouches) {
+			var touches = e.changedTouches;
+			for (var i = 0; i < touches.length; i++) {
+				e.clientX = touches[i].pageX;
+				e.clientY = touches[i].pageY;
+			}
+		}
+
 		// show tooltip
 		if ( this.onmousebounds(e)  ) {
-			var new_val = this._getValueFromAbsX(e.clientX);
+			var new_val = this._getValueFromAbsX(e.clientX - this.button.width / 2);
 			this.setTooltip(this.callback_tooltip(new_val));
 
 			this.tooltip.visible = true;
@@ -119,6 +138,15 @@ class Slider extends PIXI.Graphics {
 
 	/* check is mouse cursor hover on the slider area */
 	onmousebounds(e) {
+		// support touch from mobile devices
+		if (e.changedTouches) {
+			var touches = e.changedTouches;
+			for (var i = 0; i < touches.length; i++) {
+				e.clientX = touches[i].pageX;
+				e.clientY = touches[i].pageY;
+			}
+		}
+
 		//console.log("slider coords", this.x, this.y, this.width, this.height);
 		if (e.clientX >= this.x &&
 			e.clientX <= this.x + this.initWidth &&
@@ -131,6 +159,15 @@ class Slider extends PIXI.Graphics {
 
 	/* check is mouse cursor hover on the slider button */
 	onmousebounds_button(e) {
+		// support touch from mobile devices
+		if (e.changedTouches) {
+			var touches = e.changedTouches;
+			for (var i = 0; i < touches.length; i++) {
+				e.clientX = touches[i].pageX;
+				e.clientY = touches[i].pageY;
+			}
+		}
+
 		//console.log("slider button coords", this.button.x, this.button.y, this.button.width, this.button.height);
 		if (e.clientX >= this.x + this.button.x &&
 			e.clientX <= this.x + this.button.x + this.button.width &&
@@ -180,6 +217,9 @@ class Slider extends PIXI.Graphics {
 			new_x = this.initWidth - this.button.width;
 		this.button.x = new_x;
 		this.elapsed.width = this.button.x + this.button.width / 2;
+
+		// update counter
+		this.counter.text = this.getValue();
 
 		//console.log("slider value", this.getValue());
 		if (this.callback)
