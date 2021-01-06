@@ -129,6 +129,7 @@ async function init()
 			// if end of demo then return from the function (it will stop infinite loop)
 			//if ( !G.demo.nextFrame(gametic) )
 			//	return;
+			// FIXME: a new feature to rewind a demo is available, so don't break app when demo ends
 			G.demo.nextFrame(gametic);
 			
 			// this must be after G.demo.nextFrame(), to handle gametic = 0

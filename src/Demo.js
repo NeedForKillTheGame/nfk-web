@@ -13,19 +13,33 @@ class Demo {
 		this.data = {};
 		
 		this.frameId = 0;
-		this.frameStart = 0;
+		this.startFrame = 0;
 		this.reqId = 0;
 	}
 	
 	loadFromQuery(callback)
 	{
 		var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
+		var demoUrl = false;
         if (queryString.indexOf('demourl=') === 0) {
-            var demoUrl = decodeURIComponent(queryString.substring(8)).replace(/\+/g, ' ');
-			demoUrl = this.g.config.demoServiceUrl + demoUrl + '&type=full';
-            Console.writeText('loading demo from url ' + demoUrl);
-			this.load(demoUrl, callback);
-        }
+            demoUrl = decodeURIComponent(queryString.substring(8)).replace(/\+/g, ' ');
+		}
+		if (queryString.indexOf('match=') === 0) {
+            var matchId = decodeURIComponent(queryString.substring(6)).replace(/\+/g, ' ');
+			demoUrl = this.g.config.statsDemoUrl + matchId;
+		}
+		var idx = queryString.indexOf('frame=');
+		if (idx >= 0) {
+			this.startFrame = decodeURIComponent(queryString.substring(idx+6)).replace(/\+/g, ' ');
+			this.startFrame = parseInt(this.startFrame);
+			console.log("start from frame " + this.startFrame);
+		}
+		if (!demoUrl) {
+			alert('demourl or match is required');
+		}
+		demoUrl = this.g.config.demoServiceUrl + demoUrl + '&type=full';
+		Console.writeText('loading demo from url ' + demoUrl);
+		this.load(demoUrl, callback);
 	}
 	
 	load(demoUrl, callback)
@@ -69,7 +83,15 @@ class Demo {
 			}
 			return false;
 		}
-		
+
+				
+		// feature to start from specified frame
+		if (this.frameId > 10 && this.frameId < this.startFrame) {
+			this.frameId = this.startFrame;
+			console.log('rewind on frame ' + this.startFrame);
+			// reset start frame to able to rewind with slider
+			this.startFrame = 0;
+		}
 		
 		var unit = this.data.DemoUnits[this.frameId];
 		var demounit = unit.DemoUnit;
@@ -80,19 +102,15 @@ class Demo {
 			return true;
 
 		this.setFrameId(this.frameId + 1);
-		
-		// TEST
-		//if (this.frameId > 10 && this.frameId < this.frameStart)
-		//	this.frameId = this.frameStart;
 
 // debug
-/*
+
 		if (req)
 			this.reqId++;
 		else
 			this.reqId = 0;
-		console.log("frame " + this.frameId + " " + (req ? this.reqId : 'false'));
-*/
+		//console.log("frame " + this.frameId + " " + (req ? this.reqId : 'false'));
+
 
 		this.g.gamestate.gametime = unit.DData.gametime;
 		this.g.gamestate.gametick = unit.DData.gametick;
