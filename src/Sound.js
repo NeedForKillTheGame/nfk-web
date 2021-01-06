@@ -83,11 +83,17 @@ export default {
 	},
 	
     play(soundId, model) {
+		// do not play for inactive window
+		if (!document.hasFocus())
+			return;
 		sound_defs[soundId].volume(this.volume);
 		sound_defs[soundId].play();
 	},
 		
     playModel(model, soundId) {
+		// do not play for inactive window
+		if (!document.hasFocus())
+			return;
 		if (!sound_defs.models[model]) {
 			model = 'sarge';
 		}
