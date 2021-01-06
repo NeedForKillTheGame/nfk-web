@@ -13,6 +13,8 @@ class Demo {
 		this.data = {};
 		
 		this.frameId = 0;
+		this.frameStart = 0;
+		this.reqId = 0;
 	}
 	
 	loadFromQuery(callback)
@@ -34,6 +36,7 @@ class Demo {
 				Utils.removeHtmlElement("loading");
 				//console.log(data);
 				that.data = data;
+				console.log("total frames " + data.DemoUnits.length);
 				callback(that);
 			},
 			function(xhr) { 
@@ -54,14 +57,16 @@ class Demo {
 		return p;
 	}
 	
-	nextFrame(gametic)
+	nextFrame(gametic, req)
 	{
 		// end of the demo
 		if (this.frameId > this.data.DemoUnits.length - 1) {
-			// TODO: display players summary statistics
-			Sound.play('gameend');
-			console.log("end of demo");
-			this.g.gamestate.gameend = true;
+			if (!this.g.gamestate.gameend) {
+				// TODO: display players summary statistics
+				Sound.play('gameend');
+				console.log("end of demo");
+				this.g.gamestate.gameend = true;
+			}
 			return false;
 		}
 		
@@ -74,9 +79,21 @@ class Demo {
 		if (gametic != unit.DData.gametic)
 			return true;
 
-		//console.log("next");
+		this.setFrameId(this.frameId + 1);
 		
-		this.frameId++;
+		// TEST
+		//if (this.frameId > 10 && this.frameId < this.frameStart)
+		//	this.frameId = this.frameStart;
+
+// debug
+/*
+		if (req)
+			this.reqId++;
+		else
+			this.reqId = 0;
+		console.log("frame " + this.frameId + " " + (req ? this.reqId : 'false'));
+*/
+
 		this.g.gamestate.gametime = unit.DData.gametime;
 		this.g.gamestate.gametick = unit.DData.gametick;
 
@@ -276,7 +293,8 @@ class Demo {
 					// find player
 					if (demounit.DXID == this.players[k].DXID)
 					{
-						this.players[k].flag.returnToBase();
+						if (this.players[k].flag)
+							this.players[k].flag.returnToBase();
 					}
 				}
 				break;
@@ -419,11 +437,23 @@ class Demo {
 		}
 		
 		// increase next frame recursively until all ticks will be handled
-		this.nextFrame(gametic);
-		
+		this.nextFrame(gametic, true);
 		return true;
 	}
 	
+	setFrameId(id) {
+		if (id <= 0)
+			id = 0;
+		if (id >= this.data.DemoUnits.length)
+			id = this.data.DemoUnits.length;
+		this.frameId = id;
+
+		// reset game state
+		this.g.gamestate.gameend = false;
+	}
+	getFrameId() {
+		return this.frameId;
+	}
 	
 	_loadJSON(path, success, error)
 	{

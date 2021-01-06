@@ -54,7 +54,7 @@ class ScreenLabels  {
 			this.scoreboard.update();
 		}
 
-		this.gameTime.text = Math.floor(this.g.gamestate.gametime / 60).toString().padStart(2, '0') + ':' + (this.g.gamestate.gametime % 60).toString().padStart(2, '0');
+		this.gameTime.text = Utils.formatGameTime(this.g.gamestate.gametime);
 	}
 
 

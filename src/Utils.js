@@ -82,6 +82,15 @@ export default {
 			parent.removeChild(graphics);
 			parent.addChild(graphics);	
 		}
+	},
+
+	formatGameTime(gametime) {
+		if (gametime < 0)
+			gametime = 0;
+		return Math.floor(gametime / 60)
+			.toString().padStart(2, '0')
+			+ ':' +
+			(gametime % 60).toString().padStart(2, '0');
 	}
 };
 

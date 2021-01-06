@@ -53,11 +53,12 @@ PIXI.loader
 	.add('doom2', "images/models/doom2.json")
 	.add('crashed', "images/models/crashed.json")
 	
-	
 	.load(run);
 	
+
+
 function run(loader, resources) {
-	
+
 	G.resources = resources;
 	
 	// load demo
@@ -126,8 +127,9 @@ async function init()
 			}
 
 			// if end of demo then return from the function (it will stop infinite loop)
-			if ( !G.demo.nextFrame(gametic) )
-				return;
+			//if ( !G.demo.nextFrame(gametic) )
+			//	return;
+			G.demo.nextFrame(gametic);
 			
 			// this must be after G.demo.nextFrame(), to handle gametic = 0
 			if (++gametic >= Constants.FPS)

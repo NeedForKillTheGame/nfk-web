@@ -2,7 +2,7 @@ import PIXI from "PIXI";
 import Constants from "./Constants.js";
 import Map from "./Map.js";
 import Utils from "./Utils.js";
-
+import Slider from "./Slider.js";
 
 export default
 class Render {
@@ -35,11 +35,41 @@ class Render {
 		this.paletteCustomTexture = null;
 		this.bricksPerLineCustom = 0;
 
+		this.slider = new Slider(this, function(val){ 
+			// slider change event
+			that.g.demo.setFrameId(val); 
+		}, function(frameId){ 
+			//console.log(frameId);
+			// update time in tooltip on mousemove
+			var text = "00:00";
+			if (frameId > 0)
+			if (that.g.demo.data && that.g.demo.data.DemoUnits && that.g.demo.data.DemoUnits[frameId]) {
+				var time = that.g.demo.data.DemoUnits[frameId].DData.gametime;
+				text = Utils.formatGameTime(time);
+			}
+			return text;
+		});
+		this.app.stage.addChild(this.slider);
 
-		window.addEventListener('resize', function() { that.recalcFloatCamera(that) }, false);
-		
-		// follow next player
-		gameEl.onclick = function (e) {
+		window.addEventListener('resize', function() { 
+			that.recalcFloatCamera(that);
+		}, false);
+
+
+
+		gameEl.onmousemove = function (e) {
+			if (that.slider.onmousemove(e))
+				return;
+		};
+		gameEl.onmouseup = function (e) {
+			if (that.slider.onmouseup(e))
+				return;
+		};
+		gameEl.onmousedown = function (e) {
+			if (that.slider.onmousedown(e))
+				return;
+
+			// follow next player
 			var followId = -1;
 			for (var i = 0; i < that.g.players.length; i++) {
 				if (that.g.players[i].follow) {
@@ -54,6 +84,7 @@ class Render {
 			that.g.players[followId].follow = true;
 			console.log('Follow player ' + that.g.players[followId].displayName);
 		};
+
 	}
 	
 	
@@ -135,6 +166,9 @@ class Render {
 		
 		this.recalcFloatCamera(this);
 		this.app.render(this.stage);
+
+		// update slider
+		this.slider.setMaxValue(this.g.demo.data.DemoUnits.length);
 	}
 	
 	// when browser size changed this event fixes the map view
@@ -153,6 +187,9 @@ class Render {
 			render.mapGraphics.x = render.mapDx = Math.floor(((window.innerWidth - 20) - render.map.getCols() * 32) / 2);
 			render.mapGraphics.y = render.mapDy = Math.floor(((window.innerHeight) - render.map.getRows() * 16) / 2);
 		}
+		
+		// update slider
+		this.slider.resize(render);
 	}
 
 
@@ -177,6 +214,19 @@ class Render {
 	}
 
 	renderLabels() {
+		// update slider
+		var frameId = this.g.demo.getFrameId();
+		this.slider.setValue(frameId);
+		// TODO: here we can update slider current label (time)
+		if (this.g.demo.data.DemoUnits && this.g.demo.data.DemoUnits[frameId]) {
+			var gametime = this.g.demo.data.DemoUnits[frameId].DData.gametime;
+			// FIXME: gametime can differ for 1 second in g.gamestate, just check all variants
+			if (gametime == this.g.gamestate.gametime ||
+				 gametime-1 == this.g.gamestate.gametime || 
+				 gametime+1 == this.g.gamestate.gametime)
+				this.slider.setLoaded(true); // set loaded flag
+		}
+
 		this.g.labels.adjustPosition();
 	}
 	
@@ -218,8 +268,9 @@ class Render {
 	createMech(x, y, w, h) {
 		var mech = new PIXI.Graphics();
 		//mech.beginFill(0xFF00FF, 1);
-		mech.lineStyle(2, 0xFF00FF); 
+		mech.lineStyle(1, 0xFF00FF, 1, 0.5, true); 
 		mech.drawRect(x, y, w, h);
+		mech.drawRect(x, y, 0, h); // FIXME: draw left line
 		this.stage.addChild(mech);
 		return mech;
 	}
