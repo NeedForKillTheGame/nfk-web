@@ -1,0 +1,239 @@
+{"frames": {
+
+"flag-0.png":
+{
+	"frame": {"x":1,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-1.png":
+{
+	"frame": {"x":1,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-2.png":
+{
+	"frame": {"x":153,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-3.png":
+{
+	"frame": {"x":267,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-4.png":
+{
+	"frame": {"x":267,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-5.png":
+{
+	"frame": {"x":302,"y":87,"w":36,"h":41},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-6.png":
+{
+	"frame": {"x":305,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-7.png":
+{
+	"frame": {"x":305,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-8.png":
+{
+	"frame": {"x":343,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-9.png":
+{
+	"frame": {"x":343,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-10.png":
+{
+	"frame": {"x":1,"y":87,"w":36,"h":41},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-11.png":
+{
+	"frame": {"x":39,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-12.png":
+{
+	"frame": {"x":39,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-13.png":
+{
+	"frame": {"x":44,"y":87,"w":36,"h":41},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-14.png":
+{
+	"frame": {"x":77,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-15.png":
+{
+	"frame": {"x":77,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-16.png":
+{
+	"frame": {"x":87,"y":87,"w":36,"h":41},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-17.png":
+{
+	"frame": {"x":115,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-18.png":
+{
+	"frame": {"x":115,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-19.png":
+{
+	"frame": {"x":130,"y":87,"w":36,"h":41},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-20.png":
+{
+	"frame": {"x":153,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-21.png":
+{
+	"frame": {"x":173,"y":87,"w":36,"h":41},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-22.png":
+{
+	"frame": {"x":191,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-23.png":
+{
+	"frame": {"x":191,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-24.png":
+{
+	"frame": {"x":216,"y":87,"w":36,"h":41},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-25.png":
+{
+	"frame": {"x":229,"y":1,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-26.png":
+{
+	"frame": {"x":229,"y":44,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"flag-27.png":
+{
+	"frame": {"x":259,"y":87,"w":36,"h":41},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+}},
+"animations": {
+	"flag": ["flag-0.png","flag-1.png","flag-2.png","flag-3.png","flag-4.png","flag-5.png","flag-6.png","flag-7.png","flag-8.png","flag-9.png","flag-10.png","flag-11.png","flag-12.png","flag-13.png","flag-14.png","flag-15.png","flag-16.png","flag-17.png","flag-18.png","flag-19.png","flag-20.png","flag-21.png","flag-22.png","flag-23.png","flag-24.png","flag-25.png","flag-26.png","flag-27.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "flag.png",
+	"format": "RGBA8888",
+	"size": {"w":380,"h":124},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:368653ce9791ed8e2f46402343c5ef5b:bc2a4b4d6dbd78d55773fad364557af1:649e98370082788fd8fd3ec33000549b$"
+}
+}

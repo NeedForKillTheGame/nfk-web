@@ -1,0 +1,47 @@
+{"frames": {
+
+"Medkits-0.png":
+{
+	"frame": {"x":23,"y":1,"w":19,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":0,"w":19,"h":16},
+	"sourceSize": {"w":30,"h":16}
+},
+"Medkits-1.png":
+{
+	"frame": {"x":44,"y":1,"w":19,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":0,"w":19,"h":16},
+	"sourceSize": {"w":30,"h":16}
+},
+"Medkits-2.png":
+{
+	"frame": {"x":1,"y":1,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":30,"h":16}
+},
+"Medkits-3.png":
+{
+	"frame": {"x":65,"y":1,"w":17,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":1,"w":17,"h":15},
+	"sourceSize": {"w":30,"h":16}
+}},
+"animations": {
+	"Medkits": ["Medkits-0.png","Medkits-1.png","Medkits-2.png","Medkits-3.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "medkits.png",
+	"format": "RGBA8888",
+	"size": {"w":83,"h":18},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:eb80004da9bbc7ecf34ae5a866bb3050:95c24cfb94be67de68905d49d4b8a49c:070c2e6cddd442705c949c18a652c4d0$"
+}
+}

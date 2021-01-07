@@ -4,11 +4,13 @@
   "description": "Need For Kill - Quake 3 in 2d - WebGl game",
   "main": "src/app.js",
   "scripts": {
+    "start": "webpack-dev-server --mode development",
+    "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nfk2d/nfk-web.git"
+    "url": "git+https://github.com/nfk2d/nfk-web.git"
   },
   "keywords": [
     "nfk",
@@ -22,9 +24,24 @@
   "bugs": {
     "url": "https://github.com/nfk2d/nfk-web/issues"
   },
+  "resolutions": {
+    "terser": "3.14.1"
+  },
   "homepage": "http://needforkill.ru",
   "devDependencies": {
-    "babel-core": "^4.6.4",
-    "babel-loader": "^4.0.0"
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.2.2",
+    "babel-preset-env": "^1.7.0",
+    "pixi.js": "^5.3.7",
+    "terser": "^3.17.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.1"
+  },
+  "dependencies": {
+    "install": "^0.13.0",
+    "npm": "^6.14.10"
   }
 }

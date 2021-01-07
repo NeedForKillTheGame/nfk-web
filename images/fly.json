@@ -1,0 +1,175 @@
+{"frames": {
+
+"fly-0.png":
+{
+	"frame": {"x":30,"y":53,"w":27,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":7,"w":27,"h":25},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-1.png":
+{
+	"frame": {"x":1,"y":79,"w":27,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":7,"w":27,"h":25},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-2.png":
+{
+	"frame": {"x":30,"y":134,"w":27,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":6,"w":27,"h":25},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-3.png":
+{
+	"frame": {"x":1,"y":215,"w":26,"h":26},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":5,"w":26,"h":26},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-4.png":
+{
+	"frame": {"x":1,"y":160,"w":27,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":27,"h":25},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-5.png":
+{
+	"frame": {"x":30,"y":161,"w":27,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":3,"w":27,"h":25},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-6.png":
+{
+	"frame": {"x":1,"y":244,"w":28,"h":26},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":1,"w":28,"h":26},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-7.png":
+{
+	"frame": {"x":31,"y":244,"w":27,"h":26},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":0,"w":27,"h":26},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-8.png":
+{
+	"frame": {"x":30,"y":27,"w":28,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":0,"w":28,"h":24},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-9.png":
+{
+	"frame": {"x":1,"y":53,"w":27,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":27,"h":24},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-10.png":
+{
+	"frame": {"x":1,"y":1,"w":27,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":27,"h":24},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-11.png":
+{
+	"frame": {"x":30,"y":1,"w":28,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":28,"h":24},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-12.png":
+{
+	"frame": {"x":1,"y":27,"w":27,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":27,"h":24},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-13.png":
+{
+	"frame": {"x":30,"y":80,"w":26,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":26,"h":25},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-14.png":
+{
+	"frame": {"x":1,"y":187,"w":27,"h":26},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":27,"h":26},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-15.png":
+{
+	"frame": {"x":1,"y":106,"w":27,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":3,"w":27,"h":25},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-16.png":
+{
+	"frame": {"x":30,"y":107,"w":28,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":4,"w":28,"h":25},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-17.png":
+{
+	"frame": {"x":30,"y":188,"w":27,"h":26},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":5,"w":27,"h":26},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-18.png":
+{
+	"frame": {"x":29,"y":216,"w":28,"h":26},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":6,"w":28,"h":26},
+	"sourceSize": {"w":37,"h":32}
+},
+"fly-19.png":
+{
+	"frame": {"x":1,"y":133,"w":27,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":7,"w":27,"h":25},
+	"sourceSize": {"w":37,"h":32}
+}},
+"animations": {
+	"fly": ["fly-0.png","fly-1.png","fly-2.png","fly-3.png","fly-4.png","fly-5.png","fly-6.png","fly-7.png","fly-8.png","fly-9.png","fly-10.png","fly-11.png","fly-12.png","fly-13.png","fly-14.png","fly-15.png","fly-16.png","fly-17.png","fly-18.png","fly-19.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "fly.png",
+	"format": "RGBA8888",
+	"size": {"w":59,"h":271},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:0b222b6967dd13dbce3623e931affaa2:c2252ee66bc1763dfca8c8613551a17e:7a61be702b5a5cb11c1b01896b1d86f6$"
+}
+}

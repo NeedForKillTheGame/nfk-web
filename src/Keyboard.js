@@ -2,14 +2,17 @@ var keysState = {
     keyUp: false,
     keyDown: false,
     keyLeft: false,
-    keyRight: false
+    keyRight: false,
+    keyTab: false,
+
+    onKeyUp: function(keyCode, callback) {
+        callbacks.push({ event: 'keyup', keyCode: keyCode, f: callback });
+    }
 };
 
-document.addEventListener('keydown', e => {
-    if (e.keyCode < 37 || e.keyCode > 40) {
-        return;
-    }
+var callbacks = [];
 
+document.addEventListener('keydown', e => {
     if (e.target.nodeName.toLowerCase() !== 'textarea') {
         e.preventDefault();
         switch (e.keyCode) {
@@ -28,15 +31,21 @@ document.addEventListener('keydown', e => {
             case 40:
                 keysState.keyDown = true;
                 break;
+                
+            case 9:
+                keysState.keyTab = true;
+                break;
+        }
+
+        for (var i = 0; i < callbacks.length; i++) {
+            if (callbacks[i].event == 'keydown' && e.keyCode == callbacks[i].keyCode) {
+                callbacks[i].f();
+            }
         }
     }
 });
 
 document.addEventListener('keyup', e => {
-    if (e.keyCode < 37 || e.keyCode > 40) {
-        return;
-    }
-
     if (e.target.nodeName.toLowerCase() !== 'textarea') {
         e.preventDefault();
         switch (e.keyCode) {
@@ -55,6 +64,16 @@ document.addEventListener('keyup', e => {
             case 40:
                 keysState.keyDown = false;
                 break;
+                
+            case 9:
+                keysState.keyTab = false;
+                break;
+        }
+
+        for (var i = 0; i < callbacks.length; i++) {
+            if (callbacks[i].event == 'keyup' && e.keyCode == callbacks[i].keyCode) {
+                callbacks[i].f();
+            }
         }
     }
 });

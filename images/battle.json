@@ -1,0 +1,175 @@
+{"frames": {
+
+"battle-0.png":
+{
+	"frame": {"x":1,"y":1,"w":27,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":10,"w":27,"h":18},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-1.png":
+{
+	"frame": {"x":30,"y":1,"w":27,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":10,"w":27,"h":18},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-2.png":
+{
+	"frame": {"x":1,"y":145,"w":27,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":9,"w":27,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-3.png":
+{
+	"frame": {"x":1,"y":102,"w":26,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":8,"w":26,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-4.png":
+{
+	"frame": {"x":30,"y":145,"w":27,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":7,"w":27,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-5.png":
+{
+	"frame": {"x":1,"y":61,"w":27,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":6,"w":27,"h":18},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-6.png":
+{
+	"frame": {"x":1,"y":166,"w":28,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":4,"w":28,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-7.png":
+{
+	"frame": {"x":31,"y":166,"w":27,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":27,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-8.png":
+{
+	"frame": {"x":1,"y":187,"w":28,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":2,"w":28,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-9.png":
+{
+	"frame": {"x":31,"y":187,"w":27,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":27,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-10.png":
+{
+	"frame": {"x":1,"y":21,"w":27,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":1,"w":27,"h":18},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-11.png":
+{
+	"frame": {"x":30,"y":21,"w":28,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":2,"w":28,"h":18},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-12.png":
+{
+	"frame": {"x":30,"y":61,"w":27,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":2,"w":27,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-13.png":
+{
+	"frame": {"x":1,"y":81,"w":26,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":3,"w":26,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-14.png":
+{
+	"frame": {"x":1,"y":41,"w":27,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":5,"w":27,"h":18},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-15.png":
+{
+	"frame": {"x":30,"y":41,"w":27,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":6,"w":27,"h":18},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-16.png":
+{
+	"frame": {"x":29,"y":82,"w":28,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":7,"w":28,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-17.png":
+{
+	"frame": {"x":29,"y":103,"w":27,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":8,"w":27,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-18.png":
+{
+	"frame": {"x":1,"y":124,"w":28,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":9,"w":28,"h":19},
+	"sourceSize": {"w":37,"h":29}
+},
+"battle-19.png":
+{
+	"frame": {"x":31,"y":124,"w":27,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":10,"w":27,"h":19},
+	"sourceSize": {"w":37,"h":29}
+}},
+"animations": {
+	"battle": ["battle-0.png","battle-1.png","battle-2.png","battle-3.png","battle-4.png","battle-5.png","battle-6.png","battle-7.png","battle-8.png","battle-9.png","battle-10.png","battle-11.png","battle-12.png","battle-13.png","battle-14.png","battle-15.png","battle-16.png","battle-17.png","battle-18.png","battle-19.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "battle.png",
+	"format": "RGBA8888",
+	"size": {"w":59,"h":207},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:e2e26722370857be357e1537027b5c8b:397447a134da937827707d5ef5e4355b:a24a04ff4d7d4734fe9e4e18b8de1a1c$"
+}
+}

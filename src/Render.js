@@ -1,102 +1,296 @@
 import PIXI from "PIXI";
 import Constants from "./Constants.js";
 import Map from "./Map.js";
+import Utils from "./Utils.js";
+import Slider from "./Slider.js";
 
-const BRICK_HEIGHT = Constants.BRICK_HEIGHT;
-const BRICK_WIDTH = Constants.BRICK_WIDTH;
+export default
+class Render {
+	constructor(g) {
+		this.g = g;
+		this.map = g.map;
+		var that = this;
 
-var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
-renderer.view.style.display = "block";
-var gameEl = document.getElementById('game');
-gameEl.appendChild(renderer.view);
+		this.app = new PIXI.Application(window.innerWidth, window.innerHeight, { antialias: false, resolution: 1, transparent: true});
+		this.app.view.style.display = "block";
+		var gameEl = document.getElementById('game');
+		gameEl.appendChild(this.app.view);
+		
+		this.stage = this.app.stage;
 
-var stage = new PIXI.Stage(0x000000);
-var mapGraphics = new PIXI.Graphics();
-mapGraphics.beginFill(0x999999);
-mapGraphics.lineStyle(1, 0xAAAAAA);
-stage.addChild(mapGraphics);
+		this.mapGraphics = new PIXI.Graphics();
+		this.mapGraphics.beginFill(0x999999);
+		this.mapGraphics.lineStyle(1, 0xAAAAAA);
+		this.stage.addChild(this.mapGraphics);
 
-var localPlayerGraphics = new PIXI.Graphics();
-localPlayerGraphics.beginFill(0xAAAAFF);
-//localPlayerGraphics.lineStyle(1, 0xFFFFFF);
-localPlayerGraphics.drawRect(0, 0, 20, BRICK_HEIGHT * 3);
-localPlayerGraphics.endFill();
-stage.addChild(localPlayerGraphics);
+		this.floatCamera = false;
+		this.halfWidth = 0;
+		this.halfHeight = 0;
+		this.mapDx = 0;
+		this.mapDy = 0;
+		
+		this.bricksPerLine = 8; // 
 
-var localPlayerCenter = new PIXI.Graphics();
-localPlayerCenter.beginFill(0x0000AA);
-localPlayerCenter.drawRect(0, 0, 2, 2);
-localPlayerCenter.endFill();
-stage.addChild(localPlayerCenter);
+		this.paletteCustomTexture = null;
+		this.bricksPerLineCustom = 0;
 
-var dot1 = new PIXI.Graphics();
-stage.addChild(dot1);
+		this.slider = new Slider(this, function(val){ 
+			// slider change event
+			that.g.demo.setFrameId(val); 
+		}, function(frameId){ 
+			//console.log(frameId);
+			// update time in tooltip on mousemove
+			var text = "00:00";
+			if (frameId > 0)
+			if (that.g.demo.data && that.g.demo.data.DemoUnits && that.g.demo.data.DemoUnits[frameId]) {
+				var time = that.g.demo.data.DemoUnits[frameId].DData.gametime;
+				text = Utils.formatGameTime(time);
+			}
+			return text;
+		});
+		this.app.stage.addChild(this.slider);
 
-var dot2 = new PIXI.Graphics();
-stage.addChild(dot2);
+		window.addEventListener('resize', function() { 
+			that.recalcFloatCamera(that);
+		}, false);
 
-var floatCamera = false;
-var halfWidth = 0;
-var halfHeight = 0;
-var mapDx = 0;
-var mapDy = 0;
-function recalcFloatCamera() {
-    renderer.view.width = window.innerWidth - 20;
-    renderer.view.height = window.innerHeight;
 
-    floatCamera = Map.getRows() > (window.innerHeight) / 16 || (Map.getCols() > (window.innerWidth - 20) / 32);
-    if (floatCamera) {
-        halfWidth = Math.floor((window.innerWidth - 20) / 2);
-        halfHeight = Math.floor((window.innerHeight) / 2);
 
-    } else {
-        mapGraphics.x = mapDx = Math.floor(((window.innerWidth - 20) - Map.getCols() * 32) / 2);
-        mapGraphics.y = mapDy = Math.floor(((window.innerHeight) - Map.getRows() * 16) / 2);
-    }
+		gameEl.onmousemove = function (e) {
+			if (that.slider.onmousemove(e))
+				return;
+		};
+		gameEl.onmouseup = function (e) {
+			if (that.slider.onmouseup(e))
+				return;
+		};
+		gameEl.onmousedown = function (e) {
+			if (that.slider.onmousedown(e))
+				return;
+
+			// follow next player
+			var followId = -1;
+			for (var i = 0; i < that.g.players.length; i++) {
+				if (that.g.players[i].follow) {
+					that.g.players[i].follow = false;
+					followId = i + 1;
+					if (followId > that.g.players.length - 1)
+						followId = 0;
+				}
+			}
+			if (followId == -1)
+				return;
+			that.g.players[followId].follow = true;
+			console.log('Follow player ' + that.g.players[followId].displayName);
+		};
+
+		gameEl.addEventListener("touchstart", gameEl.onmousedown, false);
+		gameEl.addEventListener("touchend", gameEl.onmouseup, false);
+		gameEl.addEventListener("touchcancel", gameEl.onmouseup, false);
+		gameEl.addEventListener("touchmove", gameEl.onmousemove, false);
+
+	}
+	
+	
+	async updatePaletteTexture(image) {
+		//var texture = PIXI.Texture.from('images/palette.jpg');
+		//let sprite = new PIXI.Sprite.from('assets/image.png');
+		this.paletteCustomTexture = PIXI.BaseTexture.from(image);
+		// FIXME: get size of image directly, otherwise this.paletteCustomTexture
+		var size = await Utils.getImageDimensions(image);
+
+		this.bricksPerLineCustom = Math.floor(size.w / Constants.BRICK_WIDTH);
+		console.log("palette loaded = " + this.paletteCustomTexture.hasLoaded);
+		console.log("change palette. Brickes per line " + this.paletteCustomTexture.width + " " + this.bricksPerLineCustom);
+	}
+
+
+	renderMap() {
+		document.body.style.background = "url('images/bg_" + this.map.bg + ".jpg')";
+		var that = this;
+		this.g.map.destroyBrickObjects();
+
+		var tmpRows = this.map.getRows();
+		var tmpCols = this.map.getCols();
+		var tmpRow, tmpCol;
+
+		for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
+			for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
+				if (!this.map.isBrick(tmpCol, tmpRow))
+					continue;
+
+				var brickIdx = this.map.getBrick(tmpCol, tmpRow);
+
+				var pal = this.g.resources.palette.texture;
+				var bpr = this.bricksPerLine;
+				// custom palette from map
+				if (this.map.paletteCustomImage != null && brickIdx > 53 && brickIdx <= 181) {
+					pal = this.paletteCustomTexture;
+					bpr = this.bricksPerLineCustom;
+					brickIdx -= this.map.paletteCustomIndex;
+				} else {
+					brickIdx -= this.map.paletteIndex;
+				}
+
+				// cut texture rectangle for brick from the palette
+				var brickTexture = new PIXI.Texture(
+					pal, 
+					new PIXI.Rectangle(
+						brickIdx % bpr * Constants.BRICK_WIDTH, 
+						Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT, 
+						Constants.BRICK_WIDTH, 
+						Constants.BRICK_HEIGHT));
+
+				// create brick sprite
+				var brickSprite = new PIXI.Sprite(brickTexture);
+				brickSprite.position.x = tmpCol * Constants.BRICK_WIDTH;
+				brickSprite.position.y = tmpRow * Constants.BRICK_HEIGHT;
+
+				if (this.g.map.pal_transparent) {
+					// TODO: set transparent color (research how to do it in PIXI)
+					//       https://github.com/pixijs/pixi-filters can be helpful with their ColorReplaceFilter
+					//		 (how to connect it?)
+					//brickSprite.filters = [new ColorReplaceFilter(this.g.map.pal_transparent_color, 0x000000, 0.001)];
+				}
+				
+				//console.log(brickIdx + " / " 
+				//	+ brickIdx % bpr * Constants.BRICK_WIDTH + " " 
+				//	+ Math.floor(brickIdx / bpr) * Constants.BRICK_HEIGHT); // debug
+			
+				this.map.brickObjects.push({
+					idx: brickIdx,
+					row: tmpRow,
+					col: tmpCol,
+					rect: function () {
+						return that.map.brickRect(this.row, this.col);
+					},
+					sprite: brickSprite,
+					mech: this.g.config.brickMech 
+						? this.g.render.createMech(0, 0, Constants.BRICK_WIDTH, Constants.BRICK_HEIGHT)
+						: null
+				});
+
+				this.mapGraphics.addChild(brickSprite);
+			}
+		}
+
+		this.map.spawnObjects();
+		
+		this.recalcFloatCamera(this);
+		this.app.render(this.stage);
+
+		// update slider
+		this.slider.setMaxValue(this.g.demo.data.DemoUnits.length);
+	}
+	
+	// when browser size changed this event fixes the map view
+	recalcFloatCamera(render) {
+		console.log("resize event");
+		
+		render.app.view.width = window.innerWidth - 20;
+		render.app.view.height = window.innerHeight;
+
+		render.floatCamera = render.map.getRows() > (window.innerHeight) / 16 || (render.map.getCols() > (window.innerWidth - 20) / 32);
+		if (render.floatCamera) {
+			render.halfWidth = Math.floor((window.innerWidth - 20) / 2);
+			render.halfHeight = Math.floor((window.innerHeight) / 2);
+
+		} else {
+			render.mapGraphics.x = render.mapDx = Math.floor(((window.innerWidth - 20) - render.map.getCols() * 32) / 2);
+			render.mapGraphics.y = render.mapDy = Math.floor(((window.innerHeight) - render.map.getRows() * 16) / 2);
+		}
+		
+		// update slider
+		this.slider.resize(render);
+	}
+
+
+	renderGame(player) {
+				
+		// position of a player on the map
+		var tmpX = player.x + this.mapDx;
+		var tmpY = player.y + this.mapDy;
+		
+		if (this.floatCamera) {
+			if (player.follow)
+			{
+				// update map position depending on the following player 
+				this.mapDx = this.mapGraphics.x = this.halfWidth - player.x;
+				this.mapDy = this.mapGraphics.y = this.halfHeight - player.y; 
+			}
+		}
+		
+		player.graphics.adjustPosition(tmpX, tmpY);
+
+		this.app.render(this.stage);
+	}
+
+	renderLabels() {
+		// update slider
+		var frameId = this.g.demo.getFrameId();
+		this.slider.setValue(frameId);
+		// TODO: here we can update slider current label (time)
+		if (this.g.demo.data.DemoUnits && this.g.demo.data.DemoUnits[frameId]) {
+			var gametime = this.g.demo.data.DemoUnits[frameId].DData.gametime;
+			// FIXME: gametime can differ for 1 second in g.gamestate, just check all variants
+			if (gametime == this.g.gamestate.gametime ||
+				 gametime-1 == this.g.gamestate.gametime || 
+				 gametime+1 == this.g.gamestate.gametime) {
+					this.slider.setLoaded(true); // set loaded flag
+				 }
+		}
+
+		this.g.labels.adjustPosition();
+	}
+	
+	renderMech() {
+		// mech of players
+		for (var i = 0; i < this.g.players.length; i++) {
+			this.g.players[i].graphics.mech.x = this.g.players[i].rect().x1;
+			this.g.players[i].graphics.mech.y = this.g.players[i].rect().y1;
+			this.g.players[i].graphics.mech.width = this.g.players[i].rect().x2 - this.g.players[i].rect().x1;
+			this.g.players[i].graphics.mech.height = this.g.players[i].rect().y2 - this.g.players[i].rect().y1;
+			this.g.players[i].graphics.mech.visible = true;
+		}
+		// mech of objects
+		for (var i = 0; i < this.g.objects.length; i++) {
+			this.g.objects[i].mech.x = this.g.objects[i].rect().x1;
+			this.g.objects[i].mech.y = this.g.objects[i].rect().y1;
+			this.g.objects[i].mech.width = this.g.objects[i].rect().x2 - this.g.objects[i].rect().x1;
+			this.g.objects[i].mech.height = this.g.objects[i].rect().y2 - this.g.objects[i].rect().y1;
+			this.g.objects[i].mech.visible = true;
+		}
+
+		// mech of bricks
+		if (this.g.config.brickMech)
+		{
+			for (var i = 0; i < this.g.map.brickObjects.length; i++) {
+				var rect = this.g.map.brickObjects[i].rect();
+				this.g.map.brickObjects[i].mech.x = rect.x1;
+				this.g.map.brickObjects[i].mech.y = rect.y1;
+				this.g.map.brickObjects[i].mech.width = rect.x2 - rect.x1;
+				this.g.map.brickObjects[i].mech.height = rect.y2 - rect.y1;
+				this.g.map.brickObjects[i].mech.visible = true;
+			}
+		}
+	}
+	
+	
+	
+	// create and add mech object (for debug)
+	createMech(x, y, w, h) {
+		var mech = new PIXI.Graphics();
+		//mech.beginFill(0xFF00FF, 1);
+		mech.lineStyle(1, 0xFF00FF, 1, 0.5, true); 
+		mech.drawRect(x, y, w, h);
+		mech.drawRect(x, y, 0, h); // FIXME: draw left line
+		this.stage.addChild(mech);
+		return mech;
+	}
+	removeMech(mech) {
+		this.stage.removeChild(mech);
+	}
 }
 
-window.addEventListener('resize', recalcFloatCamera, false);
 
-export function renderMap() {
-    var tmpRows = Map.getRows();
-    var tmpCols = Map.getCols();
-    var tmpRow, tmpCol;
-    for (tmpRow = 0; tmpRow < tmpRows; tmpRow++) {
-        for (tmpCol = 0; tmpCol < tmpCols; tmpCol++) {
-            if (Map.isBrick(tmpCol, tmpRow)) {
-                mapGraphics.drawRect(tmpCol * 32, tmpRow * 16, 31, 15);
-            }
-        }
-    }
-    renderer.render(stage);
-    recalcFloatCamera();
-}
 
-var tmpX = 0;
-var tmpY = 0;
-export function renderGame(player) {
-
-    if (floatCamera) {
-        tmpX = halfWidth;
-        tmpY = halfHeight;
-        mapGraphics.x = halfWidth - player.x;
-        mapGraphics.y = halfHeight - player.y;
-    } else {
-        tmpX = player.x + mapDx;
-        tmpY = player.y + mapDy;
-    }
-
-    localPlayerGraphics.x = tmpX - 10; //player.x - 10;
-    if (player.crouch) {
-        localPlayerGraphics.y = tmpY - 8; //player.y - 8;
-        localPlayerGraphics.height = 2 / 3;
-    } else {
-        localPlayerGraphics.y = tmpY - 24; //player.y - 24;
-        localPlayerGraphics.height = 1;
-    }
-
-    localPlayerCenter.x = tmpX - 1; //player.x-1;
-    localPlayerCenter.y = tmpY - 1;
-
-    renderer.render(stage);
-}
