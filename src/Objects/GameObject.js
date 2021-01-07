@@ -171,10 +171,10 @@ class GameObject {
 	// rectangle
 	rect() {
 		return {
-			x1: this.x - (this.width * this.sprite.anchor.x) + this.g.render.mapDx,
-			y1: this.y - (this.height * this.sprite.anchor.y) + this.g.render.mapDy,
-			x2: this.x - (this.width * this.sprite.anchor.x) + this.width + this.g.render.mapDx,
-			y2: this.y - (this.height * this.sprite.anchor.y) + this.height + this.g.render.mapDy			
+			x1: this.x - (this.width * this.sprite.anchor.x) + this.g.render.mapDx + 1,
+			y1: this.y - (this.height * this.sprite.anchor.y) + this.g.render.mapDy + 1,
+			x2: this.x - (this.width * this.sprite.anchor.x) + this.width + this.g.render.mapDx - 1,
+			y2: this.y - (this.height * this.sprite.anchor.y) + this.height + this.g.render.mapDy - 1			
 		};
 	}
 	

@@ -117,10 +117,10 @@ class Player {
 	// player rectangle
 	rect() {
 		return {
-			x1: this.x - (this.width() / 2)  + this.g.render.mapDx,
-			y1: this.y - (this.height() / 2) + this.g.render.mapDy + 1 + (this.crouch ? Constants.BRICK_HEIGHT / 2 : 0),
-			x2: this.x + (this.width() / 2)  + this.g.render.mapDx,
-			y2: this.y + (this.height() / 2) + this.g.render.mapDy + 1 + (this.crouch ? Constants.BRICK_HEIGHT / 2 : 0),
+			x1: this.x - (this.width() / 2)  + this.g.render.mapDx + 2,
+			y1: this.y - (this.height() / 2) + this.g.render.mapDy + 1 + (this.crouch ? Constants.BRICK_HEIGHT / 2 : 0) + 2,
+			x2: this.x + (this.width() / 2)  + this.g.render.mapDx - 2,
+			y2: this.y + (this.height() / 2) + this.g.render.mapDy + 1 + (this.crouch ? Constants.BRICK_HEIGHT / 2 : 0) - 2,
 		};
 	}
 

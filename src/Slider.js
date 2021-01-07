@@ -32,7 +32,7 @@ class Slider extends PIXI.Graphics {
 		this.addChild(this.elapsed);
 		// the same loading area
 		this.elapsedLoading = new PIXI.Graphics();
-		this.elapsedLoading.beginFill(this.color, 0.4);
+		this.elapsedLoading.beginFill(this.color, 0.3);
 		this.elapsedLoading.drawRect(0, 5, 1, 8);
 		this.elapsedLoading.visible = false;
 		this.addChild(this.elapsedLoading);

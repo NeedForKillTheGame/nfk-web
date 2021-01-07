@@ -10,7 +10,7 @@ class Button extends SpecialObject {
 
 		this.texture = g.resources.button.texture.clone();
 		this.BTN_DISABLED = 6;
-		this.disableButton();
+		this.disableButton(true);
 
 		// button properties
 		this.orient = obj.orient;
@@ -19,7 +19,7 @@ class Button extends SpecialObject {
 		this.shootable = obj.shootable;
 
 		this.enabled = false;
-		this.targetObj = null;
+		this.targetObjs = [];
 	}
 
 	handleCollisions(player) {
@@ -27,32 +27,37 @@ class Button extends SpecialObject {
 		super.handleCollisions(player, function(player){
 			// TODO: handle collisions and trigger door activations
 
-			var target = that.findTarget();
-
-			// do not handle if already activated
-			if (target.enabled && that.enabled)
-				return;
-			that.enableButton();
-			Sound.play("button");
-			
-			target.delayed_action(player, function(){
-				// disable button on complete
-				that.disableButton();
+			that.findTargets(function(target){
+				// do not handle if already activated
+				if (target.enabled && that.enabled)
+					return;
+				that.enableButton();
+				
+				target.delayed_action(player, function(){
+					// disable button on complete
+					that.disableButton();
+				});
 			});
+
 
 			return false;
 		});
 	}
 
-	enableButton() {
+	enableButton(force) {
+		if (this.enabled && !force)
+			return;
+		Sound.play("button");
 		this.enabled = true;
 		this._switchButton(this.orient);
-		//console.log("button enabled", that.wait, target);
+		//console.log("button enabled", this.target);
 	}
-	disableButton() {
+	disableButton(force) {
+		if (!this.enabled && !force)
+			return;
 		this.enabled = false;
 		this._switchButton(this.BTN_DISABLED);
-		//console.log("button disabled");
+		//console.log("button disabled", this.target);
 	}
 	_switchButton(type) {
 		this.texture.frame = new PIXI.Rectangle(
@@ -62,17 +67,24 @@ class Button extends SpecialObject {
 			24);
 	}
 
-	findTarget() {
-		if (this.targetObj)
-			return this.targetObj;
+	/* exec callback for each target */
+	findTargets(callback) {
+		if (this.targetObjs.length) {
+			if (callback) {
+				this.targetObjs.forEach(function(target){
+					callback(target);
+				})
+			}
+			return this.targetObjs;
+		}
 
 		// find target and cache result
 		for (var i = 0; i < this.g.objects.length; i++) {
 			var entry = this.g.objects[i];
 			if (entry.targetname == this.target) {
-				this.targetObj = entry;
+				this.targetObjs.push(entry);
 			}
 		}
-		return this.targetObj;
+		return this.findTargets(callback);
 	}
 }

@@ -20,39 +20,46 @@ class Trigger extends SpecialObject {
 		this.target = obj.target;
 
 		this.enabled = false;
-		this.targetObj = null;
+		this.targetObjs = [];
 	}
 
 	handleCollisions(player) {
 		var that = this;
 		super.handleCollisions(player, function(player){
 
-			var target = that.findTarget();
+			that.findTargets(function(target){
+				// do not handle if already activated
+				if (target.enabled)
+					return;
 
-			// do not handle if already activated
-			if (target.enabled)
-				return;
-
-			//console.log("trigger activated", target.targetname);
-			target.delayed_action(player, function(){
-				//console.log("trigger deactivated", target.targetname);
+				//console.log("trigger activated", target.targetname);
+				target.delayed_action(player, function(){
+					//console.log("trigger deactivated", target.targetname);
+				});
 			});
+
 			return false;
 		});
 	}
 
-
-	findTarget() {
-		if (this.targetObj)
-			return this.targetObj;
+	/* exec callback for each target */
+	findTargets(callback) {
+		if (this.targetObjs.length) {
+			if (callback) {
+				this.targetObjs.forEach(function(target){
+					callback(target);
+				})
+			}
+			return this.targetObjs;
+		}
 
 		// find target and cache result
 		for (var i = 0; i < this.g.objects.length; i++) {
 			var entry = this.g.objects[i];
 			if (entry.targetname == this.target) {
-				this.targetObj = entry;
+				this.targetObjs.push(entry);
 			}
 		}
-		return this.targetObj;
+		return this.findTargets(callback);
 	}
 }
