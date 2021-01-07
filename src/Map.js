@@ -24,6 +24,9 @@ import BlueFlag from "./objects/BlueFlag.js";
 
 import Jumppad from "./objects/Jumppad.js";
 import Portal from "./objects/Portal.js";
+import Button from "./objects/Button.js";
+import Door from "./objects/Door.js";
+import Trigger from "./objects/Trigger.js";
 
 
 
@@ -48,10 +51,18 @@ class Map {
 		this.paletteCustomImage = null;
 		this.paletteCustomIndex = 54; // offset for custom palette
 
+		this.pal_transparent = false; // pallete has transparent color?
+		this.pal_transparent_color = 0; // (int color hex for replace to transparent
+
 	}
 	
 	
 	async loadFromDemo(demoMap) {
+		if (demoMap.PaletteEntry.Reserved6) {
+			this.pal_transparent = true;
+			this.pal_transparent_color = demoMap.PaletteEntry.Reserved5;
+		}
+
 		this.bg = demoMap.Header.BG;
 		if (this.bg == 0) 
 			this.bg = this.g.config.default_bg; // set default bg if not set
@@ -161,6 +172,7 @@ class Map {
 		}
 		
 		// add special objects
+		// https://github.com/NeedForKillTheGame/nfkmap-viewer/wiki/%D0%A1%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5-%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82%D1%8B-%D0%BD%D0%B0-%D0%BA%D0%B0%D1%80%D1%82%D0%B5
 		for (var i = 0; i < this.specialObjects.length; i++) {
 			var obj = this.specialObjects[i];
 			var x_coord = obj.x * Constants.BRICK_WIDTH;
@@ -168,7 +180,12 @@ class Map {
 
 			if (obj.objtype == 1)
 				this.g.objects.push(new Portal(this.g, x_coord, y_coord));
-			
+			if (obj.objtype == 2)
+				this.g.objects.push(new Button(this.g, x_coord, y_coord, obj));
+			if (obj.objtype == 3)
+				this.g.objects.push(new Door(this.g, x_coord, y_coord, obj));
+			if (obj.objtype == 4)
+				this.g.objects.push(new Trigger(this.g, x_coord, y_coord, obj));
 		}
 		
 		// spawn all objects

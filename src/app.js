@@ -40,6 +40,8 @@ PIXI.loader
 
 	.add('medkits', "images/medkits.json")
 	.add('portal', "images/portal.png")
+	.add('door', "images/door.png")
+	.add('button', "images/button.png")
 	.add('flash', "images/flash.png") // animation
 	.add('mega', "images/mega.json") // animation
 	.add('flag', "images/flag.json") // animation
@@ -63,7 +65,7 @@ function run(loader, resources) {
 	
 	// load demo
 	if (G.config.mode == 'development') {
-		G.demo.load("demo.json", init); // for debug load local demo
+		G.demo.load("demo2.json", init); // for debug load local demo
 	} else {
 		G.demo.loadFromQuery(init); // for production
 	}

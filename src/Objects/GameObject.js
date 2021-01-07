@@ -23,6 +23,7 @@ class GameObject {
 		this.texture = null; // PIXI.Texture
 		this.sprite = null; // PIXI.Sprite
 		this.anchor = false;
+		this.texture_repeat = false;
 
 		this.bullet = false;
 
@@ -73,14 +74,16 @@ class GameObject {
 					this.width, 
 					this.height));
 			*/
-			if (this.texture !== null) {
+			if (this.texture_repeat)
+				this.sprite = new PIXI.TilingSprite(this.texture, this.width, this.height);
+			else
 				this.sprite = new PIXI.Sprite(this.texture);
-			}
 		}
 		this.sprite.rotation = this.rotation;
 		if (this.anchor) {
 			this.sprite.anchor.set(this.anchor);
 		}
+
 
 		this.setX(this.x);
 		this.setY(this.y);
@@ -112,8 +115,13 @@ class GameObject {
 		this.sprite.visible = false;
 	}
 
-	visible() {
+	is_visible() {
 		return !this.sprite || this.sprite.visible;
+	}
+
+	/* does not work if object is invisible */
+	is_overlap() {
+		return this._is_overlap;
 	}
 
 	setX(x) {
@@ -128,12 +136,33 @@ class GameObject {
 	// speed = animations speed, 0.01 is slowest
 	// callback = execute after full invisible
 	fadeOut(speed, callback) {
+		if (!speed)
+			speed = 0.1;
 		var that = this;
-		var timerId =  this.g.timerManager.addTickTimer(1, 0, function(id, tick){
+		var timerId =  this.g.timerManager.addTickTimer(1, 0, function(id, tick) {
 			that.sprite.alpha -= speed; 
 			if (that.sprite.alpha <= 0) {
 				that.hide();
-				callback();
+				if (callback)
+					callback();
+				that.g.timerManager.stopTimer(id);
+			}
+		});
+		this.timerIds.push(timerId);
+	}
+
+	fadeIn(speed, callback) {
+		if (!speed)
+			speed = 0.1;
+		this.show();
+		this.sprite.alpha = 0;
+		var that = this;
+		var timerId =  this.g.timerManager.addTickTimer(1, 0, function(id, tick){
+			that.sprite.alpha += speed; 
+			if (that.sprite.alpha >= 1) {
+				if (callback)
+					callback();
+				that.g.timerManager.stopTimer(id);
 			}
 		});
 		this.timerIds.push(timerId);
@@ -155,7 +184,7 @@ class GameObject {
 			return false;
 		
 		// if object is invisible then it does not exist
-		if ( !this.visible() )
+		if ( !this.is_visible() )
 			return false;
 
 		
@@ -164,6 +193,7 @@ class GameObject {
 		var overlap = Utils.rectOverlap(this.rect(), player.rect());
 		// if player eat object then call the callback function
 		if ( overlap ) {
+			this._is_overlap = true;
 			// if player already entered the object then do not fire overlap event twice
 			if (idx != -1) {
 				return false;
@@ -176,6 +206,7 @@ class GameObject {
 			if (idx != -1) {
 				this.overlaps.splice(idx, 1);
 			}
+			this._is_overlap = false;
 		}
 	}
 
@@ -186,7 +217,7 @@ class GameObject {
 		}
 
 		// if object is invisible then it does not exist
-		if ( !this.visible() )
+		if ( !this.is_visible() )
 			return false;
 
 		var brickUid = brick.col + '_' + brick.row + '_' + brick.idx;

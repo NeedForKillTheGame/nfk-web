@@ -52,6 +52,8 @@ var sound_defs = {
 	genericdata:	new Howl({ urls: ['sounds/hit.wav'] }),
 	gameend:	new Howl({ urls: ['sounds/gameend.wav'] }),
 	matchstart:	new Howl({ urls: ['sounds/fight.wav'] }),
+
+	button:	new Howl({ urls: ['sounds/button.wav'] }),
 	
 	model_sound_path: 'sound/models/', // with slash at the end
 
