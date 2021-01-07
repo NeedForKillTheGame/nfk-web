@@ -74,10 +74,12 @@ class GameObject {
 					this.width, 
 					this.height));
 			*/
-			if (this.texture_repeat)
-				this.sprite = new PIXI.TilingSprite(this.texture, this.width, this.height);
-			else
-				this.sprite = new PIXI.Sprite(this.texture);
+			if (this.texture) {
+				if (this.texture_repeat)
+					this.sprite = new PIXI.TilingSprite(this.texture, this.width, this.height);
+				else
+					this.sprite = new PIXI.Sprite(this.texture);
+			}
 		}
 		this.sprite.rotation = this.rotation;
 		if (this.anchor) {
