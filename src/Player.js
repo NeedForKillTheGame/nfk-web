@@ -12,8 +12,8 @@ class Player {
         this.x = 0.0;
         this.y = 0.0;
 
-        this.velocityX = 0.0;
-        this.velocityY = 0.0;
+        this.velocityX = 0.0; //TPlayer.InertiaX
+        this.velocityY = 0.0; //TPlayer.InertiaY
 
         //Current state of pressed keys
         this.keyUp = false;
@@ -22,79 +22,48 @@ class Player {
         this.keyRight = false;
 
         this.crouch = false; //current crouch state
+        this.dir = Constants.DIR_RS; //walking (0, 1) or standing (2, 3) to the left/right, set by the keys of the previous frame
+        this.dead = 0;
 
         this.doublejumpCountdown = 0;
 
-        this.cacheOnGround = false;
-        this.cacheBrickOnHead = false;
-        this.cacheBrickCrouchOnHead = false;
-
-        this.speedJump = 0;
+        this.groundTicks = 0; //TPlayer.field_358: frames on the ground since landing, 255 right after a jump
+        this.speedJump = 0;   //TPlayer.field_359: strafe-jump charge 0..6
     }
 
     setX(newX) {
-        if (newX != this.x) {
-            this.x = newX;
-            this.updateCaches();
-        }
+        this.x = newX;
     }
 
     setY(newY) {
-        if (newY != this.y) {
-            this.y = newY;
-            this.updateCaches();
-        }
+        this.y = newY;
     }
 
     setXY(newX, newY) {
-        if (newX !== this.x || newY !== this.y) {
-            this.x = newX;
-            this.y = newY;
-            this.updateCaches();
-        }
+        this.x = newX;
+        this.y = newY;
     }
 
-    updateCaches() {
-        this.updateCacheOnGround();
-        this.updateCacheBrickOnHead();
-        this.updateCacheBrickCrouchOnHead();
+    //The brick checks below are evaluated on every call with the current coordinates, exactly like
+    //IsOnground(), BrickOnHead() and BrickCrouchOnHead() in NFK
+
+    isOnGround() {
+        var z = this.dead > 0 ? 0 : 9; //corpses do not stick to walls
+        return isBrick(trunc((this.x - z) / 32), trunc((this.y + 25) / 16))
+            && !isBrick(trunc((this.x - z) / 32), trunc((this.y + 23) / 16))
+
+            || isBrick(trunc((this.x + z) / 32), trunc((this.y + 25) / 16))
+            && !isBrick(trunc((this.x + z) / 32), trunc((this.y + 23) / 16))
+
+            || isBrick(trunc((this.x - z) / 32), trunc((this.y + 24) / 16))
+            && !isBrick(trunc((this.x - z) / 32), trunc((this.y + 8) / 16))
+
+            || isBrick(trunc((this.x + z) / 32), trunc((this.y + 24) / 16))
+            && !isBrick(trunc((this.x + z) / 32), trunc((this.y + 8) / 16));
     }
 
-    updateCacheOnGround() {
-        this.cacheOnGround =
-            isBrick(trunc((this.x - 9) / 32), trunc((this.y + 25) / 16))
-            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y + 23) / 16))
-
-            || isBrick(trunc(trunc(this.x + 9) / 32), trunc(trunc(this.y + 25) / 16))
-            && !isBrick(trunc(trunc(this.x + 9) / 32), trunc(trunc(this.y + 23) / 16))
-
-            || isBrick(trunc((this.x - 9) / 32), trunc((this.y + 24) / 16))
-            && !isBrick(trunc((this.x - 9) / 32), trunc((this.y + 8) / 16))
-
-            || isBrick(trunc((this.x + 9) / 32), trunc((this.y + 24) / 16))
-            && !isBrick(trunc((this.x + 9) / 32), trunc((this.y + 8) / 16));
-    }
-
-    updateCacheBrickCrouchOnHead() {
-        this.cacheBrickCrouchOnHead =
-            isBrick(trunc((this.x - 8) / 32), trunc((this.y - 9) / 16))
-            && !isBrick(trunc((this.x - 8) / 32), trunc((this.y - 7) / 16))
-
-            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 9) / 16))
-            && !isBrick(trunc((this.x + 8) / 32), trunc((this.y - 7) / 16))
-
-            || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 23) / 16))
-
-            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 23) / 16))
-
-            || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 16) / 16))
-
-            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 16) / 16));
-    }
-
-    updateCacheBrickOnHead() {
-        this.cacheBrickOnHead =
-            isBrick(trunc((this.x - 9) / 32), trunc((this.y - 25) / 16))
+    isBrickOnHead() {
+        return isBrick(trunc((this.x - 9) / 32), trunc((this.y - 25) / 16))
             && !isBrick(trunc((this.x - 9) / 32), trunc((this.y - 23) / 16))
 
             || isBrick(trunc((this.x + 9) / 32), trunc((this.y - 25) / 16))
@@ -107,15 +76,19 @@ class Player {
             && !isBrick(trunc((this.x + 9) / 32), trunc((this.y - 8) / 16));
     }
 
-    isOnGround() {
-        return this.cacheOnGround;
-    }
-
-    isBrickOnHead() {
-        return this.cacheBrickOnHead;
-    }
-
     isBrickCrouchOnHead() {
-        return this.cacheBrickCrouchOnHead;
+        return isBrick(trunc((this.x - 8) / 32), trunc((this.y - 9) / 16))
+            && !isBrick(trunc((this.x - 8) / 32), trunc((this.y - 7) / 16))
+
+            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 9) / 16))
+            && !isBrick(trunc((this.x + 8) / 32), trunc((this.y - 7) / 16))
+
+            || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 23) / 16))
+
+            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 23) / 16))
+
+            || isBrick(trunc((this.x - 8) / 32), trunc((this.y - 16) / 16))
+
+            || isBrick(trunc((this.x + 8) / 32), trunc((this.y - 16) / 16));
     }
 }
